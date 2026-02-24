@@ -56,15 +56,16 @@ async def scrape_state(page) -> dict:
         }
 
         // Board cards — inside .table-cards, each card is a child div
-        // Card structure: div > (value div + suit div)
+        // Board cards: .table-cards > .card-container > .card-flipper > .card > span.value + span.suit
         const boardArea = document.querySelector('.table-cards');
         if (boardArea) {
-            boardArea.querySelectorAll(':scope > div').forEach(card => {
-                const children = card.querySelectorAll(':scope > div, :scope > span');
-                if (children.length >= 2) {
-                    const val = children[0]?.textContent?.trim() || '';
-                    const suit = children[1]?.textContent?.trim() || '';
-                    if (val && /^[2-9TJQKA]$/.test(val)) result.board.push(val + suit);
+            boardArea.querySelectorAll('.card-container').forEach(container => {
+                const valEl = container.querySelector('.value');
+                const suitEls = container.querySelectorAll('.suit');
+                if (valEl && suitEls.length > 0) {
+                    const val = valEl.textContent.trim();
+                    const suit = suitEls[suitEls.length - 1].textContent.trim();
+                    if (val && /^[2-9TJQKA]|10$/.test(val)) result.board.push(val + suit);
                 }
             });
         }
@@ -88,23 +89,15 @@ async def scrape_state(page) -> dict:
                 }
             });
 
-            // Detect cards on this player (only our cards are face-up)
+            // Detect cards — same structure as board: .card-container > .card-flipper > .card > span.value + span.suit
             const cards = [];
-            player.querySelectorAll('div').forEach(cardDiv => {
-                const subs = cardDiv.querySelectorAll(':scope > div, :scope > span');
-                if (subs.length === 3) { // value, suit-icon, suit-letter format
-                    const v = subs[0]?.textContent?.trim();
-                    const s = subs[2]?.textContent?.trim();
-                    if (v && /^[2-9TJQKA]$/.test(v) && s && /^[hsdc]$/.test(s)) {
-                        cards.push(v + s);
-                    }
-                }
-                if (subs.length === 2) {
-                    const v = subs[0]?.textContent?.trim();
-                    const s = subs[1]?.textContent?.trim();
-                    if (v && /^[2-9TJQKA]$/.test(v) && s && /^[hsdc]$/.test(s)) {
-                        cards.push(v + s);
-                    }
+            player.querySelectorAll('.card-container').forEach(container => {
+                const valEl = container.querySelector('.value');
+                const suitEls = container.querySelectorAll('.suit');
+                if (valEl && suitEls.length > 0) {
+                    const val = valEl.textContent.trim();
+                    const suit = suitEls[suitEls.length - 1].textContent.trim();
+                    if (val && /^[2-9TJQKA]|10$/.test(val)) cards.push(val + suit);
                 }
             });
 
@@ -138,26 +131,49 @@ async def scrape_state(page) -> dict:
             result.players.push(p);
         });
 
-        // Action buttons — .action-buttons container
+        // Turn detection — check decision-current on our player element first (fastest/most reliable)
+        const myPlayerEl = document.querySelector('.table-player.decision-current.you-player');
+        if (myPlayerEl) {
+            result.is_my_turn = true;
+        }
+        
+        // Fallback: "Your Turn" text in action area
         const actionArea = document.querySelector('.action-buttons');
         if (actionArea) {
-            // "Your Turn" text means it's our action
             if (actionArea.textContent.includes('Your Turn')) {
                 result.is_my_turn = true;
             }
 
-            actionArea.querySelectorAll('button').forEach(btn => {
-                if (btn.disabled) return;
-                const text = btn.textContent.trim();
-                if (text && !text.includes('Extra Time') && text.length < 30) {
-                    result.actions.push(text);
-                    // If we see Check/Call/Bet/Raise/Fold buttons, it's our turn
-                    if (/Check|Call|Bet|Raise|Fold/i.test(text)) {
-                        result.is_my_turn = true;
+            // Only collect action buttons if it's actually our turn
+            if (result.is_my_turn) {
+                actionArea.querySelectorAll('button').forEach(btn => {
+                    if (btn.disabled) return;
+                    const text = btn.textContent.trim();
+                    if (text && !text.includes('Extra Time') && text.length < 30) {
+                        if (btn.classList.contains('suspended-action')) return;
+                        if (text === 'Check or Fold' || text === 'Call Any') return;
+                        result.actions.push(text);
                     }
-                }
-            });
+                });
+            }
         }
+
+        // All-in detection — check if we're all-in
+        document.querySelectorAll('.table-player').forEach(player => {
+            const nameEl = player.querySelector('a');
+            if (!nameEl) return;
+            const pText = player.textContent.toLowerCase();
+            if (pText.includes('all in')) {
+                const name = nameEl.textContent.trim();
+                // Find our player entry and mark it
+                result.players.forEach(p => {
+                    if (p.name === name) p.all_in = true;
+                });
+                if (player.classList.contains('you-player')) {
+                    result.im_all_in = true;
+                }
+            }
+        });
 
         // Hand strength — look for text near our cards
         document.querySelectorAll('.table-player').forEach(p => {
@@ -181,6 +197,29 @@ async def scrape_state(page) -> dict:
             if (text && result.chat.length < 5) result.chat.push(author + ': ' + text);
         });
 
+        // Game log — last 20 entries for action tracking
+        result.log = [];
+        document.querySelectorAll('.log-line, [class*=game-log] .log-message, .hand-log-line').forEach(line => {
+            const text = line.textContent?.trim();
+            if (text && result.log.length < 20) result.log.push(text);
+        });
+
+        // Position info — dealer button is a standalone element with class like "dealer-position-X"
+        result.dealer_name = null;
+        const dealerBtn = document.querySelector('[class*=dealer-button]');
+        if (dealerBtn) {
+            // Extract seat number from class like "dealer-position-1"
+            const posMatch = dealerBtn.className.match(/dealer-position-(\d+)/);
+            if (posMatch) {
+                const seatNum = parseInt(posMatch[1]);
+                // Find the player at that seat (table-player-X)
+                const dealerPlayer = document.querySelector('.table-player-' + seatNum + ' a');
+                if (dealerPlayer) {
+                    result.dealer_name = dealerPlayer.textContent.trim();
+                }
+            }
+        }
+
         return result;
     }""")
 
@@ -194,6 +233,44 @@ async def scrape_state(page) -> dict:
         state["street"] = "turn"
     elif board_count == 5:
         state["street"] = "river"
+
+    # Compute positions (heads-up: dealer=SB, other=BB)
+    # Multi-way: dealer, SB=dealer+1, BB=dealer+2, then UTG, MP, CO, BTN
+    players = [p for p in state.get("players", []) if p.get("name")]
+    active_players = [p for p in players if "fold" not in p.get("status", "").lower() 
+                      and "sitting" not in p.get("status", "").lower()
+                      and "quitting" not in p.get("status", "").lower()]
+    dealer_name = state.get("dealer_name")
+    
+    n = len(active_players)
+    if n >= 2 and dealer_name:
+        # Find dealer index
+        names = [p["name"] for p in active_players]
+        if dealer_name in names:
+            d_idx = names.index(dealer_name)
+            if n == 2:
+                # Heads up: dealer = SB (acts first preflop, last postflop)
+                active_players[d_idx]["position"] = "BTN/SB"
+                active_players[(d_idx + 1) % n]["position"] = "BB"
+            else:
+                positions = []
+                if n <= 3:
+                    positions = ["BTN", "SB", "BB"]
+                elif n <= 6:
+                    positions = ["BTN", "SB", "BB"] + ["EP"] * (n - 5) + ["MP", "CO"] if n > 5 else ["BTN", "SB", "BB", "UTG", "CO", "MP"][:n]
+                else:
+                    positions = ["BTN", "SB", "BB", "UTG", "UTG+1", "MP", "MP+1", "HJ", "CO"][:n]
+                for i, pos in enumerate(positions):
+                    idx = (d_idx + i) % n
+                    active_players[idx]["position"] = pos
+    
+    # Set my_position
+    for p in active_players:
+        if p.get("is_me") and p.get("position"):
+            state["my_position"] = p["position"]
+    
+    # Determine if we're in position (last to act postflop = dealer/BTN)
+    state["in_position"] = state.get("my_position", "").startswith("BTN")
 
     return state
 
@@ -220,13 +297,17 @@ def state_to_text(state: dict) -> str:
         pot_str = str(state["pot_total"])
     lines.append(f"Pot: {pot_str}")
 
+    if state.get("my_position"):
+        lines.append(f"My position: {state['my_position']} ({'IP' if state.get('in_position') else 'OOP'})")
+
     lines.append("Players:")
     for p in state.get("players", []):
         marker = " (ME)" if p.get("is_me") else ""
         dealer = " [D]" if p.get("dealer") else ""
+        pos = f" [{p['position']}]" if p.get("position") else ""
         bet = f" bet:{p['bet']}" if p.get("bet") and p["bet"] != "0" else ""
         status = f" ({p['status']})" if p.get("status") and p["status"] not in ("active", "") else ""
-        lines.append(f"  {p['name']}{marker}{dealer}: stack {p['stack']}{bet}{status}")
+        lines.append(f"  {p['name']}{marker}{pos}{dealer}: stack {p['stack']}{bet}{status}")
 
     if state.get("is_my_turn"):
         lines.append(f"\nMY TURN. Available: {', '.join(state.get('actions', []))}")

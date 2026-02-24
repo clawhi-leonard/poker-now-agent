@@ -1,0 +1,17 @@
+# Secrets
+.env
+config.py
+
+# Runtime data
+opponent_stats.json
+*.png
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
