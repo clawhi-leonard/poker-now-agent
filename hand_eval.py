@@ -266,7 +266,7 @@ def get_equity(my_cards_str, board_cards_str=None, num_opponents=1):
             return preflop_equity(my_cards_str[0], my_cards_str[1], num_opponents)
     else:
         # Postflop — Monte Carlo
-        sims = 100 if is_plo else 150  # fewer sims for PLO (more combos = slower)
+        sims = 150 if is_plo else 300  # fewer sims for PLO (more combos = slower)
         eq = monte_carlo_equity(my_cards_str, board_cards_str, num_opponents, simulations=sims, is_plo=is_plo)
         return eq * 100
 

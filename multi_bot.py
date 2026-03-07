@@ -419,27 +419,94 @@ async def start_game(page):
 
 
 async def auto_rebuy(page, player_name, amount=1000):
-    for sel in ['button:has-text("Re-buy")', 'button:has-text("Rebuy")',
-                'button:has-text("Add chips")', 'button:has-text("Buy In")']:
+    """Auto-rebuy when a player busts. Handles multiple UI states."""
+    # Check if there's a rebuy/add-chips UI visible
+    rebuy_clicked = False
+    
+    # Method 1: Look for rebuy button by text content (can't use :has-text in evaluate)
+    try:
+        found = await page.evaluate("""() => {
+            const buttons = document.querySelectorAll('button, a');
+            for (const btn of buttons) {
+                const text = (btn.textContent || '').trim().toLowerCase();
+                if ((text.includes('re-buy') || text.includes('rebuy') || 
+                     text.includes('add chips') || text.includes('buy in') ||
+                     text.includes('buy back')) && btn.offsetParent !== null) {
+                    btn.click();
+                    return true;
+                }
+            }
+            return false;
+        }""")
+        if found:
+            rebuy_clicked = True
+            await asyncio.sleep(1.5)
+    except:
+        pass
+    
+    # Method 2: Try Playwright selectors
+    if not rebuy_clicked:
+        for sel in ['button:has-text("Re-buy")', 'button:has-text("Rebuy")',
+                    'button:has-text("Add chips")', 'button:has-text("Buy In")',
+                    'button:has-text("Buy back")', 'a:has-text("Re-buy")']:
+            try:
+                el = await page.query_selector(sel)
+                if el and await el.is_visible():
+                    await el.click()
+                    rebuy_clicked = True
+                    await asyncio.sleep(1.5)
+                    break
+            except:
+                continue
+    
+    if not rebuy_clicked:
+        return False
+    
+    # Fill the rebuy amount
+    amount_filled = False
+    for sel in ['input[type="number"]', 'input[type="text"]', 'input[placeholder*="Stack"]',
+                'input[placeholder*="stack"]', 'input[placeholder*="amount"]']:
         try:
-            el = await page.query_selector(sel)
-            if el and await el.is_visible():
-                await el.click()
-                await asyncio.sleep(1)
-                inp = await page.query_selector('input[type="number"], input[type="text"]')
-                if inp and await inp.is_visible():
-                    await inp.fill(str(amount))
-                    await asyncio.sleep(0.3)
-                for csel in ['button:has-text("Confirm")', 'button:has-text("OK")',
-                              'button:has-text("Buy")', 'input[type="submit"]']:
-                    btn = await page.query_selector(csel)
-                    if btn and await btn.is_visible():
-                        await btn.click()
-                        log(f"   💰 {player_name} rebought {amount}")
-                        await asyncio.sleep(1)
-                        return True
+            inp = await page.query_selector(sel)
+            if inp and await inp.is_visible():
+                await inp.click(click_count=3)
+                await inp.fill(str(amount))
+                amount_filled = True
+                break
+        except:
+            continue
+    
+    if not amount_filled:
+        # Try all visible number/text inputs
+        try:
+            inputs = await page.query_selector_all('input')
+            for inp in inputs:
+                if await inp.is_visible():
+                    inp_type = await inp.get_attribute('type') or ''
+                    if inp_type in ('number', 'text', ''):
+                        await inp.click(click_count=3)
+                        await inp.fill(str(amount))
+                        amount_filled = True
+                        break
         except:
             pass
+    
+    await asyncio.sleep(0.5)
+    
+    # Confirm
+    for csel in ['button:has-text("Confirm")', 'button:has-text("OK")',
+                  'button:has-text("Buy")', 'button:has-text("Submit")',
+                  'input[type="submit"]', 'button.green']:
+        try:
+            btn = await page.query_selector(csel)
+            if btn and await btn.is_visible():
+                await btn.click()
+                log(f"   💰 {player_name} rebought {amount}")
+                await asyncio.sleep(2)
+                return True
+        except:
+            continue
+    
     return False
 
 
@@ -530,26 +597,33 @@ def bot_decide(state, profile):
         call_thresh = effective_tight - 5
         if equity >= raise_thresh:
             if can_raise and random.random() < agg + 0.3:
-                amt = min(max(4, int(pot * random.uniform(0.6, 1.0))), my_stack)
+                # Scale raise size with equity — bigger raises for premium hands
+                eq_factor = min(1.0, (equity - raise_thresh) / 20 + 0.5)
+                amt = min(max(4, int(pot * random.uniform(0.5, 0.8) * eq_factor + pot * 0.2)), my_stack)
+                # Cap re-raises: if facing a big bet, need strong equity to continue
+                if call_amount > pot * 0.5 and equity < 65:
+                    return ("call", None)
                 return ("raise", amt)
             return ("call", None) if can_call else ("check", None)
         elif equity >= call_thresh:
-            if can_raise and random.random() < agg * 0.4:
-                amt = min(max(4, int(pot * random.uniform(0.5, 0.8))), my_stack)
+            if can_raise and random.random() < agg * 0.3:
+                # Only small raises with medium hands
+                amt = min(max(4, int(pot * random.uniform(0.4, 0.6))), my_stack)
+                # Don't re-raise with medium hands
+                if call_amount > 0:
+                    return ("call", None)
                 return ("raise", amt)
             return ("call", None) if can_call else ("check", None)
-        elif equity >= call_thresh - 10:
-            if can_raise and random.random() < bluff:
-                amt = min(max(4, int(pot * random.uniform(0.5, 0.7))), my_stack)
-                return ("raise", amt)
-            if can_call and call_amount <= max(4, my_stack * 0.05):
+        elif equity >= call_thresh - 8:
+            # Marginal hands: only limp for very cheap, no raising
+            if can_call and call_amount <= max(2, my_stack * 0.02):
                 return ("call", None)
             return ("check", None) if can_check else ("fold", None)
         else:
             return ("check", None) if can_check else ("fold", None)
 
     # POSTFLOP
-    value_thresh = 55 - (agg * 15) + pos_adj
+    value_thresh = 55 - (agg * 10) + pos_adj  # Less aggressive threshold adjustment
     if equity >= value_thresh:
         if can_raise and random.random() < agg + 0.2:
             size_mult = random.uniform(0.4 + agg * 0.2, 0.7 + agg * 0.3)
@@ -574,8 +648,9 @@ def bot_decide(state, profile):
                 return ("call", None)
         return ("check", None) if can_check else ("fold", None)
 
-    if random.random() < bluff and can_raise and street != "river":
-        amt = min(max(4, int(pot * random.uniform(0.5, 0.8))), my_stack)
+    if can_raise and street not in ("river", "turn") and random.random() < bluff:
+        # Only bluff on flop, and less frequently
+        amt = min(max(4, int(pot * random.uniform(0.4, 0.65))), my_stack)
         return ("raise", amt)
 
     return ("check", None) if can_check else ("fold", None)
@@ -595,9 +670,20 @@ async def bot_loop(page, profile, is_host, stop_event):
             # Dismiss any popups
             await dismiss_alerts(page)
 
-            # Host periodically tries to start/deal
+            # Host periodically tries to start/deal and approve rebuys
             if is_host:
                 await start_game(page)
+                # Approve any pending rebuy/seat requests
+                for asel in ['button:has-text("Approve")', 'button:has-text("Accept")',
+                             'button:has-text("Allow")', 'button:has-text("Yes")']:
+                    try:
+                        el = await page.query_selector(asel)
+                        if el and await el.is_visible():
+                            await el.click()
+                            log(f"   ✅ {name} approved a request")
+                            await asyncio.sleep(0.5)
+                    except:
+                        pass
 
             state = await scrape_state_safe(page)
             cards = tuple(state.get("my_cards", []))
@@ -653,8 +739,31 @@ async def bot_loop(page, profile, is_host, stop_event):
                             my_stack = int(p["stack"])
                         except:
                             pass
+                # Check for bust/elimination and auto-rebuy
                 if my_stack == 0:
-                    await auto_rebuy(page, name, STARTING_STACK)
+                    rebuy_ok = await auto_rebuy(page, name, STARTING_STACK)
+                    if rebuy_ok:
+                        log(f"   🔄 {name} rebuying after bust")
+                    else:
+                        # Check if we're eliminated from the table entirely
+                        is_eliminated = await page.evaluate("""() => {
+                            const body = document.body.textContent.toLowerCase();
+                            return body.includes('eliminated') || body.includes('busted') ||
+                                   body.includes('you have been removed');
+                        }""")
+                        if is_eliminated:
+                            log(f"   ☠️ {name} eliminated — attempting rejoin")
+                            # Try clicking any "rejoin" or "sit" button
+                            for rsv in ['button:has-text("Sit")', '.table-player-seat-button',
+                                       'button:has-text("Re-join")', 'button:has-text("Rejoin")']:
+                                try:
+                                    el = await page.query_selector(rsv)
+                                    if el and await el.is_visible():
+                                        await el.click()
+                                        await asyncio.sleep(2)
+                                        break
+                                except:
+                                    continue
                 await asyncio.sleep(POLL_MS / 1000)
 
         except Exception as e:
