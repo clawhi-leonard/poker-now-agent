@@ -1,6 +1,15 @@
 # Poker Now AI Agent - TODO
 
-## Status: ✅ Bots create, join, seat, play, and bet autonomously (raise slider 100% fixed)
+## Status: ✅ All 4 bots seat, play, and bet autonomously (seating fix v7)
+
+### Completed (2026-03-15 Evening)
+- [x] **FIXED: Seating flow for 3+ bots** — root cause was pokernow React SPA going blank after approving first seat request
+  - Host page reload after each approval gives clean DOM for next request
+  - All 4 bots (TAG/LAG/NIT/STATION) seat reliably on first attempt
+  - host_approve_all now handles inline buttons, Options menu badge, and notification area
+  - approve_bot timeout increased to 25s, approve_seat_requests delegates to host_approve_all
+- [x] 60+ hands played successfully with all 4 bots (2 test runs)
+- [x] Game creation, reCAPTCHA bypass (including audio solve), seating, game start all working
 
 ### Completed (2026-03-06 Evening)
 - [x] **FIXED: Raise slider** — 100% success rate (was 39% failure)
@@ -57,6 +66,8 @@
 - Multi-session performance comparison
 
 ### Learned (Technical)
+- **Host page goes blank after approving seat request** — React SPA re-render. MUST reload page between approvals.
+- **Options menu (hamburger) has red badge** showing queued seat requests, but reload + inline Accept is more reliable
 - pokernow.com (not .club) — redirects
 - Host: "Take the Seat", Non-host: "Request the Seat" → host approves
 - `.alert-1-container` cookie banner blocks interaction
