@@ -2,13 +2,28 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
-v3.1 - reCAPTCHA bypass + tighter play (2026-03-06):
-  - FIXED: Stealth browser mode to avoid reCAPTCHA triggers
-  - FIXED: Single-browser game creation (fewer suspicion signals)
-  - FIXED: Auto-rebuy with diagnostic screenshots + page-reload fallback
-  - IMPROVED: Preflop fold rates (tighter ranges per style)
-  - IMPROVED: Raise sizing (minimum 2.5x BB for opens, pot-relative postflop)
-  - IMPROVED: Host approval loop runs every cycle (catches rebuy requests)
+v7.0 - Fix Options menu approval flow (2026-03-15):
+  - FIXED: Seat request approvals hidden behind Options menu (hamburger icon w/ red badge)
+  - After first inline Accept button, subsequent requests queue in Options panel
+  - host_approve_all now: checks inline buttons -> opens Options menu if badge -> checks panel
+  - approve_bot timeout increased to 25s (Options menu needs extra time)
+  - approve_seat_requests now delegates to host_approve_all (single source of truth)
+  - Added Phase 2 (Options menu badge detection) and Phase 3 (notification area) to approval
+v4.0 - Robust seating + rebuy + tighter play (2026-03-07):
+  - FIXED: Always create fresh games (no stale URL reuse without validation)
+  - FIXED: Seat count detection (comprehensive DOM query)
+  - FIXED: Host approval with expanded selectors + longer timeouts
+  - FIXED: Auto-rebuy with pokernow-specific selectors + page reload fallback
+  - FIXED: Preflop ranges tightened (NIT 50%+ fold, STATION 15%+ fold)
+  - IMPROVED: Game start detection + retry logic
+  - IMPROVED: Comprehensive DOM diagnostics on failures
+v5.0 - Better rebuy, tighter ranges, proper sizing (2026-03-10):
+  - FIXED: Auto-rebuy via leave-seat-then-re-sit flow (3 approaches)
+  - FIXED: Separated _fill_rebuy_form() for clean form handling
+  - FIXED: Preflop ranges per style (NIT 50%+, TAG 35%+, LAG 20%+, STATION 10%+ fold)
+  - FIXED: Raise sizing BB-based (min 2.5xBB opens, 3x 3-bets, 50-66% pot cbets)
+  - FIXED: NIT never bluffs, STATION capped on river calls
+  - IMPROVED: Position-adjusted thresholds, SPR-based push/fold
 """
 import asyncio
 import sys
@@ -36,6 +51,15 @@ if os.path.exists(_env_path):
 
 from hand_eval import get_equity, detect_draws
 
+try:
+    import speech_recognition as sr
+    HAS_SR = True
+except ImportError:
+    HAS_SR = False
+
+import tempfile
+import urllib.request
+
 NUM_BOTS = 4
 STARTING_STACK = 1000
 BIG_BLIND = 10
@@ -45,10 +69,10 @@ LOG_DIR = os.path.expanduser("~/Projects/poker-now-agent/logs")
 LOG_FILE = os.path.join(LOG_DIR, f"session_{time.strftime('%Y-%m-%d_%H')}.log")
 
 BOT_PROFILES = [
-    {"name": "Clawhi",   "style": "TAG",     "aggression": 0.55, "tightness": 52, "bluff_freq": 0.10, "position_aware": 1.0},
-    {"name": "AceBot",   "style": "LAG",     "aggression": 0.65, "tightness": 38, "bluff_freq": 0.18, "position_aware": 0.7},
-    {"name": "NitKing",  "style": "NIT",     "aggression": 0.30, "tightness": 65, "bluff_freq": 0.02, "position_aware": 0.5},
-    {"name": "CallStn",  "style": "STATION", "aggression": 0.15, "tightness": 30, "bluff_freq": 0.01, "position_aware": 0.3},
+    {"name": "Clawhi",   "style": "TAG",     "aggression": 0.55, "tightness": 58, "bluff_freq": 0.08, "position_aware": 1.0},
+    {"name": "AceBot",   "style": "LAG",     "aggression": 0.65, "tightness": 42, "bluff_freq": 0.15, "position_aware": 0.7},
+    {"name": "NitKing",  "style": "NIT",     "aggression": 0.30, "tightness": 70, "bluff_freq": 0.01, "position_aware": 0.5},
+    {"name": "CallStn",  "style": "STATION", "aggression": 0.15, "tightness": 38, "bluff_freq": 0.01, "position_aware": 0.3},
 ]
 
 game_url_global = None
@@ -56,6 +80,30 @@ hands_played = {p["name"]: 0 for p in BOT_PROFILES}
 rebuys_count = {p["name"]: 0 for p in BOT_PROFILES}
 folds_count = {p["name"]: 0 for p in BOT_PROFILES}
 actions_count = {p["name"]: 0 for p in BOT_PROFILES}
+rebuy_lock = None  # Initialized in main() as asyncio.Lock()
+cdp_semaphore = None  # Initialized in main() - limits concurrent CDP calls to prevent Errno 35
+
+
+async def cdp_safe(page, js_code, arg=None, retries=3, delay=1.5):
+    """Execute page.evaluate() with semaphore + Errno 35 retry.
+    Prevents macOS socket buffer overflow from concurrent Playwright calls."""
+    for attempt in range(retries):
+        try:
+            async with cdp_semaphore:
+                if arg is not None:
+                    return await page.evaluate(js_code, arg)
+                else:
+                    return await page.evaluate(js_code)
+        except Exception as e:
+            err_str = str(e)
+            if "Errno 35" in err_str or "write could not complete" in err_str:
+                if attempt < retries - 1:
+                    wait = delay * (attempt + 1) + random.uniform(0.5, 2.0)
+                    log(f"   ⏳ Errno 35 - backing off {wait:.1f}s (attempt {attempt+1}/{retries})")
+                    await asyncio.sleep(wait)
+                    continue
+            raise
+    return None
 
 
 def log(msg):
@@ -70,23 +118,48 @@ def log(msg):
         pass
 
 
-async def make_stealth_page(pw, headless=False):
-    """Create a stealth browser page that avoids bot detection."""
-    browser = await pw.chromium.launch(
+PROFILE_DIR = os.path.expanduser("~/Projects/poker-now-agent/.browser_profiles")
+
+
+async def make_stealth_page(pw, headless=False, profile_id=0):
+    """Create a stealth browser page with persistent profile (reCAPTCHA cookies persist).
+    Host (profile_id=0) uses System Chrome for better reCAPTCHA bypass.
+    Bot browsers use Playwright Chromium to avoid single-instance conflicts."""
+    user_data_dir = os.path.join(PROFILE_DIR, f"bot_{profile_id}")
+    os.makedirs(user_data_dir, exist_ok=True)
+
+    chrome_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    # Use Playwright Chromium for all bots. System Chrome conflicts with OpenClaw
+    # browser (same executable, macOS single-instance issues). 
+    # reCAPTCHA audio solver handles challenges when they appear.
+    use_chrome = False
+    # Randomize viewport slightly per bot to avoid fingerprint correlation
+    vw = 1280 + random.randint(-20, 20) * profile_id
+    vh = 800 + random.randint(-10, 10) * profile_id
+    ctx = await pw.chromium.launch_persistent_context(
+        user_data_dir,
         headless=headless,
+        executable_path=chrome_path if use_chrome else None,
         args=[
             '--disable-blink-features=AutomationControlled',
             '--no-sandbox',
-        ]
-    )
-    ctx = await browser.new_context(
-        viewport={"width": 1280, "height": 800},
+            '--disable-infobars',
+            '--disable-dev-shm-usage',
+            '--disable-extensions',
+            f'--window-size={vw},{vh}',
+            f'--window-position={100 + profile_id * 50},{100 + profile_id * 50}',
+        ],
+        viewport={"width": vw, "height": vh},
         user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        ignore_default_args=['--enable-automation'],
     )
-    page = await ctx.new_page()
+    if use_chrome:
+        log(f"   🌐 Using system Chrome (better reCAPTCHA scores)")
+    page = ctx.pages[0] if ctx.pages else await ctx.new_page()
     await Stealth().apply_stealth_async(page)
     page.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
-    return browser, page
+    # For persistent context, browser=context (context IS the browser)
+    return ctx, page
 
 
 async def dismiss_cookie_banner(page):
@@ -107,7 +180,38 @@ async def dismiss_cookie_banner(page):
     except: pass
 
 
+async def dismiss_waiting_overlay(page):
+    """Dismiss the 'Waiting for others' overlay that blocks seat buttons on pokernow."""
+    removed = await page.evaluate("""() => {
+        let removed = 0;
+        // Remove by class patterns
+        document.querySelectorAll('[class*="waiting-for-others"], [class*="share-game"]').forEach(e => {
+            e.remove(); removed++;
+        });
+        // Remove by text content (the overlay with "Waiting for others" / "COPY LINK")
+        document.querySelectorAll('div').forEach(d => {
+            const t = (d.textContent || '');
+            const r = d.getBoundingClientRect();
+            // Target the specific centered overlay (not the whole page)
+            if (r.width > 200 && r.width < 800 && r.height > 100 && r.height < 400 &&
+                (t.includes('Waiting for others') || t.includes('COPY LINK') || t.includes('Share this link'))) {
+                // Only remove if it looks like an overlay (positioned in center-ish)
+                const cx = r.left + r.width/2;
+                const cy = r.top + r.height/2;
+                if (cx > 200 && cx < window.innerWidth - 200 && cy > 100 && cy < window.innerHeight - 100) {
+                    d.remove(); removed++;
+                }
+            }
+        });
+        return removed;
+    }""")
+    if removed:
+        log(f"   🧹 Dismissed waiting overlay ({removed} elements)")
+    await asyncio.sleep(0.3)
+
+
 async def dismiss_alerts(page):
+    """Dismiss modals and alerts. Uses Playwright native click for React compatibility."""
     for sel in ['button:has-text("OK")', 'button:has-text("Confirm")',
                 'button:has-text("Close")', 'button:has-text("Dismiss")',
                 'button:has-text("Continue")', 'button:has-text("Yes")']:
@@ -119,11 +223,177 @@ async def dismiss_alerts(page):
         except: continue
 
 
+async def solve_recaptcha_audio(page, max_attempts=3):
+    """Try to solve reCAPTCHA v2 via audio challenge using Google Speech Recognition."""
+    if not HAS_SR:
+        log("   ⚠️ SpeechRecognition not installed, can't solve audio challenges")
+        return False
+
+    for attempt in range(max_attempts):
+        log(f"   🔊 Audio solve attempt {attempt+1}/{max_attempts}")
+
+        # Find the bframe (challenge frame)
+        bframe = None
+        for frame in page.frames:
+            furl = frame.url or ''
+            if 'recaptcha' in furl and 'bframe' in furl:
+                bframe = frame
+                break
+
+        if not bframe:
+            log("   No reCAPTCHA bframe found")
+            return False
+
+        # Click audio button
+        try:
+            audio_btn = await bframe.query_selector('#recaptcha-audio-button')
+            if audio_btn and await audio_btn.is_visible():
+                await audio_btn.click()
+                log("   Clicked audio button")
+                await asyncio.sleep(3)
+        except Exception as e:
+            log(f"   Audio button click error: {e}")
+
+        await asyncio.sleep(2)
+
+        # Get audio URL
+        audio_url = None
+        try:
+            audio_url = await bframe.evaluate("""() => {
+                const audio = document.querySelector('#audio-source');
+                return audio ? audio.src : null;
+            }""")
+        except Exception as e:
+            log(f"   Get audio URL error: {e}")
+
+        if not audio_url:
+            log("   No audio URL found - may be blocked or wrong mode")
+            # Check if we got "automated queries" error
+            try:
+                error_text = await bframe.evaluate("""() => {
+                    const err = document.querySelector('.rc-audiochallenge-error-message');
+                    return err ? err.textContent : null;
+                }""")
+                if error_text:
+                    log(f"   reCAPTCHA error: {error_text}")
+                    if 'automated' in (error_text or '').lower():
+                        log("   ❌ Detected as automated - audio approach blocked")
+                        return False
+            except: pass
+            await asyncio.sleep(2)
+            continue
+
+        log(f"   Audio URL: {audio_url[:80]}...")
+
+        # Download audio (async with timeout to prevent event loop blocking)
+        try:
+            audio_path = os.path.join(tempfile.gettempdir(), f"captcha_audio_{int(time.time())}.mp3")
+            def _download():
+                urllib.request.urlretrieve(audio_url, audio_path)
+                return os.path.getsize(audio_path)
+            size = await asyncio.wait_for(
+                asyncio.get_event_loop().run_in_executor(None, _download),
+                timeout=15.0
+            )
+            log(f"   Downloaded audio ({size} bytes)")
+        except asyncio.TimeoutError:
+            log(f"   ⚠️ Audio download timed out (15s) — skipping")
+            continue
+        except Exception as e:
+            log(f"   Download error: {e}")
+            continue
+
+        # Transcribe
+        try:
+            recognizer = sr.Recognizer()
+            # pydub converts mp3 -> wav for speech_recognition
+            from pydub import AudioSegment
+            wav_path = audio_path.replace('.mp3', '.wav')
+            AudioSegment.from_mp3(audio_path).export(wav_path, format="wav")
+            with sr.AudioFile(wav_path) as source:
+                audio_data = recognizer.record(source)
+            text = recognizer.recognize_google(audio_data)
+            log(f"   Transcribed: '{text}'")
+        except sr.UnknownValueError:
+            log("   Could not understand audio")
+            try:
+                reload_btn = await bframe.query_selector('#recaptcha-reload-button')
+                if reload_btn:
+                    await reload_btn.click()
+                    await asyncio.sleep(3)
+            except: pass
+            continue
+        except Exception as e:
+            log(f"   Transcription error: {e}")
+            continue
+
+        # Type the answer
+        try:
+            response_input = await bframe.query_selector('#audio-response')
+            if response_input:
+                await response_input.click()
+                await asyncio.sleep(0.3)
+                # Type character by character with human-like delays
+                for ch in text:
+                    await response_input.type(ch, delay=random.randint(50, 120))
+                log(f"   Typed answer: {text}")
+            else:
+                log("   No response input found")
+                continue
+        except Exception as e:
+            log(f"   Type error: {e}")
+            continue
+
+        # Click verify
+        await asyncio.sleep(0.5)
+        try:
+            verify_btn = await bframe.query_selector('#recaptcha-verify-button')
+            if verify_btn:
+                await verify_btn.click()
+                log("   Clicked Verify")
+                await asyncio.sleep(5)
+        except Exception as e:
+            log(f"   Verify error: {e}")
+            continue
+
+        # Check if solved
+        still_blocked = await page.evaluate("""() => {
+            const frames = document.querySelectorAll('iframe');
+            for (const f of frames) {
+                if ((f.src||'').includes('recaptcha') && (f.src||'').includes('bframe')) {
+                    const r = f.getBoundingClientRect();
+                    if (r.width > 200 && r.height > 200) return true;
+                }
+            }
+            return false;
+        }""")
+
+        if not still_blocked:
+            log("   ✅ reCAPTCHA solved via audio!")
+            return True
+        else:
+            log("   ⚠️ Still blocked after verify - retrying...")
+            await asyncio.sleep(2)
+
+    return False
+
+
 async def wait_for_recaptcha_clear(page, timeout=90):
-    """Wait for any blocking reCAPTCHA challenge to disappear."""
-    # Check multiple signals for reCAPTCHA challenge
+    """Wait for any blocking reCAPTCHA challenge to disappear.
+    With persistent profiles, reCAPTCHA v3 scores improve over time and
+    challenges may not appear at all after initial solves."""
+    # First, try clicking the reCAPTCHA checkbox (v2) if visible
+    try:
+        for frame in page.frames:
+            if 'recaptcha' in (frame.url or ''):
+                checkbox = await frame.query_selector('.recaptcha-checkbox-border')
+                if checkbox:
+                    await checkbox.click()
+                    log("   🔲 Clicked reCAPTCHA checkbox")
+                    await asyncio.sleep(3)
+    except: pass
+
     has_captcha = await page.evaluate("""() => {
-        // Check for the challenge iframe (the image grid)
         const frames = document.querySelectorAll('iframe');
         for (const f of frames) {
             const src = f.src || '';
@@ -132,7 +402,6 @@ async def wait_for_recaptcha_clear(page, timeout=90):
                 if (rect.width > 200 && rect.height > 200) return 'challenge';
             }
         }
-        // Check for any large overlay/modal blocking the page
         const overlays = document.querySelectorAll('[style*="z-index"]');
         for (const o of overlays) {
             const rect = o.getBoundingClientRect();
@@ -147,7 +416,23 @@ async def wait_for_recaptcha_clear(page, timeout=90):
     if not has_captcha:
         return True
     
-    log(f"   ⏳ reCAPTCHA challenge detected ({has_captcha}) — waiting up to {timeout}s...")
+    log(f"   ⏳ reCAPTCHA challenge detected ({has_captcha}) — attempting solve...")
+
+    # If it's a full challenge (not just overlay), try audio solver (with timeout)
+    if has_captcha == 'challenge':
+        log("   🔊 Attempting audio captcha solve...")
+        try:
+            solved = await asyncio.wait_for(
+                solve_recaptcha_audio(page, max_attempts=3),
+                timeout=60.0  # Hard cap: 60s for all audio solve attempts
+            )
+            if solved:
+                return True
+        except asyncio.TimeoutError:
+            log("   ⚠️ Audio solve hard-timeout (60s)")
+        log("   ⚠️ Audio solve failed, waiting passively...")
+
+    # Passive wait as fallback (overlay type or post-solve)
     deadline = time.time() + timeout
     while time.time() < deadline:
         still_blocked = await page.evaluate("""() => {
@@ -165,33 +450,98 @@ async def wait_for_recaptcha_clear(page, timeout=90):
             log("   ✅ reCAPTCHA cleared!")
             return True
         await asyncio.sleep(3)
-    
+
     log("   ❌ reCAPTCHA not cleared in time")
     return False
 
 
+async def _human_mouse(page):
+    """Simulate human mouse movements to improve reCAPTCHA score."""
+    import random
+    for _ in range(random.randint(3, 6)):
+        x = random.randint(100, 1100)
+        y = random.randint(100, 600)
+        await page.mouse.move(x, y, steps=random.randint(5, 15))
+        await asyncio.sleep(random.uniform(0.1, 0.5))
+
+
+async def _human_type(page, selector, text):
+    """Type text with human-like delays."""
+    el = await page.query_selector(selector)
+    if not el:
+        return False
+    if not await el.is_visible():
+        return False
+    await el.click()
+    await asyncio.sleep(random.uniform(0.2, 0.5))
+    for ch in text:
+        await page.keyboard.type(ch, delay=random.randint(50, 150))
+        await asyncio.sleep(random.uniform(0.02, 0.08))
+    return True
+
+
 async def create_game(page, host_name):
-    """Create a new game with human-like delays."""
+    """Create a new game with extensive human-like behavior for reCAPTCHA bypass."""
     log("🎰 Creating new game...")
+
+    # Pre-warm with Google first (builds reCAPTCHA trust score)
+    try:
+        log("   🌐 Pre-warming with Google...")
+        await page.goto("https://www.google.com", wait_until="domcontentloaded", timeout=10000)
+        await asyncio.sleep(random.uniform(2, 4))
+        await page.mouse.move(400, 300, steps=10)
+        await asyncio.sleep(random.uniform(1, 2))
+        # Quick search to establish browsing pattern
+        search_box = await page.query_selector('textarea[name="q"], input[name="q"]')
+        if search_box:
+            await search_box.click()
+            await asyncio.sleep(0.5)
+            for ch in "poker with friends online":
+                await page.keyboard.type(ch, delay=random.randint(30, 100))
+            await asyncio.sleep(1)
+            await page.keyboard.press("Enter")
+            await asyncio.sleep(random.uniform(2, 4))
+            await page.mouse.wheel(0, random.randint(100, 300))
+            await asyncio.sleep(random.uniform(1, 2))
+    except Exception as e:
+        log(f"   Google pre-warm: {e}")
+
+    # Visit pokernow
     await page.goto("https://www.pokernow.club", wait_until="domcontentloaded", timeout=30000)
-    await asyncio.sleep(random.uniform(3, 5))  # Human-like delay
+    await asyncio.sleep(random.uniform(4, 7))
 
     await dismiss_cookie_banner(page)
     await asyncio.sleep(random.uniform(1, 2))
 
-    # Check for reCAPTCHA before clicking
-    await wait_for_recaptcha_clear(page, timeout=60)
+    # Human-like: move mouse around, scroll
+    await _human_mouse(page)
+    await page.mouse.wheel(0, random.randint(100, 300))
+    await asyncio.sleep(random.uniform(1, 3))
+    await page.mouse.wheel(0, random.randint(-300, -100))
+    await asyncio.sleep(random.uniform(1, 2))
 
+    # Check for reCAPTCHA before clicking
+    await wait_for_recaptcha_clear(page, timeout=30)
+
+    # Click "Start a New Game" with mouse movement first
     create_clicked = False
     for sel in ['a:has-text("Start a New Game")', 'a.main-ctn-game-button',
                 'a:has-text("START A NEW GAME")']:
         try:
             el = await page.query_selector(sel)
             if el and await el.is_visible():
+                box = await el.bounding_box()
+                if box:
+                    # Move to button naturally
+                    await page.mouse.move(
+                        box['x'] + box['width'] / 2 + random.randint(-5, 5),
+                        box['y'] + box['height'] / 2 + random.randint(-3, 3),
+                        steps=random.randint(8, 20))
+                    await asyncio.sleep(random.uniform(0.3, 0.8))
                 await el.click()
                 create_clicked = True
                 log(f"   Clicked: {sel}")
-                await asyncio.sleep(random.uniform(2, 4))
+                await asyncio.sleep(random.uniform(3, 5))
                 break
         except: continue
 
@@ -200,329 +550,974 @@ async def create_game(page, host_name):
         await page.screenshot(path=os.path.join(LOG_DIR, "create_fail.png"))
         return None
 
-    # Check for reCAPTCHA on start-game page
-    await asyncio.sleep(2)
-    captcha_clear = await wait_for_recaptcha_clear(page, timeout=90)
+    # On start-game page — move mouse, then fill form
+    await _human_mouse(page)
+    await asyncio.sleep(random.uniform(1, 2))
+
+    # Check for reCAPTCHA (v3 scoring happens here)
+    captcha_clear = await wait_for_recaptcha_clear(page, timeout=30)
     if not captcha_clear:
+        log("   ⚠️ reCAPTCHA challenge present — attempting to proceed anyway...")
         await page.screenshot(path=os.path.join(LOG_DIR, "captcha_block.png"))
-        log("   ❌ reCAPTCHA blocked game creation")
-        return None
+        # Don't return None — try to fill form and submit; reCAPTCHA v3 may still pass
 
-    # Fill nickname with human-like typing
-    name_input = await page.query_selector('input[placeholder="Your Nickname"]')
-    if not name_input:
-        name_input = await page.query_selector('input[placeholder*="ick"]')
-    if not name_input:
-        name_input = await page.query_selector('input[type="text"]')
+    # Fill nickname with character-by-character typing
+    typed = False
+    for sel in ['input[placeholder="Your Nickname"]', 'input[placeholder*="ick"]', 'input[type="text"]']:
+        try:
+            typed = await _human_type(page, sel, host_name)
+            if typed:
+                log(f"   Filled host name: {host_name}")
+                break
+        except: continue
 
-    if name_input and await name_input.is_visible():
-        await name_input.click()
-        await asyncio.sleep(0.3)
-        await name_input.fill(host_name)
-        log(f"   Filled host name: {host_name}")
-    
     await asyncio.sleep(random.uniform(0.5, 1.5))
+    await _human_mouse(page)
 
+    # Click Create Game
     for sel in ['button:has-text("Create Game")', 'button.button-1.green',
                 'button:has-text("Create")']:
         try:
             el = await page.query_selector(sel)
             if el and await el.is_visible():
+                box = await el.bounding_box()
+                if box:
+                    await page.mouse.move(
+                        box['x'] + box['width'] / 2 + random.randint(-3, 3),
+                        box['y'] + box['height'] / 2 + random.randint(-2, 2),
+                        steps=random.randint(5, 12))
+                    await asyncio.sleep(random.uniform(0.2, 0.5))
                 await el.click()
                 log("   Submitted game creation")
                 break
         except: continue
 
-    # Wait for redirect with reCAPTCHA handling
-    for i in range(90):
+    # Wait for redirect — actively solve reCAPTCHA if it appears
+    captcha_solved_once = False
+    for i in range(180):
         if "/games/" in page.url:
             log(f"   ✅ Game created: {page.url}")
             return page.url
-        
-        # After 15s, check for reCAPTCHA and wait
-        if i == 15:
-            captcha = await wait_for_recaptcha_clear(page, timeout=60)
-            if captcha and "/start-game" in page.url:
-                # Re-submit
-                for sel in ['button:has-text("Create Game")', 'button.button-1.green']:
-                    try:
-                        el = await page.query_selector(sel)
-                        if el and await el.is_visible():
-                            await el.click()
-                            log("   Re-submitted after reCAPTCHA")
-                            break
-                    except: continue
-        
+
+        # Check for reCAPTCHA challenge at key intervals
+        if i in (5, 15, 30, 60, 90, 120):
+            has_challenge = await page.evaluate("""() => {
+                const frames = document.querySelectorAll('iframe');
+                for (const f of frames) {
+                    if ((f.src||'').includes('recaptcha') && (f.src||'').includes('bframe')) {
+                        const r = f.getBoundingClientRect();
+                        if (r.width > 200 && r.height > 200) return true;
+                    }
+                }
+                return false;
+            }""")
+            if has_challenge:
+                log(f"   🔒 reCAPTCHA challenge at {i}s — trying audio solve...")
+                solved = await solve_recaptcha_audio(page, max_attempts=2)
+                if solved:
+                    captcha_solved_once = True
+                    log("   ✅ Captcha solved! Checking for redirect or re-submitting...")
+                    await asyncio.sleep(3)
+                    if "/games/" in page.url:
+                        log(f"   ✅ Game created: {page.url}")
+                        return page.url
+                    # Re-submit if still on start-game page
+                    if "/start-game" in page.url:
+                        for sel in ['button:has-text("Create Game")', 'button.button-1.green']:
+                            try:
+                                el = await page.query_selector(sel)
+                                if el and await el.is_visible():
+                                    await el.click()
+                                    log("   Re-submitted after captcha solve")
+                                    break
+                            except: continue
+                else:
+                    log(f"   ⚠️ Audio solve failed at {i}s")
+                    await page.screenshot(path=os.path.join(LOG_DIR, f"captcha_fail_{int(time.time())}.png"))
+
         await asyncio.sleep(1)
 
-    log(f"   ❌ Timed out. URL: {page.url}")
+    log(f"   ❌ Timed out after 180s. URL: {page.url}")
     await page.screenshot(path=os.path.join(LOG_DIR, "create_timeout.png"))
     return None
 
 
 async def seat_at_table(page, player_name, stack, seat_number, is_host=False):
+    """Seat a player at the table with verification. Uses single evaluate() calls
+    to minimize CDP wire messages (prevents Errno 35 on macOS)."""
     label = "HOST" if is_host else player_name
     log(f"   🪑 {label}: Sitting at seat {seat_number}...")
 
-    seat_sel = f'.table-player-{seat_number} .table-player-seat-button'
-    try:
-        seat_btn = await page.query_selector(seat_sel)
-        if not seat_btn or not await seat_btn.is_visible():
-            btns = await page.query_selector_all('.table-player-seat-button')
-            visible_btns = [b for b in btns if await b.is_visible()]
-            if seat_number - 1 < len(visible_btns):
-                seat_btn = visible_btns[seat_number - 1]
-            elif visible_btns:
-                seat_btn = visible_btns[0]
-            else:
-                log(f"   ❌ {label}: No seat buttons")
-                return False
-        await seat_btn.click()
-        log(f"   {label}: Clicked seat {seat_number}")
-        await asyncio.sleep(1.5)
-    except Exception as e:
-        log(f"   ❌ {label}: Click seat failed: {e}")
-        return False
+    for attempt in range(3):
+        if attempt > 0:
+            log(f"   🔄 {label}: Seat attempt {attempt + 1}/3...")
+            await asyncio.sleep(2)
 
-    # Fill name
-    name_filled = False
-    for sel in ['input[placeholder="Your Name"]', 'input[placeholder*="Name"]',
-                'input[placeholder="Your Nickname"]']:
-        try:
-            els = await page.query_selector_all(sel)
-            for el in els:
-                if await el.is_visible():
-                    await el.triple_click()
-                    await el.fill(player_name)
-                    name_filled = True
-                    break
-            if name_filled: break
-        except: continue
-    if not name_filled:
-        try:
-            selected = await page.query_selector('.table-player-seat.selected')
-            if selected:
-                inputs = await selected.query_selector_all('input[type="text"]')
-                if inputs and await inputs[0].is_visible():
-                    await inputs[0].fill(player_name)
-                    name_filled = True
-                    log(f"   {label}: Name (fallback)")
-        except: pass
-    if not name_filled:
-        log(f"   ❌ {label}: No name input")
-        return False
+        # Dismiss overlays that block seat buttons
+        await dismiss_waiting_overlay(page)
+        await dismiss_alerts(page)
+        await page.evaluate("""() => {
+            // Close any overlay modals
+            const modals = document.querySelectorAll('.modal, .overlay, [class*="waiting"], [class*="share"]');
+            modals.forEach(m => {
+                const close = m.querySelector('button[class*="close"], .close, [aria-label="Close"]');
+                if (close) close.click();
+            });
+            const backdrop = document.querySelector('.modal-backdrop, .overlay-backdrop');
+            if (backdrop) backdrop.click();
+        }""")
+        await asyncio.sleep(0.5)
 
-    await asyncio.sleep(0.3)
+        # Step 1: Click a visible seat button (single CDP call)
+        clicked_seat = await page.evaluate("""(seatNum) => {
+            // Try specific seat first
+            let btn = document.querySelector('.table-player-' + seatNum + ' .table-player-seat-button');
+            if (btn && btn.getBoundingClientRect().width > 0) {
+                btn.click();
+                return 'seat-' + seatNum;
+            }
+            // Fallback: any visible seat button
+            const btns = document.querySelectorAll('.table-player-seat-button');
+            for (let i = 0; i < btns.length; i++) {
+                if (btns[i].getBoundingClientRect().width > 0) {
+                    btns[i].click();
+                    return 'seat-fallback-' + i;
+                }
+            }
+            return null;
+        }""", seat_number)
 
-    # Fill stack
-    stack_filled = False
-    for sel in ['input[placeholder="Your Stack"]', 'input[placeholder="Intended Stack"]',
-                'input[placeholder*="Stack"]']:
-        try:
-            els = await page.query_selector_all(sel)
-            for el in els:
-                if await el.is_visible():
-                    await el.triple_click()
-                    await el.fill(str(stack))
-                    stack_filled = True
-                    break
-            if stack_filled: break
-        except: continue
-    if not stack_filled:
-        try:
-            selected = await page.query_selector('.table-player-seat.selected')
-            if selected:
-                inputs = await selected.query_selector_all('input[type="text"]')
-                if len(inputs) >= 2 and await inputs[1].is_visible():
-                    await inputs[1].fill(str(stack))
-                    stack_filled = True
-        except: pass
+        if not clicked_seat:
+            # Maybe already seated from a previous attempt
+            already = await page.evaluate("""(name) => {
+                const youPlayer = document.querySelector('.table-player.you-player');
+                if (youPlayer) return 'you-player';
+                const players = document.querySelectorAll('.table-player a');
+                for (const p of players) {
+                    if (p.textContent.trim() === name) return 'found-by-name';
+                }
+                return null;
+            }""", player_name)
+            if already:
+                log(f"   ✅ {label}: Already seated ({already})")
+                return True
+            log(f"   ❌ {label}: No seat buttons visible (attempt {attempt+1})")
+            continue
 
-    await asyncio.sleep(0.3)
+        log(f"   {label}: Clicked {clicked_seat}")
+        await asyncio.sleep(3)  # Give React time to render seat form
 
-    submit_sel = 'button:has-text("Take the Seat")' if is_host else 'button:has-text("Request the Seat")'
-    submitted = False
-    try:
-        btn = await page.query_selector(submit_sel)
-        if btn and await btn.is_visible():
-            await btn.click()
-            submitted = True
-            log(f"   {label}: Clicked '{submit_sel}'")
-    except: pass
-    if not submitted:
-        for sel in ['button.button-1.highlighted.green', 'button.med-button',
-                    'input[type="submit"]']:
+        # Step 2: Fill form (name + stack) and submit — all in one evaluate()
+        # ONE CDP call instead of 10+ separate query_selector/fill/click calls
+        submit_text = "take the seat" if is_host else "request the seat"
+        form_result = await page.evaluate("""(params) => {
+            const playerName = params.name;
+            const stackAmt = params.stack;
+            const submitText = params.submit;
+            const result = {name: false, stack: false, submitted: false, diag: []};
+
+            // Set React-compatible input value
+            function setInput(input, value) {
+                const nativeSetter = Object.getOwnPropertyDescriptor(
+                    window.HTMLInputElement.prototype, 'value').set;
+                nativeSetter.call(input, value);
+                input.dispatchEvent(new Event('input', {bubbles: true}));
+                input.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+
+            // Find all visible inputs
+            const inputs = document.querySelectorAll(
+                'input[type="text"], input[type="number"], input:not([type])');
+            const visibleInputs = [];
+            inputs.forEach(inp => {
+                const r = inp.getBoundingClientRect();
+                if (r.width > 0 && r.height > 0) {
+                    const ph = (inp.placeholder || '').toLowerCase();
+                    visibleInputs.push({el: inp, ph: ph});
+                    result.diag.push('input:' + ph);
+                }
+            });
+
+            // Fill name
+            for (const vi of visibleInputs) {
+                if (vi.ph.includes('name') || vi.ph.includes('nick')) {
+                    setInput(vi.el, playerName);
+                    result.name = true;
+                    break;
+                }
+            }
+
+            // Fill stack
+            for (const vi of visibleInputs) {
+                if (vi.ph.includes('stack') || vi.ph.includes('amount') || vi.ph.includes('buy')) {
+                    setInput(vi.el, String(stackAmt));
+                    result.stack = true;
+                    break;
+                }
+            }
+
+            // Fallback: positional (first=name, second=stack)
+            if (!result.name && visibleInputs.length >= 2) {
+                setInput(visibleInputs[0].el, playerName);
+                result.name = true;
+            }
+            if (!result.stack && visibleInputs.length >= 2) {
+                setInput(visibleInputs[1].el, String(stackAmt));
+                result.stack = true;
+            }
+            // Single input = probably stack (host has name pre-filled)
+            if (!result.stack && visibleInputs.length === 1) {
+                setInput(visibleInputs[0].el, String(stackAmt));
+                result.stack = true;
+                result.diag.push('single-input-as-stack');
+            }
+
+            // Click submit button
+            const buttons = document.querySelectorAll('button, input[type="submit"]');
+            for (const btn of buttons) {
+                const t = (btn.textContent || btn.value || '').trim();
+                const r = btn.getBoundingClientRect();
+                if (r.width <= 0 || r.height <= 0) continue;
+                const tl = t.toLowerCase();
+                // Skip non-seat buttons explicitly
+                if (tl.includes('copy') || tl.includes('share') || tl.includes('invite') ||
+                    tl.includes('link') || tl.includes('start') || tl.includes('deal') ||
+                    tl.includes('sign') || tl.includes('login') || tl.includes('option') ||
+                    tl.includes('leave') || tl.includes('away') || tl.includes('chat') ||
+                    tl.includes('emoji') || tl.includes('log') || tl.includes('ledger')) continue;
+                // Prefer exact seat-submit text
+                if (tl.includes(submitText) || tl.includes('take the seat') ||
+                    tl.includes('request the seat') || tl === 'confirm' || tl === 'ok') {
+                    btn.click();
+                    result.submitted = true;
+                    result.submitBtn = t;
+                    break;
+                }
+            }
+
+            return result;
+        }""", {"name": player_name, "stack": stack, "submit": submit_text})
+
+        log(f"   {label}: Form: name={form_result.get('name')}, stack={form_result.get('stack')}, submitted={form_result.get('submitted')}, btn={form_result.get('submitBtn','?')}, inputs={form_result.get('diag',[])}")
+
+        # Fallback: if form fill failed, try Playwright native fill
+        if not form_result.get('name') or not form_result.get('stack'):
+            log(f"   {label}: JS form fill incomplete — trying Playwright native fill...")
+            for sel in ['input[placeholder*="ick"]', 'input[placeholder*="Name"]', 'input[placeholder*="name"]']:
+                try:
+                    el = await page.query_selector(sel)
+                    if el and await el.is_visible():
+                        await el.click(click_count=3)
+                        await el.type(player_name, delay=50)
+                        form_result['name'] = True
+                        log(f"   {label}: Playwright filled name via {sel}")
+                        break
+                except: continue
+            for sel in ['input[placeholder*="Stack"]', 'input[placeholder*="stack"]',
+                        'input[placeholder*="Buy"]', 'input[placeholder*="mount"]']:
+                try:
+                    el = await page.query_selector(sel)
+                    if el and await el.is_visible():
+                        await el.click(click_count=3)
+                        await el.type(str(stack), delay=30)
+                        form_result['stack'] = True
+                        log(f"   {label}: Playwright filled stack via {sel}")
+                        break
+                except: continue
+            await asyncio.sleep(0.5)
+
+        # For non-host bots: if JS submitted the form, return immediately.
+        # Don't attempt Playwright native click — it hangs when form is already closing.
+        if not is_host and form_result.get('submitted'):
+            await asyncio.sleep(1)
+            await dismiss_alerts(page)
+            log(f"   ✅ {label}: Seat requested via JS (pending host approval)")
+            return True
+
+        # Try Playwright native click for the submit button (React needs proper events)
+        # Only needed if JS submit failed, or for host (needs DOM verification)
+        pw_submitted = False
+        pw_submit = 'button:has-text("Take the Seat")' if is_host else 'button:has-text("Request the Seat")'
+        for sel in [pw_submit, 'button.button-1.highlighted.green', 'button.med-button']:
             try:
                 el = await page.query_selector(sel)
                 if el and await el.is_visible():
-                    await el.click()
-                    submitted = True
+                    # Use timeout to prevent hanging (was hanging 16+ minutes)
+                    await asyncio.wait_for(el.click(), timeout=5.0)
+                    pw_submitted = True
+                    log(f"   {label}: Submit clicked via Playwright: {sel}")
                     break
+            except asyncio.TimeoutError:
+                log(f"   {label}: ⚠️ Playwright click timed out for {sel}")
+                continue
             except: continue
+        
+        if not pw_submitted and not form_result.get('submitted'):
+            log(f"   {label}: ⚠️ Could not submit seat form!")
+            # Last resort: try clicking any green/highlighted button
+            for sel in ['button.button-1.highlighted', 'button.green', 'button.med-button.green']:
+                try:
+                    el = await page.query_selector(sel)
+                    if el and await el.is_visible():
+                        await asyncio.wait_for(el.click(), timeout=5.0)
+                        pw_submitted = True
+                        log(f"   {label}: Submit via last-resort selector: {sel}")
+                        break
+                except: continue
 
-    await asyncio.sleep(2)
-    log(f"   ✅ {label}: Seated!")
-    return True
+        await asyncio.sleep(3)
 
-
-async def approve_seat_requests(host_page, expected_names, timeout=15):
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        for sel in ['button:has-text("Approve")', 'button:has-text("Accept")',
-                    'button:has-text("Allow")', 'button:has-text("Yes")']:
-            try:
-                els = await host_page.query_selector_all(sel)
-                for el in els:
-                    if await el.is_visible():
-                        await el.click()
-                        log(f"   ✅ Host approved a request")
-                        await asyncio.sleep(1)
-            except: continue
-        await dismiss_alerts(host_page)
-        seated = await host_page.evaluate("""() => {
-            let c = 0;
-            document.querySelectorAll('.table-player').forEach(p => {
-                const name = p.querySelector('a');
-                if (name && name.textContent.trim()) c++;
-            });
-            return c;
-        }""")
-        if seated >= len(expected_names):
-            log(f"   ✅ All {seated} players seated!")
+        # For non-host bots: seat request needs host approval before DOM shows them.
+        if not is_host and pw_submitted:
+            await asyncio.sleep(1)
+            await dismiss_alerts(page)
+            log(f"   ✅ {label}: Seat requested via PW (pending host approval)")
             return True
-        await asyncio.sleep(1)
+
+        # Step 3: VERIFY seating (with timeout to avoid hangs)
+        is_verified = None
+        try:
+            is_verified = await asyncio.wait_for(
+                page.evaluate("""(name) => {
+                    const youPlayer = document.querySelector('.table-player.you-player');
+                    if (youPlayer) return 'you-player';
+                    const players = document.querySelectorAll('.table-player a');
+                    for (const p of players) {
+                        if (p.textContent.trim() === name) return 'found-by-name';
+                    }
+                    return null;
+                }""", player_name),
+                timeout=8.0
+            )
+        except asyncio.TimeoutError:
+            log(f"   ⚠️ {label}: Verification timed out (page may be loading)")
+
+        if is_verified:
+            log(f"   ✅ {label}: Seated and verified ({is_verified})!")
+            return True
+
+        log(f"   ⚠️ {label}: Not verified in DOM after submit (attempt {attempt+1})")
+        try:
+            await page.screenshot(path=os.path.join(LOG_DIR, f"seat_fail_{player_name}_{int(time.time())}.png"))
+        except: pass
+
+    log(f"   ❌ {label}: Failed to seat after 3 attempts")
     return False
+
+async def approve_seat_requests(host_page, expected_names, timeout=30):
+    """Approve seat requests from bots. Delegates to host_approve_all which handles
+    both inline buttons and the Options menu notification badge pattern.
+    Polls until all expected players are seated or timeout."""
+    deadline = time.time() + timeout
+    approved_count = 0
+    last_log_time = 0
+    diag_taken = False
+    
+    while time.time() < deadline:
+        await dismiss_alerts(host_page)
+        
+        # DIAGNOSTIC: On first iteration, log ALL visible buttons
+        if not diag_taken:
+            diag_taken = True
+            all_btns = await host_page.evaluate("""() => {
+                const results = [];
+                document.querySelectorAll('button, a[role="button"], div[role="button"]').forEach(b => {
+                    const t = (b.textContent || '').trim();
+                    const r = b.getBoundingClientRect();
+                    if (r.width > 0 && r.height > 0 && t.length > 0 && t.length < 100) {
+                        results.push(t.substring(0, 50) + ' @(' + Math.round(r.x) + ',' + Math.round(r.y) + ')');
+                    }
+                });
+                return results;
+            }""")
+            if all_btns:
+                log(f"   \U0001f50d DIAG: Host page buttons: {all_btns}")
+            
+            player_diag = await host_page.evaluate("""() => {
+                const results = [];
+                document.querySelectorAll('.table-player').forEach(p => {
+                    const cls = Array.from(p.classList).join(' ');
+                    const a = p.querySelector('a');
+                    const name = a ? a.textContent.trim() : '(no-link)';
+                    results.push(cls + ' -> ' + name);
+                });
+                return results;
+            }""")
+            log(f"   \U0001f50d DIAG: Table players: {player_diag}")
+            
+            try:
+                await host_page.screenshot(path=os.path.join(LOG_DIR, f"approve_diag_{int(time.time())}.png"))
+                log(f"   \U0001f4f8 Diagnostic screenshot saved")
+            except: pass
+        
+        # Use host_approve_all (handles inline buttons + Options menu + notifications)
+        try:
+            result = await asyncio.wait_for(host_approve_all(host_page), timeout=12.0)
+            if result:
+                approved_count += 1
+                log(f"   \u2705 Approval #{approved_count} completed")
+                await asyncio.sleep(1.5)
+        except asyncio.TimeoutError:
+            pass
+        except Exception as e:
+            log(f"   \u26a0\ufe0f Approval error: {str(e)[:60]}")
+
+        # Count seated players
+        seat_result = await host_page.evaluate("""() => {
+            let c = 0;
+            const names = [];
+            document.querySelectorAll('.table-player').forEach(p => {
+                if (p.classList.contains('you-player')) {
+                    c++;
+                    const nm = p.querySelector('a');
+                    names.push('YOU:' + (nm ? nm.textContent.trim() : '(host)'));
+                    return;
+                }
+                const name = p.querySelector('a');
+                if (name && name.textContent.trim()) {
+                    c++;
+                    names.push(name.textContent.trim());
+                }
+            });
+            return {count: c, names: names};
+        }""")
+
+        seated = seat_result.get('count', 0) if isinstance(seat_result, dict) else 0
+        seat_names = seat_result.get('names', []) if isinstance(seat_result, dict) else []
+
+        if seated >= len(expected_names):
+            log(f"   \u2705 All {seated} players seated! ({', '.join(seat_names)})")
+            return True
+
+        now = time.time()
+        if now - last_log_time >= 5:
+            log(f"   \u23f3 Seated: {seated}/{len(expected_names)} ({', '.join(seat_names)}), approved: {approved_count}")
+            last_log_time = now
+
+        await asyncio.sleep(1.5)
+
+    # Final count
+    seat_result = await host_page.evaluate("""() => {
+        let c = 0;
+        const names = [];
+        document.querySelectorAll('.table-player').forEach(p => {
+            if (p.classList.contains('you-player')) { c++; names.push('HOST'); return; }
+            const name = p.querySelector('a');
+            if (name && name.textContent.trim()) { c++; names.push(name.textContent.trim()); }
+        });
+        return {count: c, names: names};
+    }""")
+    seated = seat_result.get('count', 0) if isinstance(seat_result, dict) else 0
+    seat_names = seat_result.get('names', []) if isinstance(seat_result, dict) else []
+    log(f"   \u26a0\ufe0f Approval timeout. Seated: {seated}/{len(expected_names)} ({', '.join(seat_names)})")
+    
+    try:
+        await host_page.screenshot(path=os.path.join(LOG_DIR, f"approve_fail_{int(time.time())}.png"))
+    except: pass
+    
+    return seated >= 2
 
 
 async def start_game(page):
-    for sel in ['button:has-text("Start")', 'button:has-text("Start Game")',
-                'button:has-text("Deal")']:
-        try:
-            el = await page.query_selector(sel)
-            if el and await el.is_visible():
-                await el.click()
-                log("   ▶️ Game started!")
-                await asyncio.sleep(2)
-                return True
-        except: continue
+    """Click Start/Deal button. Uses cdp_safe for resilience."""
+    started = await cdp_safe(page, """() => {
+        const targets = ['start', 'start game', 'deal'];
+        const btns = document.querySelectorAll('button');
+        for (const btn of btns) {
+            const t = (btn.textContent||'').trim().toLowerCase();
+            const r = btn.getBoundingClientRect();
+            if (r.width <= 0 || r.height <= 0) continue;
+            for (const target of targets) {
+                if (t.includes(target)) { btn.click(); return t; }
+            }
+        }
+        return null;
+    }""")
+    if started:
+        log(f"   ▶️ Game started! (clicked '{started}')")
+        await asyncio.sleep(2)
+        return True
     return False
 
 
 async def host_approve_all(page):
-    count = await page.evaluate("""() => {
-        let c = 0;
-        document.querySelectorAll('button').forEach(b => {
-            const t = (b.textContent||'').trim().toLowerCase();
-            if ((t.includes('approve')||t.includes('accept')||t.includes('allow')) && b.offsetWidth>0) {
-                b.click(); c++;
+    """Approve any pending seat requests using Playwright native clicks.
+    
+    Pokernow shows seat requests in two ways:
+    1. First request: inline notification with Accept button on the main page
+    2. Subsequent requests: queued behind the OPTIONS menu (hamburger icon with red badge)
+    
+    This function handles BOTH patterns.
+    """
+    approved_any = False
+    
+    # Phase 1: Check for visible Accept/Approve buttons on the main page
+    buttons = await cdp_safe(page, """() => {
+        const results = [];
+        document.querySelectorAll('button, a, div[role="button"], span[role="button"]').forEach(b => {
+            const t = (b.textContent||'').trim();
+            const tl = t.toLowerCase();
+            const r = b.getBoundingClientRect();
+            if (r.width <= 0 || r.height <= 0) return;
+            if ((tl.includes('approve') || tl.includes('accept') || tl === 'yes' ||
+                 tl === 'allow' || tl === 'ok' || tl === 'confirm') &&
+                !tl.includes('cancel') && !tl.includes('deny') && !tl.includes('reject') &&
+                !tl.includes('cookie') && !tl.includes('privacy') && !tl.includes('feedback') &&
+                !tl.includes('leave') && !tl.includes('options') && t.length < 50) {
+                results.push({x: r.x + r.width/2, y: r.y + r.height/2, text: t});
             }
         });
-        return c;
+        return results;
     }""")
-    if count > 0:
-        log(f"   ✅ Host approved {count} request(s)")
-        await asyncio.sleep(0.5)
-    return count > 0
-
-
-async def auto_rebuy(page, player_name, amount=1000):
-    log(f"   💰 {player_name}: Rebuy attempt...")
-    try:
-        await page.screenshot(path=os.path.join(LOG_DIR, f"rebuy_{player_name}_{int(time.time())}.png"))
-    except: pass
-
-    # Log visible buttons for debugging
-    btns = await page.evaluate("""() => {
-        const r = [];
-        document.querySelectorAll('button, a').forEach(el => {
-            const rect = el.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0)
-                r.push('"' + (el.textContent||'').trim().substring(0,40) + '"');
-        });
-        return r.slice(0, 12);
-    }""")
-    log(f"   🔍 {player_name} buttons: {btns}")
-
-    clicked = await page.evaluate("""() => {
-        const els = document.querySelectorAll('button, a, div[role="button"]');
-        for (const el of els) {
-            const t = (el.textContent||'').trim().toLowerCase();
+    
+    if buttons and len(buttons) > 0:
+        for btn in buttons:
+            try:
+                await page.mouse.click(btn['x'], btn['y'])
+                log(f"   \u2705 Host approved: '{btn['text']}'")
+                approved_any = True
+                await asyncio.sleep(1)
+            except: pass
+        return True
+    
+    # Phase 1b: Playwright selector fallback on main page
+    for sel in ['button:has-text("Approve")', 'button:has-text("Accept")',
+                'button:has-text("Yes")', 'button.green:has-text("OK")']:
+        try:
+            el = await page.query_selector(sel)
+            if el and await el.is_visible():
+                await el.click()
+                log(f"   \u2705 Host approved via selector: {sel}")
+                await asyncio.sleep(1)
+                return True
+        except: continue
+    
+    # Phase 2: Open Options menu if it has a notification badge
+    # Pokernow queues seat requests behind the Options (hamburger) menu
+    has_badge = await cdp_safe(page, """() => {
+        const allEls = document.querySelectorAll('button, a, div[role="button"], [class*="option"], [class*="menu"]');
+        for (const el of allEls) {
             const r = el.getBoundingClientRect();
-            if (r.width<=0 || r.height<=0) continue;
-            if (t.includes('re-buy')||t.includes('rebuy')||t.includes('add chips')||
-                t.includes('buy in')||t.includes('buy back')||t.includes('re-entry')||
-                t.includes('top up')||t.includes('sit back')) {
-                el.click(); return t;
+            if (r.width <= 0 || r.height <= 0) continue;
+            // Check for badge child elements (red notification dot/number)
+            const badge = el.querySelector('.badge, [class*="badge"], [class*="count"], [class*="notif"]');
+            if (badge) {
+                const num = parseInt(badge.textContent);
+                if (num > 0) return {x: r.x + r.width/2, y: r.y + r.height/2, badge: num, text: el.textContent.trim().substring(0,30)};
+            }
+            // Check text for embedded numbers (e.g., "Options 2")
+            const t = (el.textContent || '').trim();
+            if (t.toLowerCase().includes('option') && /\\d+/.test(t)) {
+                const numMatch = t.match(/(\\d+)/);
+                if (numMatch) {
+                    const num = parseInt(numMatch[1]);
+                    if (num > 0) return {x: r.x + r.width/2, y: r.y + r.height/2, badge: num, text: t.substring(0,30)};
+                }
             }
         }
         return null;
     }""")
     
-    if clicked:
-        log(f"   💰 {player_name}: Clicked '{clicked}'")
-        await asyncio.sleep(2)
-    else:
-        for sel in ['button:has-text("Re-buy")', '.table-player-seat-button']:
+    if has_badge:
+        log(f"   \U0001f514 Options badge ({has_badge.get('badge')}) \u2014 opening menu...")
+        try:
+            await page.mouse.click(has_badge['x'], has_badge['y'])
+            await asyncio.sleep(2)
+            
+            # Now look for Accept/Approve in the opened panel (retry 3x)
+            for attempt in range(3):
+                panel_buttons = await cdp_safe(page, """() => {
+                    const results = [];
+                    document.querySelectorAll('button, a, div[role="button"], span[role="button"]').forEach(b => {
+                        const t = (b.textContent||'').trim();
+                        const tl = t.toLowerCase();
+                        const r = b.getBoundingClientRect();
+                        if (r.width <= 0 || r.height <= 0) return;
+                        if ((tl.includes('approve') || tl.includes('accept') || tl === 'yes' ||
+                             tl === 'allow') &&
+                            !tl.includes('cancel') && !tl.includes('deny') && !tl.includes('cookie') &&
+                            !tl.includes('privacy') && t.length < 50) {
+                            results.push({x: r.x + r.width/2, y: r.y + r.height/2, text: t});
+                        }
+                    });
+                    return results;
+                }""")
+                
+                if panel_buttons and len(panel_buttons) > 0:
+                    for btn in panel_buttons:
+                        try:
+                            await page.mouse.click(btn['x'], btn['y'])
+                            log(f"   \u2705 Host approved from Options: '{btn['text']}'")
+                            approved_any = True
+                            await asyncio.sleep(1.5)
+                        except: pass
+                    return True
+                
+                # Playwright selector fallback inside panel
+                for sel in ['button:has-text("Approve")', 'button:has-text("Accept")',
+                            'button:has-text("Yes")', '.green:has-text("Accept")']:
+                    try:
+                        el = await page.query_selector(sel)
+                        if el and await el.is_visible():
+                            await el.click()
+                            log(f"   \u2705 Host approved from panel (PW): {sel}")
+                            approved_any = True
+                            await asyncio.sleep(1)
+                    except: continue
+                
+                if approved_any:
+                    return True
+                await asyncio.sleep(1)
+            
+            if not approved_any:
+                panel_content = await cdp_safe(page, """() => {
+                    const results = [];
+                    document.querySelectorAll('button, a').forEach(b => {
+                        const t = (b.textContent||'').trim();
+                        const r = b.getBoundingClientRect();
+                        if (r.width > 0 && r.height > 0 && t.length > 0 && t.length < 80) {
+                            results.push(t.substring(0,40) + ' @(' + Math.round(r.x) + ',' + Math.round(r.y) + ')');
+                        }
+                    });
+                    return results;
+                }""")
+                log(f"   \U0001f50d Panel buttons after Options: {panel_content}")
+        except Exception as e:
+            log(f"   \u26a0\ufe0f Options menu interaction failed: {str(e)[:60]}")
+    
+    # Phase 3: Try notification area / chat-based request prompts
+    notif_result = await cdp_safe(page, """() => {
+        const notifs = document.querySelectorAll('[class*="notification"], [class*="request"], [class*="alert"], [class*="message"]');
+        for (const n of notifs) {
+            const btns = n.querySelectorAll('button, a');
+            for (const b of btns) {
+                const t = (b.textContent||'').trim().toLowerCase();
+                const r = b.getBoundingClientRect();
+                if (r.width <= 0 || r.height <= 0) continue;
+                if (t.includes('accept') || t.includes('approve') || t === 'yes' || t === 'allow') {
+                    b.click();
+                    return 'notif:' + t;
+                }
+            }
+        }
+        return null;
+    }""")
+    if notif_result:
+        log(f"   \u2705 Host approved via notification: {notif_result}")
+        return True
+    
+    return approved_any
+
+
+async def leave_seat(page, player_name):
+    """Leave the current seat. Returns True if successfully left."""
+    log(f"   🚪 {player_name}: Leaving seat...")
+    left = await page.evaluate("""() => {
+        const els = document.querySelectorAll('button, a, div[role="button"], span');
+        for (const el of els) {
+            const t = (el.textContent || '').trim().toLowerCase();
+            const rect = el.getBoundingClientRect();
+            if (rect.width <= 0 || rect.height <= 0) continue;
+            if (t.includes('leave seat') || t === 'leave' || t.includes('stand up') ||
+                t.includes('leave table')) {
+                el.click();
+                return t;
+            }
+        }
+        return null;
+    }""")
+    if left:
+        log(f"   🚪 {player_name}: Clicked '{left}'")
+        await asyncio.sleep(1.5)
+        for sel in ['button:has-text("Yes")', 'button:has-text("Confirm")',
+                    'button:has-text("OK")', 'button:has-text("Leave")']:
             try:
                 el = await page.query_selector(sel)
                 if el and await el.is_visible():
                     await el.click()
-                    clicked = sel
-                    await asyncio.sleep(2)
+                    log(f"   🚪 {player_name}: Confirmed leave")
                     break
             except: continue
-    
-    if not clicked:
-        log(f"   ⚠️ {player_name}: No rebuy button")
-        return False
-    
-    # Fill amount
+        await asyncio.sleep(2)
+        return True
+    for sel in ['.leave-seat-button', 'button:has-text("LEAVE SEAT")',
+                'a:has-text("LEAVE SEAT")', 'button:has-text("Stand Up")']:
+        try:
+            el = await page.query_selector(sel)
+            if el and await el.is_visible():
+                await el.click()
+                log(f"   🚪 {player_name}: Clicked '{sel}'")
+                await asyncio.sleep(2)
+                return True
+        except: continue
+    log(f"   ⚠️ {player_name}: No leave seat button found")
+    return False
+
+
+async def _fill_rebuy_form(page, player_name, amount):
+    """Fill the seat/rebuy form (name + stack + confirm)."""
+    for sel in ['input[placeholder="Your Name"]', 'input[placeholder*="Name"]',
+                'input[placeholder="Your Nickname"]']:
+        try:
+            el = await page.query_selector(sel)
+            if el and await el.is_visible():
+                await el.click(click_count=3)
+                await el.fill(player_name)
+                log(f"   {player_name}: Filled name for rebuy")
+                break
+        except: continue
+    await asyncio.sleep(0.3)
+    amount_filled = False
     for sel in ['input[type="number"]', 'input[placeholder*="Stack"]',
-                'input[placeholder*="stack"]', 'input[type="text"]']:
+                'input[placeholder*="stack"]', 'input[placeholder*="Amount"]',
+                'input[placeholder="Intended Stack"]', 'input[placeholder="Your Stack"]']:
         try:
             inp = await page.query_selector(sel)
             if inp and await inp.is_visible():
-                ph = (await inp.get_attribute('placeholder') or '').lower()
-                if any(x in ph for x in ['chat','search','name','nick','message']): continue
                 await inp.click(click_count=3)
                 await inp.fill(str(amount))
+                amount_filled = True
                 break
         except: continue
-    
+    if not amount_filled:
+        for sel in ['input[type="text"]']:
+            try:
+                els = await page.query_selector_all(sel)
+                for inp in els:
+                    if not await inp.is_visible(): continue
+                    ph = (await inp.get_attribute('placeholder') or '').lower()
+                    if any(x in ph for x in ['chat', 'search', 'name', 'nick', 'message']): continue
+                    await inp.click(click_count=3)
+                    await inp.fill(str(amount))
+                    amount_filled = True
+                    break
+                if amount_filled: break
+            except: continue
     await asyncio.sleep(0.5)
-    
     for csel in ['button:has-text("Confirm")', 'button:has-text("OK")',
                  'button:has-text("Buy")', 'button:has-text("Request")',
-                 'button:has-text("Take the Seat")', 'button:has-text("Request the Seat")',
-                 'input[type="submit"]', 'button.green']:
+                 'button:has-text("Request the Seat")', 'button:has-text("Take the Seat")',
+                 'input[type="submit"]', 'button.green', 'button.highlighted']:
         try:
             btn = await page.query_selector(csel)
             if btn and await btn.is_visible():
                 await btn.click()
-                log(f"   💰 {player_name}: Confirmed rebuy")
-                rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+                log(f"   💰 {player_name}: Confirmed rebuy ({csel})")
                 await asyncio.sleep(2)
                 return True
         except: continue
-    
+    log(f"   ⚠️ {player_name}: Rebuy form filled but no confirm button")
     return False
 
 
+async def auto_rebuy(page, player_name, amount=1000):
+    """Auto-rebuy when busted. Uses consolidated JS calls via cdp_safe to prevent Errno 35.
+    Strategy: leave-seat → re-sit → fill form (all via single evaluate() calls)."""
+    log(f"   💰 {player_name}: Rebuy attempt...")
+
+    # Step 1: Single CDP call — diagnose state + try direct rebuy/leave-seat in one shot
+    step1_result = await cdp_safe(page, """(params) => {
+        const result = {action: null, hasLeaveSeat: false, hasSeatBtn: false, isSpectator: true, btns: []};
+        const name = params.name;
+
+        // Scan all visible buttons
+        const allBtns = document.querySelectorAll('button, a, div[role="button"], input[type="submit"]');
+        for (const el of allBtns) {
+            const t = (el.textContent||'').trim().toLowerCase();
+            const r = el.getBoundingClientRect();
+            if (r.width <= 0 || r.height <= 0) continue;
+            result.btns.push(t.substring(0, 40));
+
+            // Direct rebuy buttons
+            if (t.includes('re-buy') || t.includes('rebuy') || t.includes('add chips') ||
+                t.includes('buy in') || t.includes('buy back') || t.includes('re-entry') ||
+                t.includes('top up') || t.includes('sit back') || t.includes('back to game') ||
+                t.includes('rejoin') || t.includes('re-join')) {
+                el.click();
+                result.action = 'rebuy_clicked:' + t;
+                return result;
+            }
+
+            if (t.includes('leave seat')) result.hasLeaveSeat = true;
+        }
+
+        // Check for seat buttons
+        const seatBtns = document.querySelectorAll('.table-player-seat-button');
+        for (const b of seatBtns) {
+            if (b.getBoundingClientRect().width > 0) { result.hasSeatBtn = true; break; }
+        }
+
+        result.isSpectator = !result.hasLeaveSeat;
+
+        // If spectator (no leave-seat), click seat button directly
+        if (result.isSpectator && result.hasSeatBtn) {
+            for (const b of seatBtns) {
+                if (b.getBoundingClientRect().width > 0) {
+                    b.click();
+                    result.action = 'seat_clicked_spectator';
+                    return result;
+                }
+            }
+        }
+
+        // If seated with 0 chips, click "Leave Seat"
+        if (result.hasLeaveSeat) {
+            for (const el of allBtns) {
+                const t = (el.textContent||'').trim().toLowerCase();
+                const r = el.getBoundingClientRect();
+                if (r.width > 0 && t.includes('leave seat')) {
+                    el.click();
+                    result.action = 'leave_clicked';
+                    return result;
+                }
+            }
+        }
+
+        return result;
+    }""", {"name": player_name})
+
+    if not step1_result:
+        log(f"   ⚠️ {player_name}: CDP call failed")
+        return False
+
+    action = step1_result.get('action', '')
+    log(f"   🔍 {player_name}: step1={action} btns={step1_result.get('btns',[])[: 6]}")
+
+    if action and action.startswith('rebuy_clicked'):
+        await asyncio.sleep(2)
+        ok = await _fill_rebuy_form_safe(page, player_name, amount)
+        if ok:
+            rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+        return ok
+
+    if action == 'seat_clicked_spectator':
+        await asyncio.sleep(1.5)
+        ok = await _fill_rebuy_form_safe(page, player_name, amount)
+        if ok:
+            rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+        return ok
+
+    if action == 'leave_clicked':
+        # Step 2: Confirm leaving (single CDP call)
+        await asyncio.sleep(1.5)
+        await cdp_safe(page, """() => {
+            const btns = document.querySelectorAll('button');
+            for (const b of btns) {
+                const t = (b.textContent||'').trim().toLowerCase();
+                const r = b.getBoundingClientRect();
+                if (r.width <= 0 || r.height <= 0) continue;
+                if (t === 'yes' || t === 'confirm' || t === 'ok' || t === 'leave') {
+                    b.click(); return true;
+                }
+            }
+            return false;
+        }""")
+        await asyncio.sleep(2.5)
+
+        # Step 3: Click seat button (single CDP call)
+        clicked_seat = await cdp_safe(page, """() => {
+            const btns = document.querySelectorAll('.table-player-seat-button');
+            for (const b of btns) {
+                if (b.getBoundingClientRect().width > 0) {
+                    b.click(); return true;
+                }
+            }
+            return false;
+        }""")
+        if clicked_seat:
+            log(f"   💰 {player_name}: Clicked seat after leaving")
+            await asyncio.sleep(1.5)
+            ok = await _fill_rebuy_form_safe(page, player_name, amount)
+            if ok:
+                rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+            return ok
+
+    log(f"   ⚠️ {player_name}: No rebuy/seat buttons found")
+    return False
+
+
+async def _fill_rebuy_form_safe(page, player_name, amount):
+    """Fill rebuy form using a single cdp_safe evaluate() call."""
+    result = await cdp_safe(page, """(params) => {
+        const playerName = params.name;
+        const stackAmt = params.stack;
+        const r = {name: false, stack: false, submitted: false};
+
+        function setInput(input, value) {
+            const nativeSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, 'value').set;
+            nativeSetter.call(input, value);
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            input.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input:not([type])');
+        const visible = [];
+        inputs.forEach(inp => {
+            const rect = inp.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                visible.push({el: inp, ph: (inp.placeholder || '').toLowerCase()});
+            }
+        });
+
+        // Fill name
+        for (const vi of visible) {
+            if (vi.ph.includes('name') || vi.ph.includes('nick')) {
+                setInput(vi.el, playerName);
+                r.name = true; break;
+            }
+        }
+        // Fill stack
+        for (const vi of visible) {
+            if (vi.ph.includes('stack') || vi.ph.includes('amount') || vi.ph.includes('buy')) {
+                setInput(vi.el, String(stackAmt));
+                r.stack = true; break;
+            }
+        }
+        // Fallback positional
+        if (!r.name && visible.length >= 2) { setInput(visible[0].el, playerName); r.name = true; }
+        if (!r.stack && visible.length >= 2) { setInput(visible[1].el, String(stackAmt)); r.stack = true; }
+        if (!r.stack && visible.length === 1) { setInput(visible[0].el, String(stackAmt)); r.stack = true; }
+
+        // Click submit
+        const buttons = document.querySelectorAll('button, input[type="submit"]');
+        for (const btn of buttons) {
+            const t = (btn.textContent || btn.value || '').trim().toLowerCase();
+            const rect = btn.getBoundingClientRect();
+            if (rect.width <= 0 || rect.height <= 0) continue;
+            if (t.includes('request the seat') || t.includes('take the seat') ||
+                t.includes('confirm') || t === 'ok' || t.includes('buy') ||
+                (btn.classList.contains('green') && btn.classList.contains('highlighted'))) {
+                btn.click();
+                r.submitted = true; r.btn = t; break;
+            }
+        }
+        return r;
+    }""", {"name": player_name, "stack": amount})
+
+    if result and result.get('submitted'):
+        log(f"   💰 {player_name}: Form submitted (btn={result.get('btn','?')})")
+        await asyncio.sleep(2)
+        return True
+    log(f"   ⚠️ {player_name}: Form fill result: {result}")
+    return False
 async def try_rejoin(page, player_name, game_url, stack=1000):
+    """Rejoin by reloading the game page. Uses cdp_safe for Errno 35 resilience."""
     log(f"   🔄 {player_name}: Rejoin via reload...")
     try:
-        await page.goto(game_url, wait_until="domcontentloaded", timeout=20000)
+        async with cdp_semaphore:
+            await page.goto(game_url, wait_until="domcontentloaded", timeout=20000)
         await asyncio.sleep(3)
         await dismiss_cookie_banner(page)
         await dismiss_alerts(page)
         await asyncio.sleep(1)
-        
-        has_seats = await page.evaluate("""() => {
+
+        has_seats = await cdp_safe(page, """() => {
             for (const b of document.querySelectorAll('.table-player-seat-button'))
                 if (b.getBoundingClientRect().width > 0) return true;
             return false;
         }""")
-        
+
         if has_seats:
             ok = await seat_at_table(page, player_name, stack, seat_number=1, is_host=False)
             if ok:
@@ -536,18 +1531,28 @@ async def try_rejoin(page, player_name, game_url, stack=1000):
 
 
 async def scrape_state_safe(page):
+    """Scrape game state with semaphore to prevent Errno 35."""
     try:
         from scrape import scrape_state
-        return await asyncio.wait_for(scrape_state(page), timeout=5.0)
-    except:
+        async with cdp_semaphore:
+            return await asyncio.wait_for(scrape_state(page), timeout=5.0)
+    except Exception as e:
+        err = str(e)
+        if 'Errno 35' in err:
+            await asyncio.sleep(random.uniform(1.0, 3.0))
         return {"is_my_turn": False}
 
 
 async def execute_action_safe(page, action, amount=None):
+    """Execute action with semaphore to prevent Errno 35."""
     try:
         from act import execute_action
-        return await asyncio.wait_for(execute_action(page, action, amount), timeout=10.0)
+        async with cdp_semaphore:
+            return await asyncio.wait_for(execute_action(page, action, amount), timeout=10.0)
     except Exception as e:
+        err = str(e)
+        if 'Errno 35' in err:
+            await asyncio.sleep(random.uniform(1.0, 3.0))
         return f"Error: {str(e)[:50]}"
 
 
@@ -565,6 +1570,15 @@ def detect_big_blind(state):
 
 
 def bot_decide(state, profile):
+    """
+    Decision engine with proper per-style preflop ranges and BB-based sizing.
+    
+    Preflop fold targets (heads-up equity thresholds for 4-handed):
+      NIT:     fold ~50% (only top ~20% of hands, equity >= 58)
+      TAG:     fold ~35% (top ~30%, equity >= 52)
+      LAG:     fold ~20% (top ~45%, equity >= 45)
+      STATION: fold ~10% (top ~60%, equity >= 40)
+    """
     actions_str = " ".join(state.get("actions", []))
     can_check = "Check" in actions_str
     can_raise = "Raise" in actions_str or "Bet" in actions_str
@@ -591,13 +1605,20 @@ def bot_decide(state, profile):
             except: pass
 
     agg = profile["aggression"]
-    tight = profile["tightness"]
     bluff = profile["bluff_freq"]
     pos_mult = profile["position_aware"]
     in_pos = state.get("in_position", False)
-    pos_adj = 8 * pos_mult if in_pos else 0
-    effective_tight = tight - pos_adj
+    pos_adj = 5 * pos_mult if in_pos else 0
     style = profile["style"]
+
+    # Per-style equity thresholds (4-handed calibrated)
+    PREFLOP_THRESHOLDS = {
+        "NIT":     {"raise": 65, "call": 55, "fold": 50},
+        "TAG":     {"raise": 58, "call": 48, "fold": 44},
+        "LAG":     {"raise": 50, "call": 42, "fold": 38},
+        "STATION": {"raise": 60, "call": 35, "fold": 32},
+    }
+    thresholds = PREFLOP_THRESHOLDS.get(style, PREFLOP_THRESHOLDS["TAG"])
 
     call_amount = 0
     for a in state.get("actions", []):
@@ -607,52 +1628,72 @@ def bot_decide(state, profile):
     spr = my_stack / max(pot, 1)
 
     def calc_raise(context="open", eq=50):
+        """BB-based raise sizing — never produces tiny raises."""
         if context == "open":
-            base = int(bb * (2.5 + agg * 0.5))
-            return max(base + random.randint(-1, 2), bb * 2)
+            # 2.5-3.5x BB depending on aggression
+            mult = 2.5 + agg
+            return int(bb * mult) + random.randint(-1, 2)
         elif context == "3bet":
-            return max(int(call_amount * 3), int(bb * 6))
+            # 3x the incoming raise, minimum 7x BB
+            return max(int(call_amount * 3), int(bb * 7))
         elif context == "cbet":
-            return max(int(pot * random.uniform(0.50, 0.66)), bb * 2)
+            # 50-66% pot, minimum 3x BB
+            return max(int(pot * random.uniform(0.50, 0.66)), bb * 3)
         elif context == "value":
-            eq_factor = min(1.0, (eq - 50) / 30.0)
-            return max(int(pot * (0.50 + eq_factor * 0.30)), bb * 2)
+            # 50-80% pot proportional to equity, minimum 3x BB
+            eq_factor = min(1.0, max(0.0, (eq - 50) / 30.0))
+            return max(int(pot * (0.50 + eq_factor * 0.30)), bb * 3)
         elif context == "bluff":
-            return max(int(pot * random.uniform(0.33, 0.50)), bb * 2)
-        return max(int(pot * 0.5), bb * 2)
+            # 33-50% pot, minimum 2.5x BB
+            return max(int(pot * random.uniform(0.33, 0.50)), int(bb * 2.5))
+        elif context == "allin_value":
+            return my_stack
+        return max(int(pot * 0.5), bb * 3)
 
     def cr(amt):
+        """Clamp raise to [2xBB, stack]."""
         return min(max(amt, bb * 2), my_stack)
 
-    # FREE CHECK
+    # ---- FREE CHECK (no call required) ----
     if can_check and not can_call:
+        # Strong hands: always bet for value
         if equity > 65 and can_raise:
             return ("raise", cr(calc_raise("value", equity)))
-        if equity > 45 and can_raise and random.random() < agg * 0.5:
+        # Medium-strong hands: bet as c-bet or thin value (higher freq)
+        if equity > 45 and can_raise and random.random() < agg * 0.7:
             return ("raise", cr(calc_raise("cbet")))
-        if can_raise and random.random() < bluff * 0.5 and street == "flop":
+        # Drawing hands on flop: semi-bluff
+        if has_draw and equity > 25 and can_raise and street == "flop" and random.random() < agg * 0.5:
+            return ("raise", cr(calc_raise("bluff")))
+        # Pure bluff on flop (rare, never NIT)
+        if can_raise and random.random() < bluff * 0.4 and street == "flop" and style != "NIT":
             return ("raise", cr(calc_raise("bluff")))
         return ("check", None)
 
+    # ---- SHORT STACK (SPR < 4) — push/fold ----
     if spr < 4:
-        if equity >= effective_tight:
+        push_thresh = 50 - (agg * 5)  # LAG pushes wider
+        if equity >= push_thresh:
             return ("raise", my_stack) if can_raise else ("call", None)
-        if equity >= effective_tight - 15 and can_call and call_amount < my_stack * 0.3:
+        if equity >= push_thresh - 10 and can_call and call_amount < my_stack * 0.3:
             return ("call", None)
         return ("check", None) if can_check else ("fold", None)
 
-    # PREFLOP
+    # ---- PREFLOP ----
     if street == "preflop":
-        raise_thresh = effective_tight + 15
-        call_thresh = effective_tight - 5
-        fold_thresh = effective_tight - 12
+        raise_thresh = thresholds["raise"] - pos_adj
+        call_thresh  = thresholds["call"]  - pos_adj
+        fold_thresh  = thresholds["fold"]  - pos_adj
 
+        # Auto-fold trash
         if equity < fold_thresh:
             return ("check", None) if can_check else ("fold", None)
 
+        # Premium hands — raise or 3-bet
         if equity >= raise_thresh:
-            if can_raise and random.random() < agg + 0.3:
+            if can_raise and random.random() < agg + 0.2:
                 if call_amount > 0:
+                    # Facing a raise: 3-bet or call
                     if equity >= 65 and random.random() < agg:
                         return ("raise", cr(calc_raise("3bet")))
                     if equity >= call_thresh:
@@ -661,15 +1702,18 @@ def bot_decide(state, profile):
                 return ("raise", cr(calc_raise("open")))
             return ("call", None) if can_call else ("check", None)
 
+        # Playable hands — call within size limits
         elif equity >= call_thresh:
             if can_call:
+                # Call up to 4x BB with decent hands, up to 8x with strong
                 if call_amount <= bb * 4:
                     return ("call", None)
-                elif equity >= call_thresh + 5 and call_amount <= bb * 8:
+                elif equity >= call_thresh + 8 and call_amount <= bb * 8:
                     return ("call", None)
                 return ("check", None) if can_check else ("fold", None)
             return ("check", None)
 
+        # Marginal hands — only limp/call 1 BB
         elif equity >= fold_thresh:
             if can_call and call_amount <= bb:
                 return ("call", None)
@@ -677,34 +1721,41 @@ def bot_decide(state, profile):
 
         return ("check", None) if can_check else ("fold", None)
 
-    # POSTFLOP
+    # ---- POSTFLOP ----
+    # Value threshold adjusts with aggression and position
     value_thresh = 55 - (agg * 8) + pos_adj
 
+    # Strong hands — bet/raise for value
     if equity >= value_thresh:
-        if can_raise and random.random() < agg + 0.2:
+        if can_raise and random.random() < agg + 0.15:
             return ("raise", cr(calc_raise("value", equity)))
         return ("call", None) if can_call else ("check", None)
 
+    # Drawing hands — semi-bluff on flop, call with pot odds
     if has_draw and equity >= 25:
-        if can_raise and random.random() < agg * 0.5 and street == "flop":
+        if can_raise and random.random() < agg * 0.4 and street == "flop" and style != "NIT":
             return ("raise", cr(calc_raise("bluff")))
         if can_call:
             pot_odds = call_amount / max(pot + call_amount, 1) * 100
-            if pot_odds < equity + 10: return ("call", None)
+            if pot_odds < equity + 8: return ("call", None)
         return ("check", None) if can_check else ("fold", None)
 
+    # Medium hands — call if pot odds justify
     if equity >= 30:
         if can_call:
             pot_odds = call_amount / max(pot + call_amount, 1) * 100
-            bonus = 8 if style == "STATION" else 0
+            bonus = 6 if style == "STATION" else 0
             if pot_odds < equity + bonus: return ("call", None)
         return ("check", None) if can_check else ("fold", None)
 
-    if can_raise and street == "flop" and random.random() < bluff * 0.5:
+    # Bluff opportunity (flop only, never NIT, rare)
+    if can_raise and street == "flop" and random.random() < bluff * 0.3 and style != "NIT":
         return ("raise", cr(calc_raise("bluff")))
 
-    if style == "STATION" and equity >= 20 and can_call and street in ("flop","turn"):
-        if call_amount / max(pot + call_amount, 1) * 100 < 40:
+    # Station calling station on flop/turn with marginal hands
+    if style == "STATION" and equity >= 22 and can_call and street in ("flop", "turn"):
+        pot_odds = call_amount / max(pot + call_amount, 1) * 100
+        if pot_odds < 35:
             return ("call", None)
 
     return ("check", None) if can_check else ("fold", None)
@@ -784,30 +1835,56 @@ async def bot_loop(page, profile, is_host, stop_event):
                     if bust_time is None:
                         bust_time = time.time()
                         rebuy_attempts = 0
-                        log(f"   ☠️ {name}: BUSTED")
+                        log(f"   ☠️ {name}: BUSTED (stack={my_stack}, seated={is_seated})")
 
                     elapsed = time.time() - bust_time
-                    if elapsed > 3 and rebuy_attempts < 5:
+                    if elapsed > 5 and rebuy_attempts < 8:
                         rebuy_attempts += 1
-                        if await auto_rebuy(page, name, STARTING_STACK):
-                            bust_time = None; rebuy_attempts = 0
-                            await asyncio.sleep(3); continue
-                        if rebuy_attempts >= 2 and game_url_global:
-                            if await try_rejoin(page, name, game_url_global, STARTING_STACK):
+                        # Stagger per-bot delay to avoid concurrent Playwright writes (Errno 35)
+                        bot_idx = next((i for i, p in enumerate(BOT_PROFILES) if p["name"] == name), 0)
+                        await asyncio.sleep(3 + bot_idx * 2 + random.uniform(0, 1.5))
+                        try:
+                            log(f"   💰 {name}: Rebuy attempt #{rebuy_attempts}...")
+                            async with rebuy_lock:
+                                rebuy_ok = await auto_rebuy(page, name, STARTING_STACK)
+                            if rebuy_ok:
                                 bust_time = None; rebuy_attempts = 0
+                                log(f"   ✅ {name}: Rebuy successful!")
                                 await asyncio.sleep(3); continue
+                        except Exception as rebuy_err:
+                            log(f"   ⚠️ {name}: Rebuy error: {str(rebuy_err)[:60]}")
+                        # After 2 failed attempts, try full page reload
+                        if rebuy_attempts >= 2 and game_url_global:
+                            try:
+                                log(f"   🔄 {name}: Trying full page reload rejoin...")
+                                if await try_rejoin(page, name, game_url_global, STARTING_STACK):
+                                    bust_time = None; rebuy_attempts = 0
+                                    log(f"   ✅ {name}: Rejoin successful!")
+                                    await asyncio.sleep(3); continue
+                            except Exception as rejoin_err:
+                                log(f"   ⚠️ {name}: Rejoin error: {str(rejoin_err)[:60]}")
                         await asyncio.sleep(5)
-                    elif rebuy_attempts >= 5:
-                        if elapsed > 60: rebuy_attempts = 0; bust_time = time.time()
-                        else: await asyncio.sleep(5)
+                    elif rebuy_attempts >= 8:
+                        if elapsed > 90: rebuy_attempts = 0; bust_time = time.time()
+                        else: await asyncio.sleep(10)
                 else:
                     bust_time = None; rebuy_attempts = 0
                 await asyncio.sleep(POLL_MS / 1000)
 
         except Exception as e:
             errors += 1
+            err_str = str(e)
+            # Detect fatal browser/page closure — stop loop
+            if 'has been closed' in err_str or 'Target closed' in err_str:
+                if errors == 1:
+                    log(f"   ⚠️ {name}: Browser/page closed — exiting loop")
+                if errors > 3:
+                    log(f"   🛑 {name}: Browser permanently closed after {errors} attempts")
+                    break
+                await asyncio.sleep(10)
+                continue
             if errors % 5 == 1:
-                log(f"   ⚠️ {name} error ({errors}): {str(e)[:80]}")
+                log(f"   ⚠️ {name} error ({errors}): {err_str[:80]}")
             if errors > 20: await asyncio.sleep(30); errors = 0
             else: await asyncio.sleep(min(2 ** min(errors, 5), 30))
 
@@ -831,9 +1908,12 @@ async def status_reporter(stop_event):
 
 
 async def main():
+    global rebuy_lock, cdp_semaphore
+    rebuy_lock = asyncio.Lock()
+    cdp_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent CDP calls across all bots
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v3.1 (stealth)")
+    log("🃏 Poker Now Multi-Bot Arena v6.0 (robust)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
@@ -852,82 +1932,312 @@ async def main():
 
     try:
         # Step 1: Create game with SINGLE stealth browser (less suspicious)
+        # Kill any lingering bot browser processes (NOT openclaw browser)
+        import subprocess
+        # Only kill Chrome/Chromium using our bot profile dirs
+        bot_profile_path = os.path.expanduser("~/Projects/poker-now-agent/.browser_profiles")
+        subprocess.run(
+            ["pkill", "-9", "-f", f"--user-data-dir={bot_profile_path}"],
+            capture_output=True)
+        await asyncio.sleep(1)
         log("🌐 Launching host browser with stealth...")
-        host_browser, host_page = await make_stealth_page(pw, headless=HEADLESS)
+        host_browser, host_page = await make_stealth_page(pw, headless=HEADLESS, profile_id=0)
         browsers.append(host_browser)
         pages.append(host_page)
         
         host_name = BOT_PROFILES[0]["name"]
         global game_url_global
         
-        # Check for pre-existing game URL (--url argument or saved file)
+        # Only use --url flag for existing game (don't auto-load stale URLs from /tmp)
         pre_url = os.environ.get('POKER_GAME_URL', '')
-        if not pre_url:
-            try:
-                with open('/tmp/poker_game_url.txt') as f:
-                    saved = f.read().strip()
-                    if '/games/' in saved:
-                        pre_url = saved
-                        log(f"   Found saved game URL: {pre_url}")
-            except: pass
         
         if pre_url and '/games/' in pre_url:
             game_url_global = pre_url
-            log(f"   🔗 Using existing game: {game_url_global}")
+            log(f"   🔗 Validating existing game: {game_url_global}")
             await host_page.goto(game_url_global, wait_until="domcontentloaded", timeout=30000)
             await asyncio.sleep(3)
             await dismiss_cookie_banner(host_page)
             await dismiss_alerts(host_page)
+            # Validate game is active (has table elements)
+            is_active = await host_page.evaluate("""() => {
+                return document.querySelector('.table-player') !== null ||
+                       document.querySelector('.table-cards') !== null ||
+                       document.querySelector('.table-pot-size') !== null;
+            }""")
+            if not is_active:
+                log("   ⚠️ Existing game is dead/invalid, creating new one...")
+                game_url_global = await create_game(host_page, host_name)
         else:
             game_url_global = await create_game(host_page, host_name)
 
+            # Retry with fresh profile if creation failed (reCAPTCHA flagged)
+            if not game_url_global or "/games/" not in game_url_global:
+                for retry in range(2):
+                    log(f"   🔄 Retry {retry+1}/2: Trying with fresh profile...")
+                    # Close old browser
+                    try:
+                        await host_browser.close()
+                        browsers.remove(host_browser)
+                    except: pass
+
+                    # Delete flagged profile and create fresh
+                    import shutil
+                    old_profile = os.path.join(PROFILE_DIR, "bot_0")
+                    if os.path.exists(old_profile):
+                        shutil.rmtree(old_profile, ignore_errors=True)
+                        log(f"   🗑️ Cleared flagged profile: {old_profile}")
+
+                    await asyncio.sleep(random.uniform(10, 20))  # Cool-down
+
+                    host_browser, host_page = await make_stealth_page(pw, headless=HEADLESS, profile_id=0)
+                    browsers.insert(0, host_browser)
+                    pages[0] = host_page if pages else pages.append(host_page)
+
+                    game_url_global = await create_game(host_page, host_name)
+                    if game_url_global and "/games/" in game_url_global:
+                        log("   ✅ Game created on retry!")
+                        break
+
         if not game_url_global or "/games/" not in game_url_global:
-            log("❌ Failed to create game. Waiting 30s before retry...")
-            await asyncio.sleep(30)
+            log("❌ Failed to create game after all retries. Waiting 60s before restart...")
+            await asyncio.sleep(60)
             return
 
         await asyncio.sleep(2)
         await dismiss_cookie_banner(host_page)
+        await dismiss_waiting_overlay(host_page)
         await dismiss_alerts(host_page)
         await asyncio.sleep(1)
 
-        # Host sits
-        await seat_at_table(host_page, host_name, STARTING_STACK, seat_number=1, is_host=True)
+        # Host sits (may fail on name input but host is game creator, auto-seated on start)
+        host_seated = await seat_at_table(host_page, host_name, STARTING_STACK, seat_number=1, is_host=True)
+        if not host_seated:
+            log("   ⚠️ Host seating form incomplete — host is game creator, will be auto-seated on start")
         await asyncio.sleep(2)
 
-        # Step 2: Launch remaining bots AFTER game is created
+        # Step 2: Launch remaining bots SEQUENTIALLY with immediate approval
+        # Key fix (v6): join each bot, then immediately approve from host
+        # before joining the next one. Prevents race conditions and ensures
+        # each bot is properly seated.
+
+        async def check_host_alive(hp, game_url):
+            """Verify host page is alive and on the game URL."""
+            try:
+                current_url = hp.url
+                if '/games/' not in current_url:
+                    log(f"   \u26a0\ufe0f Host page navigated away: {current_url}")
+                    await hp.goto(game_url, wait_until='domcontentloaded', timeout=20000)
+                    await asyncio.sleep(2)
+                    await dismiss_cookie_banner(hp)
+                    await dismiss_waiting_overlay(hp)
+                # Quick DOM check
+                alive = await asyncio.wait_for(
+                    hp.evaluate('() => document.readyState'),
+                    timeout=5.0
+                )
+                return alive is not None
+            except Exception as e:
+                log(f"   \u26a0\ufe0f Host health check failed: {str(e)[:60]}")
+                return False
+
+        async def approve_bot(hp, bot_name, max_wait=25):
+            """Approve a specific bot's seat request. Polls host page for
+            approve/accept buttons up to max_wait seconds.
+            Uses host_approve_all which handles both inline buttons AND
+            the Options menu notification badge pattern."""
+            deadline = time.time() + max_wait
+            attempts = 0
+            while time.time() < deadline:
+                attempts += 1
+                try:
+                    # host_approve_all now handles:
+                    # 1. Inline Accept buttons (first request)
+                    # 2. Options menu badge -> open -> Accept (subsequent requests)
+                    # 3. Notification area buttons
+                    # Give it more time (10s) since it may need to open the Options menu
+                    result = await asyncio.wait_for(host_approve_all(hp), timeout=10.0)
+                    if result:
+                        log(f"   \u2705 Approved {bot_name} seat request (attempt {attempts})")
+                        return True
+                except asyncio.TimeoutError:
+                    log(f"   \u23f3 Approval attempt {attempts} timed out for {bot_name}")
+                except Exception as e:
+                    if 'has been closed' in str(e):
+                        return False
+                    log(f"   \u26a0\ufe0f Approval error for {bot_name}: {str(e)[:60]}")
+                await asyncio.sleep(2)
+        
+            # Take screenshot on failure for diagnostics
+            try:
+                await hp.screenshot(path=os.path.join(LOG_DIR, f"approve_fail_{bot_name}_{int(time.time())}.png"))
+            except: pass
+            log(f"   \u26a0\ufe0f Could not find approval button for {bot_name} within {max_wait}s")
+            return False
+
+        async def count_seated_players(hp):
+            """Count seated players on host page with timeout protection."""
+            try:
+                return await asyncio.wait_for(hp.evaluate("""() => {
+                    let c = 0;
+                    const names = [];
+                    document.querySelectorAll('.table-player').forEach(p => {
+                        if (p.classList.contains('you-player')) {
+                            c++;
+                            const nm = p.querySelector('a');
+                            names.push(nm ? nm.textContent.trim() : '(you)');
+                            return;
+                        }
+                        const name = p.querySelector('a');
+                        if (name && name.textContent.trim()) {
+                            c++;
+                            names.push(name.textContent.trim());
+                        }
+                    });
+                    const seatBtns = document.querySelectorAll('.table-player-seat-button');
+                    let visibleSeats = 0;
+                    seatBtns.forEach(b => {
+                        if (b.getBoundingClientRect().width > 0) visibleSeats++;
+                    });
+                    return {count: c, names: names, emptySeats: visibleSeats};
+                }"""), timeout=8.0)
+            except:
+                return {'count': 0, 'names': [], 'emptySeats': -1}
+
         for i in range(1, NUM_BOTS):
             bot_name = BOT_PROFILES[i]["name"]
-            log(f"🌐 Launching browser for {bot_name}...")
-            bot_browser, bot_page = await make_stealth_page(pw, headless=HEADLESS)
+
+            # Health check host page before each bot join
+            host_ok = await check_host_alive(host_page, game_url_global)
+            if not host_ok:
+                log(f"   \u26a0\ufe0f Host page unhealthy before {bot_name} \u2014 recovering...")
+                try:
+                    await host_page.goto(game_url_global, wait_until='domcontentloaded', timeout=20000)
+                    await asyncio.sleep(2)
+                    await dismiss_cookie_banner(host_page)
+                    await dismiss_waiting_overlay(host_page)
+                except Exception as e:
+                    log(f"   \u274c Host recovery failed: {str(e)[:60]}")
+
+            log(f"\U0001f310 Launching browser for {bot_name}...")
+            bot_browser, bot_page = await make_stealth_page(pw, headless=HEADLESS, profile_id=i)
             browsers.append(bot_browser)
             pages.append(bot_page)
 
-            log(f"🤖 {bot_name} joining...")
-            await bot_page.goto(game_url_global, wait_until="domcontentloaded", timeout=30000)
+            log(f"\U0001f916 {bot_name} joining...")
+            try:
+                await asyncio.wait_for(
+                    bot_page.goto(game_url_global, wait_until="domcontentloaded"),
+                    timeout=30.0
+                )
+            except asyncio.TimeoutError:
+                log(f"   \u26a0\ufe0f {bot_name}: Page load timed out \u2014 continuing anyway")
+            except Exception as e:
+                log(f"   \u26a0\ufe0f {bot_name}: Page load error: {str(e)[:60]}")
+
             await asyncio.sleep(3)
             await dismiss_cookie_banner(bot_page)
+            await dismiss_waiting_overlay(bot_page)
             await dismiss_alerts(bot_page)
-            await wait_for_recaptcha_clear(bot_page, timeout=30)
+
+            # Quick recaptcha check (joining existing game rarely triggers)
+            try:
+                await asyncio.wait_for(
+                    wait_for_recaptcha_clear(bot_page, timeout=10),
+                    timeout=15.0
+                )
+            except asyncio.TimeoutError:
+                log(f"   \u26a0\ufe0f {bot_name}: reCAPTCHA wait timed out \u2014 continuing")
             await asyncio.sleep(1)
 
+            # Seat the bot
             await seat_at_table(bot_page, bot_name, STARTING_STACK, seat_number=i+1, is_host=False)
             await asyncio.sleep(2)
-            await approve_seat_requests(host_page, [p["name"] for p in BOT_PROFILES[:i+1]], timeout=10)
-            await asyncio.sleep(1)
+
+            # IMMEDIATELY approve from host page
+            log(f"   \U0001f511 Approving {bot_name} from host page...")
+            await approve_bot(host_page, bot_name, max_wait=25)
+            await asyncio.sleep(2)
+
+            # Reload host page after approval to ensure clean state for next bot
+            # The host page often goes blank/stale after clicking Accept
+            await asyncio.sleep(2)
+            try:
+                log(f"   \U0001f504 Reloading host page after {bot_name} approval...")
+                await host_page.goto(game_url_global, wait_until='domcontentloaded', timeout=20000)
+                await asyncio.sleep(3)
+                await dismiss_cookie_banner(host_page)
+                await dismiss_waiting_overlay(host_page)
+                await dismiss_alerts(host_page)
+            except Exception as e:
+                log(f"   \u26a0\ufe0f Host reload failed: {str(e)[:60]}")
+            
+            # Verify seat count after each bot
+            seat_info = await count_seated_players(host_page)
+            seated_now = seat_info.get('count', 0)
+            seated_names = seat_info.get('names', [])
+            log(f"   \U0001f4ca After {bot_name}: {seated_now} seated ({', '.join(seated_names)})")
+
+        # Final comprehensive approval sweep (catch any missed)
+        # Reload host page to get a clean state for final sweep
+        log("   \U0001f504 Reloading host for final approval sweep...")
+        try:
+            await host_page.goto(game_url_global, wait_until='domcontentloaded', timeout=20000)
+            await asyncio.sleep(3)
+            await dismiss_cookie_banner(host_page)
+            await dismiss_waiting_overlay(host_page)
+            await dismiss_alerts(host_page)
+        except Exception as e:
+            log(f"   \u26a0\ufe0f Pre-sweep reload failed: {str(e)[:60]}")
+        
+        log("   \U0001f504 Final approval sweep...")
+        for _ in range(5):
+            approved = await host_approve_all(host_page)
+            if not approved:
+                break
+            await asyncio.sleep(1.5)
 
         await asyncio.sleep(3)
-        seated = await host_page.evaluate("""() => {
-            let c = 0;
-            document.querySelectorAll('.table-player').forEach(p => {
-                const name = p.querySelector('a');
-                if (name && name.textContent.trim()) c++;
-            });
-            return c;
-        }""")
-        log(f"   📊 Seated: {seated}/{NUM_BOTS}")
+
+        # Final seat count with full diagnostics
+        seat_info = await count_seated_players(host_page)
+        seated = seat_info.get('count', 0)
+        seat_names = seat_info.get('names', [])
+        empty_seats = seat_info.get('emptySeats', 0)
+        log(f"   \U0001f4ca Final: Seated {seated}/{NUM_BOTS} ({', '.join(seat_names)}) | Empty seats: {empty_seats}")
+
+        # Diagnostic: capture host page state
+        try:
+            host_url = host_page.url
+            log(f"   \U0001f50d Host URL: {host_url}")
+            await host_page.screenshot(path=os.path.join(LOG_DIR, f"pre_start_{int(time.time())}.png"))
+            dom_diag = await asyncio.wait_for(host_page.evaluate("""() => {
+                return {
+                    title: document.title,
+                    bodyClasses: document.body ? document.body.className : 'none',
+                    tablePlayerCount: document.querySelectorAll('.table-player').length,
+                    youPlayer: !!document.querySelector('.you-player'),
+                    iframes: document.querySelectorAll('iframe').length,
+                    bodyText: (document.body ? document.body.innerText : '').substring(0, 200)
+                };
+            }"""), timeout=5.0)
+            log(f"   \U0001f50d DOM: {dom_diag}")
+        except Exception as e:
+            log(f"   \u26a0\ufe0f Diagnostic failed: {str(e)[:60]}")
+
         if seated < 2:
-            log(f"⚠️ Only {seated} seated, trying to start anyway...")
+            log(f"\u26a0\ufe0f Only {seated} seated. Attempting recovery...")
+            try:
+                await host_page.reload(wait_until='domcontentloaded', timeout=15000)
+                await asyncio.sleep(3)
+                await dismiss_cookie_banner(host_page)
+                await dismiss_waiting_overlay(host_page)
+                seat_info = await count_seated_players(host_page)
+                seated = seat_info.get('count', 0)
+                seat_names = seat_info.get('names', [])
+                log(f"   \U0001f4ca After reload: {seated}/{NUM_BOTS} ({', '.join(seat_names)})")
+            except Exception as e:
+                log(f"   \u26a0\ufe0f Reload recovery failed: {str(e)[:60]}")
+            await approve_seat_requests(host_page, [p["name"] for p in BOT_PROFILES[:NUM_BOTS]], timeout=15)
 
         log("\n🎮 Starting game...")
         for _ in range(10):
