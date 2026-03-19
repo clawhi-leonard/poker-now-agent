@@ -2,6 +2,13 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v12.0 - Bet capping, NIT fix, STATION fix, chip tracking (2026-03-18):
+  - FIXED: Flop escalation — max single bet = 2x pot (unless all-in with <25% stack)
+  - FIXED: NIT postflop over-aggression — max raise = pot unless equity > 80%
+  - FIXED: STATION fold threshold raised 28 → 32 (was calling 4c3h preflop)
+  - ADDED: Position + stack logging in action output
+  - ADDED: Chip tracking per bot — reports net chip won/lost at session end
+  - ADDED: Stack history tracking (stack_history dict, logged every 50 hands)
 v11.0 - Re-raise cap, position-based ranges, recalibrated fold rates (2026-03-18):
   - FIXED: Re-raise escalation — max 3 raises/street total, 2 per player → then call/fold
   - FIXED: Preflop fold rates too high — multiway discount 0.85→0.92, thresholds lowered
@@ -109,6 +116,8 @@ hands_played = {p["name"]: 0 for p in BOT_PROFILES}
 rebuys_count = {p["name"]: 0 for p in BOT_PROFILES}
 folds_count = {p["name"]: 0 for p in BOT_PROFILES}
 actions_count = {p["name"]: 0 for p in BOT_PROFILES}
+stack_history = {p["name"]: [] for p in BOT_PROFILES}  # v12: [(hand_num, stack_value)]
+starting_stacks = {}  # v12: track initial stack after first sit-down
 rebuy_lock = None  # Initialized in main() as asyncio.Lock()
 rebuy_pending = None  # Initialized in main() as asyncio.Event() — signals host to approve rebuy requests
 cdp_semaphore = None  # Initialized in main() - limits concurrent CDP calls to prevent Errno 35
@@ -1225,6 +1234,37 @@ async def host_approve_all(page):
         except Exception as e:
             log(f"   \u26a0\ufe0f Options menu interaction failed: {str(e)[:60]}")
     
+    # Phase 2c (v12): Always try clicking "OPTIONS" text button even without badge
+    # Pokernow may not show a visible badge count in all situations
+    if not approved_any:
+        try:
+            opts_btn = await page.query_selector('button:has-text("OPTIONS"), button:has-text("Options")')
+            if opts_btn and await opts_btn.is_visible():
+                await opts_btn.click()
+                await asyncio.sleep(1.5)
+                # Look for Accept/Approve in the panel
+                for _ in range(3):
+                    accept_btns = await page.query_selector_all('button:has-text("Accept"), button:has-text("Approve")')
+                    for abtn in accept_btns:
+                        try:
+                            if await abtn.is_visible():
+                                await abtn.click()
+                                log(f"   ✅ Host approved from Options menu (v12 fallback)")
+                                approved_any = True
+                                await asyncio.sleep(1)
+                        except: pass
+                    if approved_any:
+                        break
+                    await asyncio.sleep(0.5)
+                # Close the options menu if no approvals found
+                if not approved_any:
+                    await page.keyboard.press("Escape")
+                    await asyncio.sleep(0.3)
+        except: pass
+    
+    if approved_any:
+        return True
+    
     # Phase 3: Try notification area / chat-based request prompts
     notif_result = await cdp_safe(page, """() => {
         const notifs = document.querySelectorAll('[class*="notification"], [class*="request"], [class*="alert"], [class*="message"]');
@@ -1399,23 +1439,52 @@ async def auto_rebuy(page, player_name, amount=1000, is_host=False):
     has_pending = step1_result.get('hasPending', False)
     log(f"   🔍 {player_name}: step1={action} pending={has_pending} btns={step1_result.get('btns',[])[: 6]}")
 
-    # v10: If we already have a pending request, just signal host and wait
+    # v12: If pending request exists, signal host and wait. After 3 failed waits, cancel and re-request.
     if has_pending:
         rebuy_pending.set()
-        log(f"   ⏳ {player_name}: Seat request already pending — signaling host")
-        await asyncio.sleep(8)
-        # Check if we're now seated
-        check = await cdp_safe(page, """() => {
-            const yp = document.querySelector('.you-player');
-            if (!yp) return null;
-            const stack = yp.querySelector('p, div');
-            return stack ? stack.textContent.trim() : '0';
-        }""")
-        if check and check != '0':
-            log(f"   ✅ {player_name}: Now seated with stack {check}")
-            rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
-            return True
-        return False
+        # Track pending wait count per player
+        if not hasattr(auto_rebuy, '_pending_waits'):
+            auto_rebuy._pending_waits = {}
+        auto_rebuy._pending_waits[player_name] = auto_rebuy._pending_waits.get(player_name, 0) + 1
+        wait_count = auto_rebuy._pending_waits[player_name]
+        
+        if wait_count >= 3:
+            # v12: Cancel pending request and re-request fresh
+            log(f"   🔄 {player_name}: Pending too long ({wait_count} waits) — canceling and re-requesting...")
+            auto_rebuy._pending_waits[player_name] = 0
+            # Click "cancel game ingress request" button
+            await cdp_safe(page, """() => {
+                document.querySelectorAll('button, a').forEach(el => {
+                    const t = (el.textContent||'').trim().toLowerCase();
+                    if (t.includes('cancel game ingress') || t.includes('cancel request')) {
+                        el.click();
+                    }
+                });
+            }""")
+            await asyncio.sleep(2)
+            # Reload and re-request
+            async with cdp_semaphore:
+                await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
+            await asyncio.sleep(3)
+            await dismiss_cookie_banner(page)
+            await dismiss_alerts(page)
+            # Fall through to normal seat-click flow below
+        else:
+            log(f"   ⏳ {player_name}: Seat request already pending — signaling host (wait {wait_count}/3)")
+            await asyncio.sleep(8)
+            # Check if we're now seated
+            check = await cdp_safe(page, """() => {
+                const yp = document.querySelector('.you-player');
+                if (!yp) return null;
+                const stack = yp.querySelector('p, div');
+                return stack ? stack.textContent.trim() : '0';
+            }""")
+            if check and check != '0':
+                log(f"   ✅ {player_name}: Now seated with stack {check}")
+                rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+                auto_rebuy._pending_waits[player_name] = 0
+                return True
+            return False
 
     # If a direct rebuy button was found and clicked, fill the form
     if action and action.startswith('rebuy_clicked'):
@@ -1653,19 +1722,18 @@ def detect_big_blind(state):
 
 def bot_decide(state, profile):
     """
-    Decision engine v11: re-raise cap, position-based ranges, softer multiway discount.
+    Decision engine v12: bet capping, NIT postflop fix, STATION fold fix, chip tracking.
+    
+    v12 changes:
+      - Max single bet = 2x pot on any street (unless all-in with <25% stack remaining)
+      - NIT postflop: max raise = pot unless equity > 80%
+      - STATION fold threshold 28 → 32 (stop calling with 4c3h, 8s3c)
+      - Position + stack logged in action output
     
     v11 changes:
-      - Re-raise cap: max 3 raises per street per player (open, 3-bet, 4-bet) → then call/fold
-      - Preflop thresholds lowered for 4-handed (NIT was folding 64%, now target 45%)
-      - Position adjustments: wider from BTN/CO, tighter from SB/BB
-      - Multiway equity discount softened: 0.85 → 0.92 in hand_eval.py
-    
-    Preflop fold targets (4-handed with 0.92 discount):
-      NIT:     fold ~45-50% (top ~25%, equity >= 52)
-      TAG:     fold ~30-35% (top ~35%, equity >= 46)
-      LAG:     fold ~15-20% (top ~50%, equity >= 40)
-      STATION: fold ~10% (top ~60%, equity >= 35)
+      - Re-raise cap: facing 4-bet+ preflop → call/fold only
+      - Preflop thresholds lowered for 4-handed (0.92 multiway discount)
+      - Position adjustments: BTN -7, CO -5, UTG +3, SB +3
     """
     actions_str = " ".join(state.get("actions", []))
     can_check = "Check" in actions_str
@@ -1741,7 +1809,7 @@ def bot_decide(state, profile):
         "NIT":     {"raise": 58, "call": 50, "fold": 45},
         "TAG":     {"raise": 52, "call": 44, "fold": 40},
         "LAG":     {"raise": 46, "call": 38, "fold": 34},
-        "STATION": {"raise": 55, "call": 32, "fold": 28},
+        "STATION": {"raise": 55, "call": 32, "fold": 32},  # v12: raised from 28 (was calling trash like 4c3h)
     }
     thresholds = PREFLOP_THRESHOLDS.get(style, PREFLOP_THRESHOLDS["TAG"])
 
@@ -1771,8 +1839,15 @@ def bot_decide(state, profile):
         return max(int(pot * 0.5), bb * 3)
 
     def cr(amt):
-        """Clamp raise to [2xBB, stack]."""
-        return min(max(amt, bb * 2), my_stack)
+        """Clamp raise to [2xBB, min(2x pot, stack)].
+        v12: Cap at 2x pot to prevent flop escalation to >1000 chips.
+        Exception: allow all-in if stack < 25% of pot (short-stacked shove)."""
+        amt = max(amt, bb * 2)
+        # v12: Max bet = 2x pot (unless short-stacked all-in)
+        if pot > 0 and my_stack > pot * 0.25:
+            max_bet = max(pot * 2, bb * 6)  # floor of 6xBB to avoid tiny caps
+            amt = min(amt, int(max_bet))
+        return min(amt, my_stack)
 
     # ---- FREE CHECK (no call required) ----
     if can_check and not can_call:
@@ -1852,7 +1927,7 @@ def bot_decide(state, profile):
 
         return ("check", None) if can_check else ("fold", None)
 
-    # ---- POSTFLOP ---- (v11: re-raise cap + more aggressive value betting)
+    # ---- POSTFLOP ---- (v12: NIT raise cap, bet cap, improved value betting)
     # Value threshold: how strong you need to be to bet/raise for value
     # v11: pos_adj is negative for IP (lower threshold = bet more) ✓
     value_thresh = 50 - (agg * 10) + pos_adj
@@ -1860,6 +1935,10 @@ def bot_decide(state, profile):
 
     # v9: NIT should never raise on river without 70%+ equity
     nit_river_block = (style == "NIT" and street == "river" and equity < 70)
+    
+    # v12: NIT postflop raise cap — max raise = pot unless equity > 80%
+    # This prevents NIT from raising 5564 on turn with 51% equity
+    nit_postflop_block = (style == "NIT" and equity < 80)
     
     # v9: STATION should never raise large amounts — they call, not bet
     station_raise_block = (style == "STATION" and can_call)
@@ -1871,6 +1950,10 @@ def bot_decide(state, profile):
                 return ("call", None) if can_call else ("check", None)
             if station_raise_block and equity < 75:
                 return ("call", None)
+            # v12: NIT with <80% equity → small bet only (max pot-size), not big raise
+            if nit_postflop_block:
+                small_bet = min(int(pot * 0.5), my_stack)
+                return ("raise", max(small_bet, bb * 2))
             return ("raise", cr(calc_raise("value", equity)))
         return ("call", None) if can_call else ("check", None)
 
@@ -1881,6 +1964,10 @@ def bot_decide(state, profile):
                 return ("call", None) if can_call else ("check", None)
             if station_raise_block:
                 return ("call", None)
+            # v12: NIT cap at half-pot for value_thresh range (not strong enough for big bets)
+            if nit_postflop_block:
+                small_bet = min(int(pot * 0.4), my_stack)
+                return ("raise", max(small_bet, bb * 2))
             return ("raise", cr(calc_raise("value", equity)))
         return ("call", None) if can_call else ("check", None)
 
@@ -1941,26 +2028,26 @@ async def bot_loop(page, profile, is_host, stop_event):
                 await start_game(page)
                 await host_approve_all(page)
                 
-                # v11: Proactive rebuy approval — try on current page first (no reload!)
-                # Only do a full page reload every 60s, and NEVER during rebuy cooldown
+                # v12: More aggressive rebuy approval — check every 15s or on signal
+                # Reduced from 60s to catch rebuy requests faster after mass busts
                 now = time.time()
                 needs_approval_check = False
                 if rebuy_pending is not None and rebuy_pending.is_set():
                     rebuy_pending.clear()
                     needs_approval_check = True
-                elif now - last_host_check > 60:
+                elif now - last_host_check > 15:  # v12: 60s → 15s
                     needs_approval_check = True
                 
                 if needs_approval_check and now >= rebuy_cooldown_until:
                     try:
-                        # v11: First try approval WITHOUT reloading (keeps game state intact)
+                        # v12: First try approval WITHOUT reloading (keeps game state intact)
                         approved = await host_approve_all(page)
                         if approved:
                             log(f"   ✅ Host: Approved rebuy seat request(s) (no reload)")
                             await start_game(page)
                             last_host_check = now
-                        elif now - last_host_check > 60:
-                            # Only reload if it's been >60s since last check AND we're not in a hand
+                        elif now - last_host_check > 20:  # v12: 60s → 20s
+                            # Reload to catch queued requests not visible on current page
                             state_peek = await scrape_state_safe(page)
                             if not state_peek.get("is_my_turn"):
                                 async with cdp_semaphore:
@@ -1985,7 +2072,23 @@ async def bot_loop(page, profile, is_host, stop_event):
             cards = tuple(state.get("my_cards", []))
             if cards and cards != last_cards and last_cards:
                 hands_played[name] = hands_played.get(name, 0) + 1
-                if hands_played[name] % 25 == 0:
+                # v12: Track stack at each new hand
+                cur_stack = None
+                for p in state.get("players", []):
+                    if p.get("is_me"):
+                        try: cur_stack = int(p["stack"])
+                        except: pass
+                if cur_stack is not None:
+                    stack_history[name].append((hands_played[name], cur_stack))
+                    if name not in starting_stacks:
+                        starting_stacks[name] = cur_stack
+                if hands_played[name] % 50 == 0:
+                    # v12: Report stack changes every 50 hands
+                    net = (cur_stack or 0) - starting_stacks.get(name, STARTING_STACK)
+                    rebuys = rebuys_count.get(name, 0)
+                    net_adj = net - (rebuys * STARTING_STACK)  # Subtract rebuy chips
+                    log(f"   📊 {name} ({style}): {hands_played[name]} hands | stack={cur_stack} | net={net_adj:+d} ({rebuys} rebuys)")
+                elif hands_played[name] % 25 == 0:
                     log(f"   📊 {name} ({style}): {hands_played[name]} hands")
                 bust_time = None
                 rebuy_attempts = 0
@@ -2021,7 +2124,13 @@ async def bot_loop(page, profile, is_host, stop_event):
                                state.get("board",[]) if state.get("board") else None,
                                max(1, sum(1 for p in state.get("players", [])
                                           if not p.get("is_me") and p.get("status","active") == "active")))
-                log(f"   {name}({style}) | {st} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}% -> {action} {amount or ''} | {result}")
+                pos_str = state.get("my_position", "?")
+                stack_str = ""
+                for p in state.get("players", []):
+                    if p.get("is_me"):
+                        try: stack_str = f" stk={int(p['stack'])}"
+                        except: pass
+                log(f"   {name}({style}) | {st} | {pos_str}{stack_str} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}% -> {action} {amount or ''} | {result}")
 
                 last_act_time = time.time()
                 last_state_key = state_key
@@ -2068,7 +2177,26 @@ async def bot_loop(page, profile, is_host, stop_event):
                                 bust_time = None; rebuy_attempts = 0; is_busted = False
                                 rebuy_cooldown_until = time.time() + 15  # v10: 15s cooldown
                                 log(f"   ✅ {name}: Rebuy successful! (cooldown 15s)")
-                                await asyncio.sleep(5); continue
+                                # v12: After host rebuy, immediately approve pending bot requests
+                                if is_host:
+                                    await asyncio.sleep(2)
+                                    try:
+                                        approved = await host_approve_all(page)
+                                        if approved:
+                                            log(f"   ✅ Host: Post-rebuy approval sweep successful")
+                                        # Also try reload + approve for queued requests
+                                        async with cdp_semaphore:
+                                            await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
+                                        await asyncio.sleep(2)
+                                        await dismiss_cookie_banner(page)
+                                        await dismiss_alerts(page)
+                                        approved2 = await host_approve_all(page)
+                                        if approved2:
+                                            log(f"   ✅ Host: Post-rebuy approval sweep (reload) successful")
+                                        await start_game(page)
+                                    except Exception as e:
+                                        log(f"   ⚠️ Host: Post-rebuy approval error: {str(e)[:60]}")
+                                await asyncio.sleep(3); continue
                         except Exception as rebuy_err:
                             log(f"   ⚠️ {name}: Rebuy error: {str(rebuy_err)[:60]}")
                         await asyncio.sleep(8)
@@ -2123,7 +2251,7 @@ async def main():
     cdp_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent CDP calls across all bots
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v11.0 (re-raise cap + position ranges)")
+    log("🃏 Poker Now Multi-Bot Arena v12.0 (bet cap + NIT fix + chip tracking)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
@@ -2474,7 +2602,10 @@ async def main():
         await pw.stop()
 
         total = sum(hands_played.values())
-        log(f"\n{'='*60}\n📊 FINAL | {total} hands")
+        log(f"\n{'='*60}\n📊 FINAL SESSION REPORT | {total} hands")
+        log(f"{'─'*60}")
+        log(f"   {'Bot':<12} {'Style':<8} {'Hands':>6} {'Rebuys':>7} {'Fold%':>6} {'Net Chips':>10}")
+        log(f"   {'─'*12} {'─'*8} {'─'*6} {'─'*7} {'─'*6} {'─'*10}")
         for p in BOT_PROFILES[:NUM_BOTS]:
             n = p["name"]
             h = hands_played.get(n,0)
@@ -2482,7 +2613,24 @@ async def main():
             f = folds_count.get(n,0)
             a = actions_count.get(n,0)
             fp = f"{100*f/a:.0f}%" if a > 0 else "N/A"
-            log(f"   {n}({p['style']}): {h}h, {r} rebuys, fold {fp}")
+            # v12: Net chip calculation
+            last_stack = stack_history[n][-1][1] if stack_history[n] else 0
+            initial = starting_stacks.get(n, STARTING_STACK)
+            net = last_stack - initial - (r * STARTING_STACK)  # Subtract rebuy chips
+            log(f"   {n:<12} {p['style']:<8} {h:>6} {r:>7} {fp:>6} {net:>+10}")
+        # v12: Determine winner
+        results = []
+        for p in BOT_PROFILES[:NUM_BOTS]:
+            n = p["name"]
+            last_stack = stack_history[n][-1][1] if stack_history[n] else 0
+            r = rebuys_count.get(n, 0)
+            net = last_stack - starting_stacks.get(n, STARTING_STACK) - (r * STARTING_STACK)
+            results.append((n, p["style"], net))
+        results.sort(key=lambda x: x[2], reverse=True)
+        if results:
+            log(f"\n   🏆 Winner: {results[0][0]} ({results[0][1]}) with {results[0][2]:+d} chips")
+            log(f"   💀 Loser:  {results[-1][0]} ({results[-1][1]}) with {results[-1][2]:+d} chips")
+        log(f"{'='*60}")
         log("👋 Done.")
 
 

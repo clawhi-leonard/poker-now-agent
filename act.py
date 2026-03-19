@@ -233,38 +233,57 @@ async def _find_bet_input(page: Page):
 
 
 async def _set_bet_amount(page: Page, amount: int, input_selector: str) -> str:
-    """Set the bet amount using React-compatible JS setter."""
+    """Set the bet amount using React-compatible JS setter.
+    v12: Try text input first, then slider. Also try React fiber props for
+    more reliable state updates in pokernow's React SPA."""
     actual = await page.evaluate("""(args) => {
         const [amount, selector] = args;
         const nativeSetter = Object.getOwnPropertyDescriptor(
             window.HTMLInputElement.prototype, 'value'
         ).set;
         
-        const textInput = document.querySelector(selector);
-        if (textInput) {
-            nativeSetter.call(textInput, String(amount));
-            textInput.dispatchEvent(new Event('input', { bubbles: true }));
-            textInput.dispatchEvent(new Event('change', { bubbles: true }));
-            // Try React event handler
-            for (const key of Object.keys(textInput)) {
+        // Helper: trigger React-compatible events on an input
+        function setReactValue(el, val) {
+            nativeSetter.call(el, String(val));
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            // Try React event handler via fiber
+            for (const key of Object.keys(el)) {
                 if (key.startsWith('__reactEventHandlers$') || key.startsWith('__reactProps$')) {
-                    const props = textInput[key];
+                    const props = el[key];
                     if (props && props.onChange) {
-                        props.onChange({ target: textInput });
+                        props.onChange({ target: { value: String(val) } });
                         break;
                     }
                 }
             }
         }
         
-        const slider = document.querySelector('input[type="range"]');
-        if (slider) {
-            nativeSetter.call(slider, String(amount));
-            slider.dispatchEvent(new Event('input', { bubbles: true }));
-            slider.dispatchEvent(new Event('change', { bubbles: true }));
+        // 1. Try text input FIRST (more reliable than slider for exact values)
+        const textInput = document.querySelector(selector);
+        if (textInput && textInput.type !== 'range') {
+            setReactValue(textInput, amount);
         }
         
-        if (textInput) return textInput.value;
+        // 2. Set slider to match (pokernow syncs slider ↔ text input)
+        const slider = document.querySelector('input[type="range"]');
+        if (slider) {
+            setReactValue(slider, amount);
+        }
+        
+        // 3. Also try other text inputs in the raise panel
+        if (!textInput || textInput.type === 'range') {
+            const altInputs = document.querySelectorAll('.game-decisions-ctn input:not([type="range"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"])');
+            for (const inp of altInputs) {
+                if (inp.offsetWidth > 0 && inp.offsetHeight > 0) {
+                    setReactValue(inp, amount);
+                    break;
+                }
+            }
+        }
+        
+        // Return the actual value from the text input (most reliable readback)
+        if (textInput && textInput.type !== 'range') return textInput.value;
         if (slider) return slider.value;
         return '?';
     }""", [amount, input_selector])

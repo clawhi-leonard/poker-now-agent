@@ -1,81 +1,86 @@
 # Poker Now AI Agent - TODO
 
-## Status: ✅ 220+ hands, 100% rebuy recovery, improved preflop ranges (v11)
+## Status: v12 — NIT/STATION fixes working, slider reliability is #1 blocker
+
+### Completed (2026-03-18 Night — v12)
+- [x] **FIXED: NIT postflop over-aggression**
+  - NIT max raise = half pot when equity < 80%
+  - NitKing bet 25 on flop with 54% eq (was raising 900+ in v11) ✅
+- [x] **FIXED: STATION fold threshold raised 28 → 32**
+  - Still only 6% fold rate — may need 36 for 4-handed
+- [x] **ADDED: Position + stack logging in action output**
+  - Every action line: `UTG stk=1000 | Kh Js | eq=50%`
+- [x] **ADDED: Chip tracking per bot**
+  - `stack_history` dict, final report with net chips and winner/loser
+- [x] **ADDED: Cancel-and-re-request rebuy mechanism**
+  - After 3 failed pending waits, cancel request and re-submit fresh
+  - Creates new Accept button for host — fixes stuck rebuy loop
+- [x] **ADDED: Options menu v12 fallback**
+  - Always tries clicking OPTIONS button even without badge
+  - `host_approve_all` Phase 2c catches more approvals
+- [x] **IMPROVED: Host approval check interval 60s → 15s**
+- [x] **IMPROVED: Post-rebuy host approval sweep**
+  - After host reseats, immediately does approval sweep with page reload
+- [x] **IMPROVED: act.py slider React event handling**
+  - Better text input detection (tries non-range inputs first)
+  - Triggers React fiber onChange handler with proper target object
 
 ### Completed (2026-03-18 Night — v11)
-- [x] **FIXED: Preflop fold rates recalibrated for 4-handed**
-  - Multiway discount 0.85 → 0.92 per opponent (was way too harsh)
-  - NIT fold: 64% → 38% (target 40-50%) ✅
-  - TAG fold: 51% → 38% (target 30-40%) ✅
-  - LAG fold: 37% → 26% (target 20-30%) ✅
-  - STATION fold: 16% → 5% (target 5-15%) ✅
-- [x] **FIXED: Re-raise escalation capped**
-  - Preflop: no re-raise when facing >8x BB
-  - Postflop: no re-raise when call > 50% pot AND pot > 10x BB
-  - Log-based backup: caps if ≥4 raises in recent log
-- [x] **FIXED: Host page stability during rebuy approval**
-  - No longer reloads page during active hand (was causing host to lose seat)
-  - Approval on current page first, reload only after 60s + not in hand
-  - Rebuy success: 71% → 100% (8/8 busts recovered)
-- [x] **IMPROVED: Position-based preflop ranges**
-  - BTN: -7 equity threshold (play wider)
-  - CO: -5, SB: +3, UTG: +3
-- [x] **IMPROVED: Cookie banner removal** — runs before every action and scrape
-- [x] **220+ hands in 17 minutes** — no stalls, no crashes
+- [x] Preflop fold rates recalibrated for 4-handed (multiway discount 0.85→0.92)
+- [x] Re-raise escalation capped (preflop >8xBB, postflop >50% pot)
+- [x] Host page stability during rebuy approval (no-reload approach first)
+- [x] Position-based preflop ranges (BTN -7, CO -5, UTG +3, SB +3)
+- [x] Cookie banner removal before every action and scrape
 
-### Completed (2026-03-18 Evening — v10)
-- [x] **FIXED: Rebuy system (71% recovery rate, up from 0%)**
-- [x] **310+ hands played in 22 minutes** — no stalls, no crashes
-- [x] All 4 styles playing with distinct behaviors
+### Priority 0: Fix Slider Reliability (CRITICAL)
+- Slider goes to max instead of target value ~70% of the time
+- Causes premature all-ins → mass bust-outs → 80% of session time in rebuys
+- **TODO:** Try keyboard arrow key approach (set to max, press Left to decrement)
+- **TODO:** Try clicking the text input, clearing, typing amount, then pressing Enter
+- **TODO:** Fallback to min-bet preset button ("BET 20") when slider fails
+- **TODO:** Consider "call-only mode" when facing unreliable slider
 
-### Completed (2026-03-15 — v7)
-- [x] Fixed seating flow — reload host page between bot approvals
-- [x] 60+ hands played with all 4 bots
+### Priority 1: Deeper Starting Stacks (HIGH)
+- 1000 chips / 10BB = only 100BB = bust in 3-4 big pots
+- **TODO:** Change STARTING_STACK to 5000 or 10000
+- **TODO:** Adjust raise sizing proportionally
 
-### Priority 1: Tighten Flop Escalation Cap (HIGH)
-- 9 instances of raises >1000 chips on flop in v11 session
-- Current heuristic (call > 50% pot) doesn't trigger early enough
-- **TODO:** Max single bet = 2x pot (unless all-in with <25% of stack left)
-- **TODO:** Track raise count per street explicitly (not just from game log)
+### Priority 2: Reduce Rebuy Cycle Time (HIGH)
+- Cancel-and-re-request after 2 waits instead of 3
+- Host page reload every 15s when pending bots exist
+- Reduce per-wait sleep from 8s to 4s
 
-### Priority 2: Fix NIT Postflop Over-Aggression (HIGH)
-- NitKing raised 5564 on turn with only 51% equity — should never happen
-- NIT postflop: should almost never raise >2x pot unless equity >80%
-- **TODO:** Add NIT-specific postflop raise cap: max raise = pot unless equity >80%
+### Priority 3: STATION Still Too Loose (MEDIUM)
+- 6% preflop fold rate — calling almost everything
+- **TODO:** Raise fold threshold from 32 to 36
 
-### Priority 3: STATION Fold Threshold Slightly Too Low (MEDIUM)
-- Only 5% preflop fold — calling 4c3h and 8s3c preflop
-- **TODO:** Raise STATION fold threshold from 28 to 32
+### Priority 4: Add Chip Tracking Report (MEDIUM)
+- Stack history tracking is in place but session too short to generate meaningful data
+- **TODO:** Log stack every 10 hands for mid-session updates
+- **TODO:** Track chip changes per street (flop/turn/river profit/loss)
 
-### Priority 4: Add Position + Stack Logging (MEDIUM)
-- Can't verify position adjustments are working without log data
-- **TODO:** Log position and stack in action output
-
-### Priority 5: Chip Tracking / Winner Detection (MEDIUM)
-- No way to tell which bot won the most chips over a session
-- **TODO:** Track stack changes hand-over-hand
-- **TODO:** Report net chip won/lost per bot at end of session
-
-### Priority 6: GTO & Analytics (LOW)
+### Priority 5: GTO & Analytics (LOW)
 - Balanced ranges, mixed strategies
 - Track VPIP, PFR, AF, WTSD per bot per session
 - Standard hand history format
 - Multi-session performance comparison
 
 ### Learned (Technical)
+- **Slider reliability is pokernow's biggest automation challenge** — React SPA ignores nativeSetter
+  - `nativeSetter.call(slider, value)` + dispatchEvent doesn't reliably update React state
+  - The actual rendered bet amount defaults to slider max
+  - Even triple-click + keyboard type doesn't work reliably
+- **Cancel-and-re-request works** — after 3 failed waits, cancel pending request and re-submit
+  - Creates fresh Accept notification for host
+  - Much more reliable than trying to find approval in Options menu
+- **Options menu v12 fallback helps** — clicking OPTIONS and looking for Accept buttons
+  - Works on first approval but not reliably for subsequent queued requests
+- **Host page reload timing matters** — too frequent = game disruption, too infrequent = missed approvals
+  - 15s check interval with 20s reload threshold seems good
 - **Multiway equity discount matters enormously** — 0.85^3 = 0.614 vs 0.92^3 = 0.779
-  - NIT went from 64% preflop fold to 38% just by changing this one number
-- **Host page reload during hand = disaster** — causes seat loss and game disruption
-  - v11 fix: approve on current page first, only reload if >60s AND not in hand
-- **Re-raise cap heuristic** — call_amount relative to BB/pot works but needs tuning
-  - Log-based raise counting is unreliable (entries span multiple streets/hands)
-- **Position system** — BTN/CO adjustments working but hard to verify without explicit logging
 - **Host page goes blank after approving seat request** — React SPA re-render. MUST reload page.
-- **"cancel game ingress request"** means bot has pending seat request — don't resit, just wait
+- **"cancel game ingress request"** means bot has pending seat request
 - **Host is game owner** — uses "Take the Seat" (instant), not "Request the Seat"
-- **Rebuy cooldown needed** — after successful rebuy, bot sees stack=None briefly during re-render
-- **"copy link" button matched as form submit** — must filter unrelated buttons
+- **Both bots showing 80%+ equity** — MC sims are vs random hands, not actual opponent
 - `.alert-1-container` cookie banner blocks interaction — must remove from DOM before every action
 - **"BET 20" is preset min-bet (acts immediately), "BET" opens slider panel**
-- **Monte Carlo equity with 500 sims gives ±5% accuracy — acceptable for speed**
-- **Both bots showing 80%+ equity** — MC sims are vs random hands, not actual opponent
