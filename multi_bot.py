@@ -2,6 +2,12 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v13.0 - Slider rewrite + deeper stacks (2026-03-18):
+  - REWRITE: act.py slider uses 3-tier approach (mouse drag → arrow keys → text input)
+  - FIXED: Slider going to max (70% failure rate) → call fallback when all tiers fail
+  - CHANGED: STARTING_STACK 1000 → 5000 (500BB) — reduces bust-out frequency 5x
+  - ADDED: Slider accuracy stats logged at session end (tier1/tier2/tier3/fallback counts)
+  - ADDED: Escape+Call fallback when slider lands at >2x target amount
 v12.0 - Bet capping, NIT fix, STATION fix, chip tracking (2026-03-18):
   - FIXED: Flop escalation — max single bet = 2x pot (unless all-in with <25% stack)
   - FIXED: NIT postflop over-aggression — max raise = pot unless equity > 80%
@@ -97,7 +103,7 @@ import tempfile
 import urllib.request
 
 NUM_BOTS = 4
-STARTING_STACK = 1000
+STARTING_STACK = 5000  # v13: 500BB — deeper stacks reduce bust-out frequency
 BIG_BLIND = 10
 HEADLESS = False
 POLL_MS = 400
@@ -2242,6 +2248,15 @@ async def status_reporter(stop_event):
         log(f"📊 STATUS | {total}h | {' '.join(parts)}")
         if fp: log(f"   Folds: {' '.join(fp)}")
         if rp: log(f"   Rebuys: {' '.join(rp)}")
+        # v13: Log slider stats
+        try:
+            from act import get_slider_stats
+            ss = get_slider_stats()
+            att = ss.get("attempts", 0)
+            if att > 0:
+                suc = ss.get("successes", 0)
+                log(f"   🎚️ Slider: {suc}/{att} ({100*suc/att:.0f}%) | T1:{ss.get('tier1_ok',0)} T2:{ss.get('tier2_ok',0)} T3:{ss.get('tier3_ok',0)} | Fallback calls:{ss.get('fallback_calls',0)}")
+        except: pass
 
 
 async def main():
@@ -2251,7 +2266,7 @@ async def main():
     cdp_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent CDP calls across all bots
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v12.0 (bet cap + NIT fix + chip tracking)")
+    log("🃏 Poker Now Multi-Bot Arena v13.0 (slider rewrite + 5000 stacks)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
@@ -2630,6 +2645,19 @@ async def main():
         if results:
             log(f"\n   🏆 Winner: {results[0][0]} ({results[0][1]}) with {results[0][2]:+d} chips")
             log(f"   💀 Loser:  {results[-1][0]} ({results[-1][1]}) with {results[-1][2]:+d} chips")
+        # v13: Final slider stats
+        try:
+            from act import get_slider_stats
+            ss = get_slider_stats()
+            att = ss.get("attempts", 0)
+            if att > 0:
+                suc = ss.get("successes", 0)
+                log(f"\n   🎚️ SLIDER STATS: {suc}/{att} accurate ({100*suc/att:.0f}%)")
+                log(f"      Tier 1 (mouse):  {ss.get('tier1_ok',0)}")
+                log(f"      Tier 2 (arrows): {ss.get('tier2_ok',0)}")
+                log(f"      Tier 3 (text):   {ss.get('tier3_ok',0)}")
+                log(f"      Fallback calls:  {ss.get('fallback_calls',0)}")
+        except: pass
         log(f"{'='*60}")
         log("👋 Done.")
 
