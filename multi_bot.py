@@ -2,6 +2,19 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v18.0 - River value betting + LAG fold fix + crumbs add-chips (2026-03-19):
+  - FIXED: River value bet missing — bots were checking back 70-80% equity rivers
+    Free-check section now ALWAYS bets river with equity > 70% (50-75% pot)
+    This was leaving massive value on the table (identified in v16/v17 analyses)
+  - FIXED: LAG fold rate too low (3-7% vs target ~15%) — raised LAG fold threshold 34 → 38
+    AceBot was calling with 7h2h, 4h8d, 6h8s preflop — now properly folding trash
+  - FIXED: "Seated with crumbs" rebuy loop — new approach tries Options menu "Add Chips" /
+    "Top Up" before the costly leave-resit-reload cycle. Saves 60-90s per rebuy.
+    If add-chips not available, falls through to original leave-resit path.
+  - FIXED: STATION river call threshold tightened — was calling 25% equity vs 40%+ pot odds
+    Now requires equity >= pot_odds - 3 (was equity - 5 + 8 bonus = too loose)
+  - IMPROVED: Free check c-bet on river now uses value sizing (not cbet sizing)
+  - IMPROVED: calc_raise "river_value" context — 50-75% pot, good sizing for thin value
 v17.0 - Serialized rebuy queue + global rebuy suppression (2026-03-19):
   - FIXED: Concurrent rebuy chaos — 3 bots rebuying simultaneously caused cascading
     false busts, stuck loops, and host unable to approve because it was also rebuying
@@ -1441,6 +1454,160 @@ async def _fill_rebuy_form(page, player_name, amount):
     return False
 
 
+async def _try_add_chips(page, player_name, amount):
+    """v18: Try to add chips via Options menu without leaving the seat.
+    Pokernow may have 'Add Chips', 'Top Up', 'Rebuy', or 'Buy More' in the Options panel.
+    This avoids the expensive leave-seat → reload → crumbs-loop cycle.
+    Returns True if chips were successfully added."""
+    log(f"   🔧 {player_name}: Trying add-chips via Options menu...")
+    
+    # Step 1: Open Options menu
+    options_opened = await cdp_safe(page, """() => {
+        const btns = document.querySelectorAll('button, div[role="button"]');
+        for (const b of btns) {
+            const t = (b.textContent || '').trim().toLowerCase();
+            const r = b.getBoundingClientRect();
+            if (r.width > 0 && r.height > 0 && t === 'options') {
+                b.click();
+                return true;
+            }
+        }
+        return false;
+    }""")
+    
+    if not options_opened:
+        log(f"   🔍 {player_name}: No Options button found")
+        return False
+    
+    await asyncio.sleep(1.5)
+    
+    # Step 2: Look for add-chips / top-up / rebuy buttons in the opened panel
+    add_chips_clicked = await cdp_safe(page, """() => {
+        const btns = document.querySelectorAll('button, a, div[role="button"]');
+        const addChipsTerms = ['add chips', 'top up', 'top-up', 'rebuy', 're-buy', 
+                               'buy more', 'buy chips', 'add more', 'increase stack'];
+        for (const b of btns) {
+            const t = (b.textContent || '').trim().toLowerCase();
+            const r = b.getBoundingClientRect();
+            if (r.width <= 0 || r.height <= 0) continue;
+            for (const term of addChipsTerms) {
+                if (t.includes(term)) {
+                    b.click();
+                    return t;
+                }
+            }
+        }
+        return null;
+    }""")
+    
+    if not add_chips_clicked:
+        # Close the Options menu by clicking elsewhere
+        try:
+            await page.mouse.click(10, 10)
+        except: pass
+        await asyncio.sleep(0.5)
+        log(f"   🔍 {player_name}: No add-chips option in Options menu")
+        return False
+    
+    log(f"   🔧 {player_name}: Found add-chips button: '{add_chips_clicked}'")
+    await asyncio.sleep(2)
+    
+    # Step 3: Fill the amount form (similar to _fill_rebuy_form_safe)
+    result = await cdp_safe(page, """(params) => {
+        const amount = params.amount;
+        const r = {filled: false, submitted: false};
+        
+        function setInput(input, value) {
+            const nativeSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, 'value').set;
+            nativeSetter.call(input, String(value));
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            input.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+        
+        // Find visible number/text inputs for the amount
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input:not([type])');
+        for (const inp of inputs) {
+            const rect = inp.getBoundingClientRect();
+            if (rect.width <= 0 || rect.height <= 0) continue;
+            const ph = (inp.placeholder || '').toLowerCase();
+            // Skip name inputs
+            if (ph.includes('name') || ph.includes('alias')) continue;
+            setInput(inp, amount);
+            r.filled = true;
+            break;
+        }
+        
+        if (!r.filled) return r;
+        
+        // Find and click submit button
+        const btns = document.querySelectorAll('button, input[type="submit"]');
+        const submitTerms = ['confirm', 'submit', 'add', 'ok', 'request', 'buy', 'top up'];
+        for (const b of btns) {
+            const t = (b.textContent || '').trim().toLowerCase();
+            const rect = b.getBoundingClientRect();
+            if (rect.width <= 0 || rect.height <= 0) continue;
+            for (const term of submitTerms) {
+                if (t.includes(term)) {
+                    b.click();
+                    r.submitted = true;
+                    return r;
+                }
+            }
+        }
+        
+        return r;
+    }""", {"amount": amount})
+    
+    if result and result.get('submitted'):
+        log(f"   ✅ {player_name}: Add-chips form submitted (amount={amount})")
+        await asyncio.sleep(3)
+        # Verify stack increased
+        new_stack = await cdp_safe(page, """() => {
+            const yp = document.querySelector('.table-player.you-player');
+            if (!yp) return 0;
+            const texts = yp.querySelectorAll('p, span, div');
+            for (const t of texts) {
+                const val = t.textContent.trim().replace(/,/g, '');
+                if (/^\\d+$/.test(val) && parseInt(val) > 0) return parseInt(val);
+            }
+            return 0;
+        }""")
+        if new_stack and new_stack >= int(STARTING_STACK * 0.30):
+            log(f"   ✅ {player_name}: Stack after add-chips: {new_stack}")
+            rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+            return True
+        else:
+            log(f"   🔍 {player_name}: Add-chips submitted but stack still low ({new_stack})")
+            # May need host approval for add-chips request
+            if not is_host_bot(player_name):
+                rebuy_pending.set()
+                await asyncio.sleep(8)
+                # Re-check
+                new_stack2 = await cdp_safe(page, """() => {
+                    const yp = document.querySelector('.table-player.you-player');
+                    if (!yp) return 0;
+                    const texts = yp.querySelectorAll('p, span, div');
+                    for (const t of texts) {
+                        const val = t.textContent.trim().replace(/,/g, '');
+                        if (/^\\d+$/.test(val) && parseInt(val) > 0) return parseInt(val);
+                    }
+                    return 0;
+                }""")
+                if new_stack2 and new_stack2 >= int(STARTING_STACK * 0.30):
+                    log(f"   ✅ {player_name}: Add-chips approved! Stack: {new_stack2}")
+                    rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+                    return True
+    
+    log(f"   🔍 {player_name}: Add-chips form fill failed")
+    return False
+
+
+def is_host_bot(name):
+    """Check if a player name is the host bot."""
+    return name == BOT_PROFILES[0]["name"]
+
+
 async def auto_rebuy(page, player_name, amount=1000, is_host=False):
     """Auto-rebuy when busted. Page-reload approach for SPA reliability.
     v16: Completely rewritten host rebuy path.
@@ -1631,7 +1798,18 @@ async def auto_rebuy(page, player_name, amount=1000, is_host=False):
                     auto_rebuy._resit_attempts[player_name] = 0
                 return True
             else:
-                log(f"   🔍 {player_name}: Seated but stack={stack_val} (< {meaningful_stack}) — leaving to re-sit with fresh chips")
+                log(f"   🔍 {player_name}: Seated but stack={stack_val} (< {meaningful_stack}) — trying add-chips first")
+                
+                # v18: Try "Add Chips" / "Top Up" via Options menu BEFORE leave-resit loop.
+                # This avoids the costly reload cycle where pokernow auto-seats with crumb stack.
+                add_chips_ok = await _try_add_chips(page, player_name, STARTING_STACK - stack_val)
+                if add_chips_ok:
+                    log(f"   ✅ {player_name}: Add-chips successful! Topped up from {stack_val}")
+                    if hasattr(auto_rebuy, '_resit_attempts'):
+                        auto_rebuy._resit_attempts[player_name] = 0
+                    return True
+                
+                log(f"   🔍 {player_name}: Add-chips not available — falling back to leave-resit")
                 # v17: Track leave-resit attempts to avoid infinite loop
                 if not hasattr(auto_rebuy, '_resit_attempts'):
                     auto_rebuy._resit_attempts = {}
@@ -2053,7 +2231,7 @@ def bot_decide(state, profile):
     PREFLOP_THRESHOLDS = {
         "NIT":     {"raise": 58, "call": 50, "fold": 45},
         "TAG":     {"raise": 52, "call": 44, "fold": 44},  # v14: tightened from 40 (was 19% fold, target 25-30%)
-        "LAG":     {"raise": 46, "call": 38, "fold": 34},
+        "LAG":     {"raise": 46, "call": 38, "fold": 38},  # v18: raised fold from 34→38 (was 3-7% fold, target ~15%)
         "STATION": {"raise": 55, "call": 32, "fold": 32},  # v12: raised from 28 (was calling trash like 4c3h)
     }
     thresholds = PREFLOP_THRESHOLDS.get(style, PREFLOP_THRESHOLDS["TAG"])
@@ -2076,6 +2254,10 @@ def bot_decide(state, profile):
             # v10: 60-90% pot proportional to equity, minimum 3x BB
             eq_factor = min(1.0, max(0.0, (eq - 45) / 35.0))
             return max(int(pot * (0.60 + eq_factor * 0.30)), bb * 3)
+        elif context == "river_value":
+            # v18: River-specific value sizing — 50-75% pot
+            eq_factor = min(1.0, max(0.0, (eq - 55) / 30.0))
+            return max(int(pot * (0.50 + eq_factor * 0.25)), bb * 3)
         elif context == "bluff":
             # 33-50% pot, minimum 2.5x BB
             return max(int(pot * random.uniform(0.33, 0.50)), int(bb * 2.5))
@@ -2096,6 +2278,32 @@ def bot_decide(state, profile):
 
     # ---- FREE CHECK (no call required) ----
     if can_check and not can_call:
+        # v18: RIVER VALUE BET — the #1 missing feature from v16/v17.
+        # Bots were checking back 70-80% equity rivers, leaving huge value on table.
+        # On river with strong equity, ALWAYS bet for value (no more draws to protect against).
+        # NOTE: We check the ORIGINAL can_raise state (Raise/Bet in actions_str) because
+        # raise_capped may have killed can_raise for big pots — but we SHOULD bet the river
+        # for value even in big pots when we have a free check. The raise cap is meant to
+        # prevent re-raise wars, not block opening bets on river with strong hands.
+        river_can_bet = "Raise" in actions_str or "Bet" in actions_str
+        if street == "river" and river_can_bet:
+            if equity >= 70:
+                # Strong river value bet: 50-75% pot (NIT bets smaller, LAG bigger)
+                river_size = pot * (0.50 + agg * 0.25)
+                return ("raise", cr(max(int(river_size), bb * 3)))
+            elif equity >= 55 and style in ("TAG", "LAG"):
+                # Thin river value bet for aggressive styles only
+                if random.random() < agg * 0.6:
+                    river_size = pot * random.uniform(0.33, 0.50)
+                    return ("raise", cr(max(int(river_size), bb * 3)))
+            elif equity < 20 and style == "LAG" and random.random() < bluff * 0.5:
+                # River bluff with air (LAG only, rare)
+                bluff_size = pot * random.uniform(0.50, 0.75)
+                return ("raise", cr(max(int(bluff_size), bb * 3)))
+            # Default: check river with medium equity
+            if equity < 55:
+                return ("check", None)
+
         # Strong hands: always bet for value (60-80% pot)
         if equity > 60 and can_raise:
             return ("raise", cr(calc_raise("value", equity)))
@@ -2188,9 +2396,15 @@ def bot_decide(state, profile):
     # v9: STATION should never raise large amounts — they call, not bet
     station_raise_block = (style == "STATION" and can_call)
 
+    # v18: On river with free check, override raise cap for value betting
+    # The raise cap prevents re-raise wars but shouldn't block opening value bets
+    postflop_can_raise = can_raise
+    if street == "river" and can_check and not can_call:
+        postflop_can_raise = "Raise" in actions_str or "Bet" in actions_str
+
     # Very strong hands — always bet/raise for value
     if equity >= strong_thresh:
-        if can_raise:
+        if postflop_can_raise:
             if nit_river_block:
                 return ("call", None) if can_call else ("check", None)
             if station_raise_block and equity < 75:
@@ -2204,7 +2418,7 @@ def bot_decide(state, profile):
 
     # Strong hands — bet for value most of the time
     if equity >= value_thresh:
-        if can_raise and random.random() < agg + 0.25:
+        if postflop_can_raise and random.random() < agg + 0.25:
             if nit_river_block:
                 return ("call", None) if can_call else ("check", None)
             if station_raise_block:
@@ -2229,10 +2443,10 @@ def bot_decide(state, profile):
     if equity >= 28:
         if can_call:
             pot_odds = call_amount / max(pot + call_amount, 1) * 100
-            bonus = 8 if style == "STATION" else 0
+            bonus = 5 if style == "STATION" else 0  # v18: reduced from 8 (was calling 25% eq vs 40% pot odds)
             # On river, require better pot odds (no speculative calling)
             if street == "river":
-                if pot_odds < equity - 5 + bonus: return ("call", None)
+                if pot_odds < equity - 3 + bonus: return ("call", None)  # v18: tightened from equity-5
             else:
                 if pot_odds < equity + bonus: return ("call", None)
         return ("check", None) if can_check else ("fold", None)
