@@ -1,0 +1,95 @@
+[18:09:20] ============================================================
+[18:09:20] 🃏 Poker Now Multi-Bot Arena v6.0 (robust)
+[18:09:20]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[18:09:20]    Stack: 1000 | BB: 10
+[18:09:20] ============================================================
+[18:09:22] 🌐 Launching host browser with stealth...
+[18:09:25] 🎰 Creating new game...
+[18:09:25]    🌐 Pre-warming with Google...
+[18:09:54]    Clicked: a:has-text("Start a New Game")
+[18:10:03]    ⏳ reCAPTCHA challenge detected (overlay) — attempting solve...
+[18:10:03]    ✅ reCAPTCHA cleared!
+[18:10:04]    Filled host name: Clawhi
+[18:10:07]    Submitted game creation
+[18:10:08]    ✅ Game created: https://www.pokernow.com/games/pglQY3EY4n3mVxmD9S1wB7sBu
+[18:10:11]    🧹 Dismissed waiting overlay (1 elements)
+[18:10:13]    🪑 HOST: Sitting at seat 1...
+[18:10:13]    HOST: Clicked seat-1
+[18:10:16]    HOST: Form: name=False, stack=False, submitted=False, btn=?, inputs=[]
+[18:10:16]    HOST: JS form fill incomplete — trying Playwright native fill...
+[18:10:17]    HOST: ⚠️ Could not submit seat form!
+[18:10:20]    ⚠️ HOST: Not verified in DOM after submit (attempt 1)
+[18:10:21]    🔄 HOST: Seat attempt 2/3...
+[18:10:24]    HOST: Clicked seat-1
+[18:10:27]    HOST: Form: name=True, stack=True, submitted=True, btn=Take the Seat, inputs=['input:your name', 'input:your stack']
+[18:10:30]    ✅ HOST: Seated and verified (you-player)!
+[18:10:32] 🌐 Launching browser for AceBot...
+[18:10:35] 🤖 AceBot joining...
+[18:10:41]    🪑 AceBot: Sitting at seat 2...
+[18:10:42]    AceBot: Clicked seat-2
+[18:10:45]    AceBot: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[18:10:47]    ✅ AceBot: Seat requested via JS (pending host approval)
+[18:10:49]    🔑 Approving AceBot from host page...
+[18:10:49]    ✅ Host approved: 'Accept'
+[18:10:50]    ✅ Approved AceBot seat request
+[18:10:52]    📊 After AceBot: 0 seated ()
+[18:10:52] 🌐 Launching browser for NitKing...
+[18:10:55] 🤖 NitKing joining...
+[18:11:00]    🪑 NitKing: Sitting at seat 3...
+[18:11:01]    NitKing: Clicked seat-3
+[18:11:04]    NitKing: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[18:11:06]    ✅ NitKing: Seat requested via JS (pending host approval)
+[18:11:08]    🔑 Approving NitKing from host page...
+[18:11:23]    ⚠️ Could not find approval button for NitKing within 15s
+[18:11:25]    📊 After NitKing: 0 seated ()
+[18:11:25] 🌐 Launching browser for CallStn...
+[18:11:28] 🤖 CallStn joining...
+[18:11:38]    🪑 CallStn: Sitting at seat 4...
+[18:11:39]    CallStn: Clicked seat-4
+[18:11:42]    CallStn: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[18:11:45]    ✅ CallStn: Seat requested via JS (pending host approval)
+[18:11:47]    🔑 Approving CallStn from host page...
+[18:12:02]    ⚠️ Could not find approval button for CallStn within 15s
+[18:12:04]    📊 After CallStn: 0 seated ()
+[18:12:04]    🔄 Final approval sweep...
+[18:12:07]    📊 Final: Seated 0/4 () | Empty seats: 0
+[18:12:07]    🔍 Host URL: https://www.pokernow.com/games/pglQY3EY4n3mVxmD9S1wB7sBu
+[18:12:07]    🔍 DOM: {'title': 'Poker Now - Poker with Friends', 'bodyClasses': '', 'tablePlayerCount': 0, 'youPlayer': False, 'iframes': 1, 'bodyText': ''}
+[18:12:07] ⚠️ Only 0 seated. Attempting recovery...
+[18:12:11]    📊 After reload: 2/4 (Clawhi, AceBot)
+[18:12:11]    🔍 DIAG: Host page buttons: ['Options @(12,75)', 'Leave Seat @(12,139)', 'Away @(12,204)', 'Select @(886,570)', 'Sound @(1213,105)', 'Log / Ledger @(9,595)', 'Shuffle Seats @(874,668)', 'Start Game @(1088,668)', 'Expand/Collapse @(422,647)', 'New Message @(470,647)', 'Join @(532,649)']
+[18:12:11]    🔍 DIAG: Table players: ['table-player table-player-1 you-player -> Clawhi', 'table-player table-player-2 -> AceBot', 'table-player table-player-seat table-player-3 -> (no-link)', 'table-player table-player-seat table-player-4 -> (no-link)', 'table-player table-player-seat table-player-5 -> (no-link)', 'table-player table-player-seat table-player-6 -> (no-link)', 'table-player table-player-seat table-player-7 -> (no-link)', 'table-player table-player-seat table-player-8 -> (no-link)', 'table-player table-player-seat table-player-9 -> (no-link)', 'table-player table-player-seat table-player-10 -> (no-link)']
+[18:12:11]    📸 Diagnostic screenshot saved
+[18:12:11]    ⏳ Seated: 2/4 (YOU:Clawhi, AceBot), approved: 0
+[18:12:17]    ⏳ Seated: 2/4 (YOU:Clawhi, AceBot), approved: 0
+[18:12:22]    ⏳ Seated: 2/4 (YOU:Clawhi, AceBot), approved: 0
+[18:12:26]    ⚠️ Approval timeout. Seated: 2/4 (HOST, AceBot)
+[18:12:26] 
+🎮 Starting game...
+[18:12:26]    ▶️ Game started! (clicked 'start game')
+[18:12:28] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pglQY3EY4n3mVxmD9S1wB7sBu
+============================================================
+
+[18:12:28] 🤖 Clawhi (TAG) loop starting...
+[18:12:28] 🤖 AceBot (LAG) loop starting...
+[18:12:28] 🤖 NitKing (NIT) loop starting...
+[18:12:28] 🤖 CallStn (STATION) loop starting...
+[18:12:30]    AceBot(LAG) | preflop | 8s 5h | eq=39% -> call  | Called
+[18:12:31]    Clawhi(TAG) | preflop | 10d 6c | eq=44% -> check  | Checked
+[18:12:34]    Clawhi(TAG) | flop | 10d 6c | eq=38% -> check  | Checked
+[18:12:36]    AceBot(LAG) | flop | 8s 5h | eq=73% -> raise 30 | Raised to 30 (range 20-980)
+[18:12:38]    Clawhi(TAG) | flop | 10d 6c | eq=34% -> call  | Called
+[18:12:41]    Clawhi(TAG) | turn | 10d 6c | eq=28% -> check  | Checked
+[18:12:43]    AceBot(LAG) | turn | 8s 5h | eq=73% -> raise 75 | Raised to 75 (range 20-950)
+[18:12:44]    Clawhi(TAG) | turn | 10d 6c | eq=24% -> call  | Called
+ION) loop starting...
+[18:12:30]    AceBot(LAG) | preflop | 8s 5h | eq=39% -> call  | Called
+[18:12:31]    Clawhi(TAG) | preflop | 10d 6c | eq=44% -> check  | Checked
+[18:12:34]    Clawhi(TAG) | flop | 10d 6c | eq=38% -> check  | Checked
+[18:12:36]    AceBot(LAG) | flop | 8s 5h | eq=73% -> raise 30 | Raised to 30 (range 20-980)
+[18:12:38]    Clawhi(TAG) | flop | 10d 6c | eq=34% -> call  | Called
+[18:12:41]    Clawhi(TAG) | turn | 10d 6c | eq=28% -> check  | Checked
+[18:12:43]    AceBot(LAG) | turn | 8s 5h | eq=73% -> raise 75 | Raised to 75 (range 20-950)
+[18:12:44]    Clawhi(TAG) | turn | 10d 6c | eq=24% -> call  | Called

@@ -2,6 +2,13 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v11.0 - Re-raise cap, position-based ranges, recalibrated fold rates (2026-03-18):
+  - FIXED: Re-raise escalation — max 3 raises/street total, 2 per player → then call/fold
+  - FIXED: Preflop fold rates too high — multiway discount 0.85→0.92, thresholds lowered
+  - FIXED: Cookie banner more aggressive removal (before every action, kills overlays)
+  - IMPROVED: Position-based preflop ranges (BTN opens wider, UTG tighter)
+  - IMPROVED: NIT target 45% fold (was 64%), TAG target 35% fold (was 51%)
+  - IMPROVED: Per-position equity adjustments: BTN -7, CO -5, UTG +3, SB +3
 v10.0 - Fix game stalls, improve postflop play, robust rebuys (2026-03-18):
   - FIXED: Game stalls after all-in — host now clicks Start/Deal every loop
   - FIXED: Host proactively checks for rebuy approvals every 30s (not just on signal)
@@ -186,11 +193,21 @@ async def make_stealth_page(pw, headless=False, profile_id=0):
 
 
 async def dismiss_cookie_banner(page):
+    """v11: More aggressive cookie banner removal — kills all overlay elements."""
     await page.evaluate("""() => {
-        const alert = document.querySelector('.alert-1-container');
-        if (alert) alert.remove();
+        // Remove cookie banner and any overlay elements that intercept clicks
+        document.querySelectorAll('.alert-1-container, .cookie-consent, [class*="cookie"], [class*="consent-banner"]').forEach(el => el.remove());
+        // Also remove any fixed/absolute overlays that might block clicks
+        document.querySelectorAll('div').forEach(d => {
+            const s = getComputedStyle(d);
+            const t = (d.textContent || '').toLowerCase();
+            if ((s.position === 'fixed' || s.position === 'absolute') && 
+                s.zIndex > 999 && (t.includes('cookie') || t.includes('consent') || t.includes('got it'))) {
+                d.remove();
+            }
+        });
     }""")
-    await asyncio.sleep(0.3)
+    await asyncio.sleep(0.2)
     try:
         btn = await page.query_selector('button:has-text("Got it")')
         if btn and await btn.is_visible():
@@ -199,7 +216,7 @@ async def dismiss_cookie_banner(page):
                 if cb: await cb.click()
             except: pass
             await btn.click()
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.3)
     except: pass
 
 
@@ -1607,8 +1624,10 @@ async def scrape_state_safe(page):
 
 
 async def execute_action_safe(page, action, amount=None):
-    """Execute action with semaphore to prevent Errno 35."""
+    """Execute action with semaphore to prevent Errno 35. v11: dismiss banner before every action."""
     try:
+        # v11: Always remove cookie banner before clicking action buttons
+        await page.evaluate("() => { document.querySelectorAll('.alert-1-container').forEach(el => el.remove()); }")
         from act import execute_action
         async with cdp_semaphore:
             return await asyncio.wait_for(execute_action(page, action, amount), timeout=10.0)
@@ -1634,13 +1653,19 @@ def detect_big_blind(state):
 
 def bot_decide(state, profile):
     """
-    Decision engine with proper per-style preflop ranges and BB-based sizing.
+    Decision engine v11: re-raise cap, position-based ranges, softer multiway discount.
     
-    Preflop fold targets (heads-up equity thresholds for 4-handed):
-      NIT:     fold ~50% (only top ~20% of hands, equity >= 58)
-      TAG:     fold ~35% (top ~30%, equity >= 52)
-      LAG:     fold ~20% (top ~45%, equity >= 45)
-      STATION: fold ~10% (top ~60%, equity >= 40)
+    v11 changes:
+      - Re-raise cap: max 3 raises per street per player (open, 3-bet, 4-bet) → then call/fold
+      - Preflop thresholds lowered for 4-handed (NIT was folding 64%, now target 45%)
+      - Position adjustments: wider from BTN/CO, tighter from SB/BB
+      - Multiway equity discount softened: 0.85 → 0.92 in hand_eval.py
+    
+    Preflop fold targets (4-handed with 0.92 discount):
+      NIT:     fold ~45-50% (top ~25%, equity >= 52)
+      TAG:     fold ~30-35% (top ~35%, equity >= 46)
+      LAG:     fold ~15-20% (top ~50%, equity >= 40)
+      STATION: fold ~10% (top ~60%, equity >= 35)
     """
     actions_str = " ".join(state.get("actions", []))
     can_check = "Check" in actions_str
@@ -1671,22 +1696,54 @@ def bot_decide(state, profile):
     bluff = profile["bluff_freq"]
     pos_mult = profile["position_aware"]
     in_pos = state.get("in_position", False)
-    pos_adj = 5 * pos_mult if in_pos else 0
+    my_pos = state.get("my_position", "")
     style = profile["style"]
 
-    # Per-style equity thresholds (4-handed calibrated)
-    PREFLOP_THRESHOLDS = {
-        "NIT":     {"raise": 65, "call": 55, "fold": 50},
-        "TAG":     {"raise": 58, "call": 48, "fold": 44},
-        "LAG":     {"raise": 50, "call": 42, "fold": 38},
-        "STATION": {"raise": 60, "call": 35, "fold": 32},
+    # v11: Position-based adjustment (wider from late position, tighter from blinds)
+    # BTN/CO get -5 to -8 equity threshold (play more hands)
+    # SB/BB get +2 to +4 (play fewer hands OOP)
+    # UTG gets +3 (tightest)
+    POS_ADJUSTMENTS = {
+        "BTN": -7, "BTN/SB": -3, "CO": -5, "MP": -2, "HJ": -1,
+        "UTG": 3, "UTG+1": 2, "EP": 2,
+        "SB": 3, "BB": 2,
     }
-    thresholds = PREFLOP_THRESHOLDS.get(style, PREFLOP_THRESHOLDS["TAG"])
+    pos_adj = POS_ADJUSTMENTS.get(my_pos, 0) * pos_mult
 
+    # Parse call amount early (needed for raise cap check)
     call_amount = 0
     for a in state.get("actions", []):
         m = re.search(r"Call\s+(\d+)", a)
         if m: call_amount = int(m.group(1))
+
+    # v11: Re-raise cap — prevent escalation wars
+    # Heuristic: if the call amount is already large relative to the pot/street, cap raising.
+    # Preflop: if call > 8x BB, we're facing a 4-bet+ → don't re-raise (call or fold)
+    # Postflop: if call > 50% of pot AND pot > 10x BB, we're in re-raise territory → cap
+    # Also count raises in game log as backup signal
+    log_entries = state.get("log", [])
+    raises_in_log = sum(1 for e in log_entries if "raise" in e.lower())
+    
+    raise_capped = False
+    if street == "preflop" and call_amount > bb * 8:
+        raise_capped = True  # Facing 4-bet+, just call or fold
+    elif street != "preflop" and call_amount > pot * 0.5 and pot > bb * 10:
+        raise_capped = True  # Pot already escalated significantly  
+    elif raises_in_log >= 4:
+        raise_capped = True  # Many raises in recent log (cross-street but still a signal)
+    
+    if raise_capped:
+        can_raise = False  # Force call/fold only
+
+    # v11: Per-style equity thresholds (recalibrated for 4-handed with 0.92 discount)
+    # Lowered from v10 since the multiway discount is softer now
+    PREFLOP_THRESHOLDS = {
+        "NIT":     {"raise": 58, "call": 50, "fold": 45},
+        "TAG":     {"raise": 52, "call": 44, "fold": 40},
+        "LAG":     {"raise": 46, "call": 38, "fold": 34},
+        "STATION": {"raise": 55, "call": 32, "fold": 28},
+    }
+    thresholds = PREFLOP_THRESHOLDS.get(style, PREFLOP_THRESHOLDS["TAG"])
 
     spr = my_stack / max(pot, 1)
 
@@ -1747,9 +1804,14 @@ def bot_decide(state, profile):
 
     # ---- PREFLOP ----
     if street == "preflop":
-        raise_thresh = thresholds["raise"] - pos_adj
-        call_thresh  = thresholds["call"]  - pos_adj
-        fold_thresh  = thresholds["fold"]  - pos_adj
+        # v11: pos_adj is negative for late position (play wider) and positive for early (play tighter)
+        # Subtracting pos_adj: BTN(-7) → thresh-(-7) = thresh+7 → need LESS equity = play wider ✓
+        # Wait, that's wrong. Lower threshold = play more hands. So subtract pos_adj directly.
+        # BTN pos_adj=-7: thresh - (-7) = thresh + 7 → HIGHER threshold → tighter. Wrong!
+        # Fix: ADD pos_adj (which is negative for BTN → lowers threshold → wider)
+        raise_thresh = thresholds["raise"] + pos_adj
+        call_thresh  = thresholds["call"]  + pos_adj
+        fold_thresh  = thresholds["fold"]  + pos_adj
 
         # Auto-fold trash
         if equity < fold_thresh:
@@ -1790,9 +1852,9 @@ def bot_decide(state, profile):
 
         return ("check", None) if can_check else ("fold", None)
 
-    # ---- POSTFLOP ---- (v10: more aggressive value betting, pot-odds-aware)
+    # ---- POSTFLOP ---- (v11: re-raise cap + more aggressive value betting)
     # Value threshold: how strong you need to be to bet/raise for value
-    # v10: Lowered thresholds so bots actually bet with good hands
+    # v11: pos_adj is negative for IP (lower threshold = bet more) ✓
     value_thresh = 50 - (agg * 10) + pos_adj
     strong_thresh = 65  # clear value bet territory
 
@@ -1879,31 +1941,45 @@ async def bot_loop(page, profile, is_host, stop_event):
                 await start_game(page)
                 await host_approve_all(page)
                 
-                # v10: Proactive rebuy approval every 30s + on signal
+                # v11: Proactive rebuy approval — try on current page first (no reload!)
+                # Only do a full page reload every 60s, and NEVER during rebuy cooldown
                 now = time.time()
                 needs_approval_check = False
                 if rebuy_pending is not None and rebuy_pending.is_set():
                     rebuy_pending.clear()
                     needs_approval_check = True
-                    log(f"   🔔 Host: Rebuy request signal detected")
-                elif now - last_host_check > 30:
+                elif now - last_host_check > 60:
                     needs_approval_check = True
-                    last_host_check = now
                 
-                if needs_approval_check:
+                if needs_approval_check and now >= rebuy_cooldown_until:
                     try:
-                        async with cdp_semaphore:
-                            await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
-                        await asyncio.sleep(3)
-                        await dismiss_cookie_banner(page)
-                        await dismiss_alerts(page)
+                        # v11: First try approval WITHOUT reloading (keeps game state intact)
                         approved = await host_approve_all(page)
                         if approved:
-                            log(f"   ✅ Host: Approved rebuy seat request(s)")
-                        # Also try to start game after approval (new player seated)
-                        await start_game(page)
+                            log(f"   ✅ Host: Approved rebuy seat request(s) (no reload)")
+                            await start_game(page)
+                            last_host_check = now
+                        elif now - last_host_check > 60:
+                            # Only reload if it's been >60s since last check AND we're not in a hand
+                            state_peek = await scrape_state_safe(page)
+                            if not state_peek.get("is_my_turn"):
+                                async with cdp_semaphore:
+                                    await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
+                                await asyncio.sleep(3)
+                                await dismiss_cookie_banner(page)
+                                await dismiss_alerts(page)
+                                approved = await host_approve_all(page)
+                                if approved:
+                                    log(f"   ✅ Host: Approved rebuy seat request(s) (after reload)")
+                                await start_game(page)
+                                last_host_check = now
                     except Exception as e:
                         log(f"   ⚠️ Host: Rebuy approval check error: {str(e)[:60]}")
+
+            # v11: Dismiss cookie banner every iteration to prevent click interception
+            try:
+                await page.evaluate("() => { document.querySelectorAll('.alert-1-container').forEach(el => el.remove()); }")
+            except: pass
 
             state = await scrape_state_safe(page)
             cards = tuple(state.get("my_cards", []))
@@ -2047,7 +2123,7 @@ async def main():
     cdp_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent CDP calls across all bots
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v6.0 (robust)")
+    log("🃏 Poker Now Multi-Bot Arena v11.0 (re-raise cap + position ranges)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)

@@ -1,0 +1,155 @@
+[21:18:09] ============================================================
+[21:18:09] 🃏 Poker Now Multi-Bot Arena v11.0 (re-raise cap + position ranges)
+[21:18:09]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[21:18:09]    Stack: 1000 | BB: 10
+[21:18:09] ============================================================
+[21:18:11] 🌐 Launching host browser with stealth...
+[21:21:41] ❌ Fatal: BrowserType.launch_persistent_context: Timeout 180000ms exceeded.
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=10782
+  - [pid=10782][err] [10782:183097:0318/211811.108017:ERROR:mojo/public/cpp/platform/named_platform_channel_mac.cc:44] bootstrap_check_in com.google.chrome.for.testing.apps.0278B3E5B62DA9F9D032289CBA24C7AD9A37F5EB74258812FA8A535E4427D6B4: Permission denied (1100)
+  - [pid=10782][err] [10782:183087:0318/211811.108212:ERROR:components/segmentation_platform/internal/database/ukm_database_backend.cc:148] Failed to open UKM database: 0 database is locked
+
+Traceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 2154, in main
+    host_browser, host_page = await make_stealth_page(pw, headless=HEADLESS, profile_id=0)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 169, in make_stealth_page
+    ctx = await pw.chromium.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 14840, in launch_persistent_context
+    await self._impl_obj.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_browser_type.py", line 164, in launch_persistent_context
+    result = await self._channel.send_return_as_dict(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 83, in send_return_as_dict
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: BrowserType.launch_persistent_context: Timeout 180000ms exceeded.
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=10782
+  - [pid=10782][err] [10782:183097:0318/211811.108017:ERROR:mojo/public/cpp/platform/named_platform_channel_mac.cc:44] bootstrap_check_in com.google.chrome.for.testing.apps.0278B3E5B62DA9F9D032289CBA24C7AD9A37F5EB74258812FA8A535E4427D6B4: Permission denied (1100)
+  - [pid=10782][err] [10782:183087:0318/211811.108212:ERROR:components/segmentation_platform/internal/database/ukm_database_backend.cc:148] Failed to open UKM database: 0 database is locked
+
+[21:21:41] 🧹 Cleaning up...
+[21:21:41] 
+============================================================
+📊 FINAL | 0 hands
+[21:21:41]    Clawhi(TAG): 0h, 0 rebuys, fold N/A
+[21:21:41]    AceBot(LAG): 0h, 0 rebuys, fold N/A
+[21:21:41]    NitKing(NIT): 0h, 0 rebuys, fold N/A
+[21:21:41]    CallStn(STATION): 0h, 0 rebuys, fold N/A
+[21:21:41] 👋 Done.
+[21:21:41] ============================================================
+[21:21:41] 🃏 Poker Now Multi-Bot Arena v11.0 (re-raise cap + position ranges)
+[21:21:41]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[21:21:41]    Stack: 1000 | BB: 10
+[21:21:41] ============================================================
+[21:21:42] 🌐 Launching host browser with stealth...
+[21:22:30] ❌ Fatal: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+<launched> pid=11090
+[pid=11090][err] [11090:188122:0318/212142.433863:ERROR:components/segmentation_platform/internal/database/ukm_database_backend.cc:148] Failed to open UKM database: 0 database is locked
+[pid=11090][err] [11090:188122:0318/212142.433990:ERROR:mojo/public/cpp/platform/named_platform_channel_mac.cc:44] bootstrap_check_in com.google.chrome.for.testing.apps.0278B3E5B62DA9F9D032289CBA24C7AD9A37F5EB74258812FA8A535E4427D6B4: Permission denied (1100)
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=11090
+  - [pid=11090][err] [11090:188122:0318/212142.433863:ERROR:components/segmentation_platform/internal/database/ukm_database_backend.cc:148] Failed to open UKM database: 0 database is locked
+  - [pid=11090][err] [11090:188122:0318/212142.433990:ERROR:mojo/public/cpp/platform/named_platform_channel_mac.cc:44] bootstrap_check_in com.google.chrome.for.testing.apps.0278B3E5B62DA9F9D032289CBA24C7AD9A37F5EB74258812FA8A535E4427D6B4: Permission denied (1100)
+  - [pid=11090] <gracefully close start>
+  - [pid=11090] <kill>
+  - [pid=11090] <will force kill>
+  - [pid=11090] exception while trying to kill process: Error: kill EPERM
+  - [pid=11090] <process did exit: exitCode=null, signal=SIGKILL>
+  - [pid=11090] starting temporary directories cleanup
+  - [pid=11090] finished temporary directories cleanup
+  - [pid=11090] <gracefully close end>
+
+Traceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 2154, in main
+    host_browser, host_page = await make_stealth_page(pw, headless=HEADLESS, profile_id=0)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 169, in make_stealth_page
+    ctx = await pw.chromium.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 14840, in launch_persistent_context
+    await self._impl_obj.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_browser_type.py", line 164, in launch_persistent_context
+    result = await self._channel.send_return_as_dict(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 83, in send_return_as_dict
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+<launched> pid=11090
+[pid=11090][err] [11090:188122:0318/212142.433863:ERROR:components/segmentation_platform/internal/database/ukm_database_backend.cc:148] Failed to open UKM database: 0 database is locked
+[pid=11090][err] [11090:188122:0318/212142.433990:ERROR:mojo/public/cpp/platform/named_platform_channel_mac.cc:44] bootstrap_check_in com.google.chrome.for.testing.apps.0278B3E5B62DA9F9D032289CBA24C7AD9A37F5EB74258812FA8A535E4427D6B4: Permission denied (1100)
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=11090
+  - [pid=11090][err] [11090:188122:0318/212142.433863:ERROR:components/segmentation_platform/internal/database/ukm_database_backend.cc:148] Failed to open UKM database: 0 database is locked
+  - [pid=11090][err] [11090:188122:0318/212142.433990:ERROR:mojo/public/cpp/platform/named_platform_channel_mac.cc:44] bootstrap_check_in com.google.chrome.for.testing.apps.0278B3E5B62DA9F9D032289CBA24C7AD9A37F5EB74258812FA8A535E4427D6B4: Permission denied (1100)
+  - [pid=11090] <gracefully close start>
+  - [pid=11090] <kill>
+  - [pid=11090] <will force kill>
+  - [pid=11090] exception while trying to kill process: Error: kill EPERM
+  - [pid=11090] <process did exit: exitCode=null, signal=SIGKILL>
+  - [pid=11090] starting temporary directories cleanup
+  - [pid=11090] finished temporary directories cleanup
+  - [pid=11090] <gracefully close end>
+
+[21:22:30] 🧹 Cleaning up...
+[21:22:30] 
+============================================================
+📊 FINAL | 0 hands
+[21:22:30]    Clawhi(TAG): 0h, 0 rebuys, fold N/A
+[21:22:30]    AceBot(LAG): 0h, 0 rebuys, fold N/A
+[21:22:30]    NitKing(NIT): 0h, 0 rebuys, fold N/A
+[21:22:30]    CallStn(STATION): 0h, 0 rebuys, fold N/A
+[21:22:30] 👋 Done.
+[21:22:30] ============================================================
+[21:22:30] 🃏 Poker Now Multi-Bot Arena v11.0 (re-raise cap + position ranges)
+[21:22:30]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[21:22:30]    Stack: 1000 | BB: 10
+[21:22:30] ============================================================
+[21:22:32] 🌐 Launching host browser with stealth...
+[21:22:33] 🎰 Creating new game...
+[21:22:33]    🌐 Pre-warming with Google...
+[21:22:40]    Google pre-warm: Keyboard.type: Target page, context or browser has been closed
+[21:22:40] ❌ Fatal: Page.goto: Target page, context or browser has been closed
+Traceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 2181, in main
+    game_url_global = await create_game(host_page, host_name)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 550, in create_game
+    await page.goto("https://www.pokernow.club", wait_until="domcontentloaded", timeout=30000)
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 9045, in goto
+    await self._impl_obj.goto(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_page.py", line 552, in goto
+    return await self._main_frame.goto(**locals_to_params(locals()))
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_frame.py", line 153, in goto
+    await self._channel.send(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: Page.goto: Target page, context or browser has been closed
+[21:22:40] 🧹 Cleaning up...
+[21:22:40] 
+============================================================
+📊 FINAL | 0 hands
+[21:22:40]    Clawhi(TAG): 0h, 0 rebuys, fold N/A
+[21:22:40]    AceBot(LAG): 0h, 0 rebuys, fold N/A
+[21:22:40]    NitKing(NIT): 0h, 0 rebuys, fold N/A
+[21:22:40]    CallStn(STATION): 0h, 0 rebuys, fold N/A
+[21:22:40] 👋 Done.
+[21:22:40] ============================================================
+[21:22:40] 🃏 Poker Now Multi-Bot Arena v11.0 (re-raise cap + position ranges)
+[21:22:40]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[21:22:40]    Stack: 1000 | BB: 10
+[21:22:40] ============================================================
+[21:22:41] 🌐 Launching host browser with stealth...
+[21:22:42] 🎰 Creating new game...
+[21:22:42]    🌐 Pre-warming with Google...

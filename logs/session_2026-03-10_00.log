@@ -1,0 +1,134 @@
+[00:57:20] ============================================================
+[00:57:20] 🃏 Poker Now Multi-Bot Arena v3.1 (stealth)
+[00:57:20]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[00:57:20]    Stack: 1000 | BB: 10
+[00:57:20] ============================================================
+[00:57:20] 🌐 Launching host browser with stealth...
+[00:57:23]    🌐 Using system Chrome (better reCAPTCHA scores)
+[00:57:23] 🎰 Creating new game...
+[00:57:30]    Clicked: a:has-text("Start a New Game")
+[00:57:35]    ⏳ reCAPTCHA challenge detected (overlay) — waiting up to 90s...
+[00:57:35]    💡 Persistent profiles should reduce reCAPTCHA frequency over time
+[00:57:35]    ✅ reCAPTCHA cleared!
+[00:57:36]    Filled host name: Clawhi
+[00:57:36]    Submitted game creation
+[00:57:37]    ✅ Game created: https://www.pokernow.com/games/pglm4cpV9RKd0bwrFgWScKRLk
+[00:57:41]    🪑 HOST: Sitting at seat 1...
+[00:57:41]    HOST: Clicked seat 1
+[00:57:43]    HOST: Name (fallback)
+[00:57:43]    HOST: Clicked 'button:has-text("Take the Seat")'
+[00:57:45]    ✅ HOST: Seated!
+[00:57:47] 🌐 Launching browser for AceBot...
+[00:57:49]    🌐 Using system Chrome (better reCAPTCHA scores)
+[00:57:49] 🤖 AceBot joining...
+[00:57:55]    🪑 AceBot: Sitting at seat 2...
+[00:57:55]    AceBot: Clicked seat 2
+[00:57:56]    AceBot: Name (fallback)
+[00:57:57]    AceBot: Clicked 'button:has-text("Request the Seat")'
+[00:57:59]    ✅ AceBot: Seated!
+[00:58:01]    ✅ Host approved 1 request(s) (total: 1)
+[00:58:03]    ✅ All 2 players seated!
+[00:58:04] 🌐 Launching browser for NitKing...
+[00:58:05]    🌐 Using system Chrome (better reCAPTCHA scores)
+[00:58:05] 🤖 NitKing joining...
+[00:58:10]    🪑 NitKing: Sitting at seat 3...
+[00:58:10]    NitKing: Clicked seat 3
+[00:58:12]    NitKing: Name (fallback)
+[00:58:12]    NitKing: Clicked 'button:has-text("Request the Seat")'
+[00:58:14]    ✅ NitKing: Seated!
+[00:58:16]    ✅ Host approved 1 request(s) (total: 1)
+[00:58:18]    ✅ All 3 players seated!
+[00:58:19] 🌐 Launching browser for CallStn...
+[00:58:20]    🌐 Using system Chrome (better reCAPTCHA scores)
+[00:58:21] 🤖 CallStn joining...
+[00:58:26]    🪑 CallStn: Sitting at seat 4...
+[00:58:26]    CallStn: Clicked seat 4
+[00:58:27]    CallStn: Name (fallback)
+[00:58:28]    CallStn: Clicked 'button:has-text("Request the Seat")'
+[00:58:30]    ✅ CallStn: Seated!
+[00:58:32]    ✅ Host approved 1 request(s) (total: 1)
+[00:58:34]    ✅ All 4 players seated!
+[00:58:38]    📊 Seated: 4/4 (Clawhi, AceBot, NitKing, CallStn) | Empty seats: 0
+[00:58:38] 
+🎮 Starting game...
+[00:58:38]    ▶️ Game started!
+[00:58:40] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pglm4cpV9RKd0bwrFgWScKRLk
+============================================================
+
+[00:58:40] 🤖 Clawhi (TAG) loop starting...
+[00:58:40] 🤖 AceBot (LAG) loop starting...
+[00:58:40] 🤖 NitKing (NIT) loop starting...
+[00:58:40] 🤖 CallStn (STATION) loop starting...
+[00:58:40]    NitKing(NIT) | preflop | 4c 3d | eq=32% -> fold  | Folded
+[00:58:42]    CallStn(STATION) | preflop | 10s Jc | eq=54% -> call  | Called
+[00:58:43]    Clawhi(TAG) | preflop | 3h 4s | eq=32% -> fold  | Folded
+[00:58:44]    AceBot(LAG) | preflop | 8h Ks | eq=54% -> check  | Checked
+[00:58:46]    AceBot(LAG) | flop | 8h Ks | eq=47% -> check  | Checked
+[00:58:48]    CallStn(STATION) | flop | 10s Jc | eq=75% -> raise 37 | Raised to 37 (range 20-980)
+[00:58:49]    AceBot(LAG) | flop | 8h Ks | eq=48% -> call  | Called
+[00:58:51]    AceBot(LAG) | turn | 8h Ks | eq=38% -> check  | Checked
+[00:58:52]    CallStn(STATION) | turn | 10s Jc | eq=79% -> raise 90 | Raised to 90 (range 20-943)
+[00:58:53]    AceBot(LAG) | turn | 8h Ks | eq=44% -> call  | Called
+[00:58:56]    AceBot(LAG) | river | 8h Ks | eq=33% -> check  | Checked
+[00:58:57]    CallStn(STATION) | river | 10s Jc | eq=69% -> check  | Checked
+[00:59:04]    CallStn(STATION) | preflop | Jd 2h | eq=42% -> fold  | Folded
+[00:59:06]    Clawhi(TAG) | preflop | 10h 8s | eq=48% -> fold  | Folded
+[00:59:07]    AceBot(LAG) | preflop | 8h 6d | eq=41% -> call  | Called
+[00:59:08]    NitKing(NIT) | preflop | Js 7c | eq=48% -> check  | Checked
+[00:59:09]    AceBot(LAG) | flop | 8h 6d | eq=36% -> check  | Checked
+[00:59:10]    NitKing(NIT) | flop | Js 7c | eq=32% -> check  | Checked
+[00:59:12]    AceBot(LAG) | turn | 8h 6d | eq=92% -> raise 32 | Raised to 32 (range 20-833)
+[00:59:13]    NitKing(NIT) | turn | Js 7c | eq=52% -> call  | Called
+[00:59:14]    AceBot(LAG) | river | 8h 6d | eq=93% -> raise 83 | Raised to 83 (range 20-801)
+[00:59:15]    NitKing(NIT) | river | Js 7c | eq=71% -> call  | Called
+[00:59:23]    Clawhi(TAG) | preflop | 8h 9h | eq=49% -> fold  | Folded
+[00:59:24]    AceBot(LAG) | preflop | Qd 2h | eq=45% -> fold  | Folded
+[00:59:25]    NitKing(NIT) | preflop | 4c As | eq=55% -> call  | Called
+[00:59:26]    CallStn(STATION) | preflop | Jd 7c | eq=48% -> check  | Checked
+[00:59:28]    NitKing(NIT) | flop | 4c As | eq=82% -> raise 32 | Raised to 32 (range 20-845)
+[00:59:29]    CallStn(STATION) | flop | Jd 7c | eq=75% -> call  | Called
+[00:59:31]    NitKing(NIT) | turn | 4c As | eq=82% -> raise 83 | Raised to 83 (range 20-813)
+[00:59:32]    CallStn(STATION) | turn | Jd 7c | eq=85% -> call  | Called
+[00:59:33]    NitKing(NIT) | river | 4c As | eq=81% -> raise 216 | Raised to 216 (range 20-730)
+[00:59:34]    CallStn(STATION) | river | Jd 7c | eq=90% -> raise 1022 | Raised to 1022 (range 432-1022)
+[00:59:36]    NitKing(NIT) | river | 4c As | eq=84% -> call  | Called
+[00:59:37]    ☠️ CallStn: BUSTED
+[00:59:40]    💰 CallStn: Rebuy attempt...
+[00:59:44]    AceBot(LAG) | preflop | 8d Kh | eq=54% -> call  | Called
+[01:00:16]    Clawhi(TAG) | preflop | Qh 6h | eq=52% -> check  | Checked
+[01:00:18]    Clawhi(TAG) | flop | Qh 6h | eq=38% -> check  | Checked
+[01:00:20]    AceBot(LAG) | flop | 8d Kh | eq=40% -> check  | Checked
+[01:00:21]    Clawhi(TAG) | turn | Qh 6h | eq=31% -> check  | Checked
+[01:00:22]    AceBot(LAG) | turn | 8d Kh | eq=42% -> check  | Checked
+[01:00:23]    Clawhi(TAG) | river | Qh 6h | eq=32% -> check  | Checked
+[01:00:24]    AceBot(LAG) | river | 8d Kh | eq=44% -> check  | Checked
+[01:00:53]    Clawhi(TAG) | preflop | Qd Ad | eq=65% -> raise 70 | Raised to 70 (range 40-970)
+[01:00:55]    AceBot(LAG) | preflop | As 2h | eq=53% -> call  | Called
+[01:00:56]    Clawhi(TAG) | flop | Qd Ad | eq=68% -> check  | Checked
+[01:00:57]    AceBot(LAG) | flop | As 2h | eq=54% -> check  | Checked
+[01:00:58]    Clawhi(TAG) | turn | Qd Ad | eq=68% -> raise 74 | Raised to 74 (range 20-900)
+[01:00:59]    AceBot(LAG) | turn | As 2h | eq=45% -> call  | Called
+[01:01:01]    Clawhi(TAG) | river | Qd Ad | eq=97% -> raise 230 | Raised to 230 (range 20-826)
+[01:01:02]    AceBot(LAG) | river | As 2h | eq=53% -> raise 874 | Raised to 874 (range 460-874)
+[01:01:04]    Clawhi(TAG) | river | Qd Ad | eq=96% -> call  | Called
+[01:01:11]    Clawhi(TAG) | preflop | 3c Ah | eq=54% -> call  | Called
+[01:01:12]    AceBot(LAG) | preflop | 6c 4h | eq=35% -> fold  | Folded
+[01:01:56]    Clawhi(TAG) | flop | 3c Ah | eq=87% -> raise 40 | Raised to 40 (range 20-1920)
+[01:02:22]    AceBot(LAG) | preflop | As 3c | eq=54% -> fold  | Folded
+[01:03:10]    Clawhi(TAG) | preflop | 2s 7h | eq=32% -> fold  | Folded
+[01:03:14]    Clawhi(TAG) | preflop | Jc As | eq=63% -> call  | Called
+[01:03:16]    AceBot(LAG) | preflop | 7s Ah | eq=57% -> raise 38 | Raised to 40 (range 40-48)
+[01:03:38]    Clawhi(TAG) | preflop | Jc As | eq=63% -> call  | Called
+[01:03:40] 📊 STATUS | 35h | Clawhi:13h AceBot:12h NitKing:5h CallStn:5h
+[01:03:40]    Folds: Clawhi:24% AceBot:13% NitKing:10% CallStn:11%
+[01:03:40]    AceBot(LAG) | flop | 7s Ah | eq=83% -> raise 8 | Raised to 8 (range 8-8)
+[01:03:41]    Clawhi(TAG) | flop | Jc As | eq=88% -> raise 86 | Raised to 86 (range 28-1930)
+[01:04:26]    Clawhi(TAG) | preflop | Jh 3c | eq=43% -> call  | Called
+[01:05:10]    Clawhi(TAG) | flop | Jh 3c | eq=28% -> check  | Checked
+[01:05:32]    Clawhi(TAG) | turn | Jh 3c | eq=30% -> check  | Checked
+[01:05:54]    Clawhi(TAG) | river | Jh 3c | eq=39% -> check  | Checked
+[01:06:26]    Clawhi(TAG) | preflop | Jd 9d | eq=54% -> call  | Called
+[01:07:10]    Clawhi(TAG) | flop | Jd 9d | eq=45% -> check  | Checked
+[01:07:20] 🛑 Shutting down...

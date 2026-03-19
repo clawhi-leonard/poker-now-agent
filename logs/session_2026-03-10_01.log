@@ -1,0 +1,157 @@
+[01:09:21] ============================================================
+[01:09:21] 🃏 Poker Now Multi-Bot Arena v3.1 (stealth)
+[01:09:21]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[01:09:21]    Stack: 1000 | BB: 10
+[01:09:21] ============================================================
+[01:09:21] 🌐 Launching host browser with stealth...
+[01:09:23]    🌐 Using system Chrome (better reCAPTCHA scores)
+[01:09:23] 🎰 Creating new game...
+[01:09:30]    Clicked: a:has-text("Start a New Game")
+[01:09:35]    ⏳ reCAPTCHA challenge detected (overlay) — waiting up to 90s...
+[01:09:35]    💡 Persistent profiles should reduce reCAPTCHA frequency over time
+[01:09:35]    ✅ reCAPTCHA cleared!
+[01:09:35]    Filled host name: Clawhi
+[01:09:36]    Submitted game creation
+[01:09:37]    ✅ Game created: https://www.pokernow.com/games/pgl_6TZMMvQra7pqSUgmtBmqD
+[01:09:40]    🪑 HOST: Sitting at seat 1...
+[01:09:40]    HOST: Clicked seat 1
+[01:09:42]    ❌ HOST: No name input
+[01:09:44] 🌐 Launching browser for AceBot...
+[01:09:45]    🌐 Using system Chrome (better reCAPTCHA scores)
+[01:09:45] 🤖 AceBot joining...
+[01:09:50]    🪑 AceBot: Sitting at seat 2...
+[01:09:50]    AceBot: Clicked seat 2
+[01:09:51]    AceBot: Name (fallback)
+[01:09:52]    AceBot: Clicked 'button:has-text("Request the Seat")'
+[01:09:54]    ✅ AceBot: Seated!
+[01:09:56]    ✅ Host approved 1 request(s) (total: 1)
+[01:10:00]    ⏳ Seated: 1/2, approved: 1
+[01:10:05]    ⏳ Seated: 1/2, approved: 1
+[01:10:10]    ⏳ Seated: 1/2, approved: 1
+[01:10:15]    ⏳ Seated: 1/2, approved: 1
+[01:10:16]    ⚠️ Approval timeout. Seated: 1/2
+[01:10:17] 🌐 Launching browser for NitKing...
+[01:10:18]    🌐 Using system Chrome (better reCAPTCHA scores)
+[01:10:18] 🤖 NitKing joining...
+[01:10:23]    🪑 NitKing: Sitting at seat 3...
+[01:10:23]    NitKing: Clicked seat 3
+[01:10:25]    NitKing: Name (fallback)
+[01:10:25]    NitKing: Clicked 'button:has-text("Request the Seat")'
+[01:10:27]    ✅ NitKing: Seated!
+[01:10:29]    ✅ Host approved 1 request(s) (total: 1)
+[01:10:35]    ⏳ Seated: 2/3, approved: 1
+[01:10:40]    ⏳ Seated: 2/3, approved: 1
+[01:10:45]    ⏳ Seated: 2/3, approved: 1
+[01:10:50]    ⚠️ Approval timeout. Seated: 2/3
+[01:10:51] 🌐 Launching browser for CallStn...
+[01:10:52]    🌐 Using system Chrome (better reCAPTCHA scores)
+[01:10:52] 🤖 CallStn joining...
+[01:10:56]    🪑 CallStn: Sitting at seat 4...
+[01:10:57]    CallStn: Clicked seat 4
+[01:10:58]    CallStn: Name (fallback)
+[01:10:59]    CallStn: Clicked 'button:has-text("Request the Seat")'
+[01:11:01]    ✅ CallStn: Seated!
+[01:11:03]    ✅ Host approved 1 request(s) (total: 1)
+[01:11:05]    ⏳ Seated: 3/4, approved: 1
+[01:11:10]    ⏳ Seated: 3/4, approved: 1
+[01:11:15]    ⏳ Seated: 3/4, approved: 1
+[01:11:20]    ⏳ Seated: 3/4, approved: 1
+[01:11:23]    ⚠️ Approval timeout. Seated: 3/4
+[01:11:27]    📊 Seated: 3/4 (AceBot, NitKing, CallStn) | Empty seats: 7
+[01:11:27] 
+🎮 Starting game...
+[01:11:27]    ▶️ Game started!
+[01:11:29] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pgl_6TZMMvQra7pqSUgmtBmqD
+============================================================
+
+[01:11:29] 🤖 Clawhi (TAG) loop starting...
+[01:11:29] 🤖 AceBot (LAG) loop starting...
+[01:11:29] 🤖 NitKing (NIT) loop starting...
+[01:11:29] 🤖 CallStn (STATION) loop starting...
+[01:11:29]    AceBot(LAG) | preflop | 5d As | eq=56% -> call  | Called
+[01:11:31]    NitKing(NIT) | preflop | 10d 7h | eq=46% -> fold  | Folded
+[01:11:32]    CallStn(STATION) | preflop | 8c 3h | eq=35% -> check  | Checked
+[01:11:34]    CallStn(STATION) | flop | 8c 3h | eq=33% -> check  | Checked
+[01:11:36]    AceBot(LAG) | flop | 5d As | eq=36% -> check  | Checked
+[01:11:37]    CallStn(STATION) | turn | 8c 3h | eq=20% -> check  | Checked
+[01:11:39]    AceBot(LAG) | turn | 5d As | eq=34% -> check  | Checked
+[01:11:40]    CallStn(STATION) | river | 8c 3h | eq=14% -> check  | Checked
+[01:11:41]    AceBot(LAG) | river | 5d As | eq=34% -> check  | Checked
+[01:11:49]    NitKing(NIT) | preflop | Jh 3h | eq=46% -> fold  | Folded
+[01:11:50]    CallStn(STATION) | preflop | 6d 8c | eq=41% -> call  | Called
+[01:11:51]    AceBot(LAG) | preflop | 10c 8h | eq=48% -> check  | Checked
+[01:11:53]    CallStn(STATION) | flop | 6d 8c | eq=38% -> check  | Checked
+[01:11:54]    AceBot(LAG) | flop | 10c 8h | eq=73% -> raise 30 | Raised to 30 (range 20-1010)
+[01:11:55]    CallStn(STATION) | flop | 6d 8c | eq=35% -> raise 75 | Raised to 75 (range 60-960)
+[01:11:57]    AceBot(LAG) | flop | 10c 8h | eq=70% -> raise 102 | Raised to 120 (range 120-1010)
+[01:11:58]    CallStn(STATION) | flop | 6d 8c | eq=38% -> call  | Called
+[01:12:00]    CallStn(STATION) | turn | 6d 8c | eq=28% -> check  | Checked
+[01:12:02]    AceBot(LAG) | turn | 10c 8h | eq=72% -> raise 215 | Raised to 215 (range 20-890)
+[01:12:03]    CallStn(STATION) | turn | 6d 8c | eq=28% -> fold  | Folded
+[01:12:08]    CallStn(STATION) | preflop | 7d Ah | eq=57% -> call  | Called
+[01:12:09]    AceBot(LAG) | preflop | 4c 5s | eq=35% -> fold  | Folded
+[01:12:10]    NitKing(NIT) | preflop | 10d Qs | eq=56% -> check  | Checked
+[01:12:13]    NitKing(NIT) | flop | 10d Qs | eq=78% -> raise 39 | Raised to 39 (range 20-970)
+[01:12:14]    CallStn(STATION) | flop | 7d Ah | eq=84% -> raise 117 | Raised to 117 (range 78-820)
+[01:12:15]    NitKing(NIT) | flop | 10d Qs | eq=75% -> call  | Called
+[01:12:18]    NitKing(NIT) | turn | 10d Qs | eq=80% -> raise 219 | Raised to 219 (range 20-853)
+[01:12:19]    CallStn(STATION) | turn | 7d Ah | eq=82% -> raise 703 | Raised to 703 (range 438-703)
+[01:12:20]    NitKing(NIT) | turn | 10d Qs | eq=78% -> raise 634 | Raised to 853 (range 853-853)
+[01:12:21]    ☠️ Clawhi: BUSTED (stack=0, seated=True)
+[01:12:21]    ☠️ AceBot: BUSTED (stack=0, seated=True)
+[01:12:22]    ☠️ NitKing: BUSTED (stack=0, seated=True)
+[01:12:29]    💰 Clawhi: Rebuy attempt #1...
+[01:12:29]    💰 Clawhi: Rebuy attempt...
+[01:12:30]    🔍 Clawhi UI elements: [{"text": "", "tag": "A", "cls": ""}, {"text": "Sign In", "tag": "A", "cls": "login-button"}, {"text": "Options", "tag": "BUTTON", "cls": "top-buttons-button options "}, {"text": "Sit", "tag": "BUTTON", "cls": "table-player-seat-button"}, {"text": "AceBot", "tag": "A", "cls": ""}, {"text": "NitKing", "tag": "A", "cls": ""}, {"text": "CallStn", "tag": "A", "cls": ""}, {"text": "Sit", "tag": "BUTTON", "cls": "table-player-seat-button"}]
+[01:12:30]    🚪 Clawhi: Leaving seat...
+[01:12:30]    ⚠️ Clawhi: No leave seat button found
+[01:12:30]    💰 Clawhi: Clicked seat button (direct)
+[01:12:30]    💰 AceBot: Rebuy attempt #1...
+[01:12:30]    💰 AceBot: Rebuy attempt...
+[01:12:30]    💰 NitKing: Rebuy attempt #1...
+[01:12:30]    💰 NitKing: Rebuy attempt...
+[01:12:30]    🔍 AceBot UI elements: [{"text": "", "tag": "A", "cls": ""}, {"text": "Sign In", "tag": "A", "cls": "login-button"}, {"text": "Options", "tag": "BUTTON", "cls": "top-buttons-button options "}, {"text": "Leave Seat", "tag": "BUTTON", "cls": "top-buttons-button quit "}, {"text": "Away", "tag": "BUTTON", "cls": "top-buttons-button stand-up"}, {"text": "Select", "tag": "BUTTON", "cls": "emoji-select-button"}, {"text": "AceBot", "tag": "A", "cls": ""}, {"text": "NitKing", "tag": "A", "cls": ""}]
+[01:12:30]    🚪 AceBot: Leaving seat...
+[01:12:30]    🚪 AceBot: Clicked 'leave seat'
+[01:12:30]    ⚠️ NitKing: Rebuy error: [Errno 35] write could not complete without blocking
+[01:12:31]    Clawhi: Filled name for rebuy
+[01:12:32]    🚪 AceBot: Confirmed leave
+[01:12:32]    💰 Clawhi: Confirmed rebuy (button:has-text("Take the Seat"))
+[01:12:34]    ✅ Clawhi: Rebuy successful!
+[01:12:36]    💰 AceBot: Clicked empty seat after leaving
+[01:12:37]    AceBot: Filled name for rebuy
+[01:12:38]    Clawhi(TAG) | preflop | Js 6d | eq=46% -> fold  | Folded
+[01:12:38]    💰 AceBot: Confirmed rebuy (button:has-text("Request"))
+[01:12:39]    NitKing(NIT) | preflop | Ad 4d | eq=57% -> call  | Called
+[01:12:39]    ✅ Host approved 1 request(s)
+[01:12:40]    CallStn(STATION) | preflop | Qd 7d | eq=53% -> check  | Checked
+[01:12:40]    ✅ AceBot: Rebuy successful!
+[01:12:41]    NitKing(NIT) | flop | Ad 4d | eq=49% -> check  | Checked
+[01:12:43]    CallStn(STATION) | flop | Qd 7d | eq=78% -> raise 30 | Raised to 30 (range 20-1670)
+[01:12:44]    NitKing(NIT) | flop | Ad 4d | eq=49% -> fold  | Folded
+[01:12:48]    AceBot(LAG) | preflop | Qs 4s | eq=50% -> fold  | Folded
+[01:12:50]    NitKing(NIT) | preflop | 2h 3s | eq=29% -> fold  | Folded
+[01:12:51]    CallStn(STATION) | preflop | 5h Kh | eq=54% -> call  | Called
+[01:12:52]    Clawhi(TAG) | preflop | 10h 5s | eq=42% -> check  | Checked
+[01:12:53]    CallStn(STATION) | flop | 5h Kh | eq=48% -> check  | Checked
+[01:12:54]    Clawhi(TAG) | flop | 10h 5s | eq=34% -> check  | Checked
+[01:12:56]    CallStn(STATION) | turn | 5h Kh | eq=40% -> check  | Checked
+[01:12:57]    Clawhi(TAG) | turn | 10h 5s | eq=29% -> check  | Checked
+[01:12:58]    CallStn(STATION) | river | 5h Kh | eq=41% -> check  | Checked
+[01:12:59]    Clawhi(TAG) | river | 10h 5s | eq=26% -> check  | Checked
+[01:13:07]    NitKing(NIT) | preflop | 4c 6c | eq=38% -> fold  | Folded
+[01:13:08]    CallStn(STATION) | preflop | 10s 2c | eq=39% -> fold  | Folded
+[01:13:10]    Clawhi(TAG) | preflop | 9h 3s | eq=37% -> fold  | Folded
+[01:13:14]    CallStn(STATION) | preflop | 8s 9h | eq=46% -> fold  | Folded
+[01:13:15]    Clawhi(TAG) | preflop | Qc Kd | eq=60% -> call  | Called
+[01:13:17]    AceBot(LAG) | preflop | 4h 5d | eq=35% -> fold  | Folded
+[01:13:18]    NitKing(NIT) | preflop | 9c 4c | eq=41% -> check  | Checked
+[01:13:20]    NitKing(NIT) | flop | 9c 4c | eq=25% -> check  | Checked
+[01:13:21]    Clawhi(TAG) | flop | Qc Kd | eq=54% -> check  | Checked
+[01:13:22]    NitKing(NIT) | turn | 9c 4c | eq=16% -> check  | Checked
+[01:13:24]    Clawhi(TAG) | turn | Qc Kd | eq=48% -> check  | Checked
+[01:13:25]    NitKing(NIT) | river | 9c 4c | eq=16% -> check  | Checked
+[01:13:27]    Clawhi(TAG) | river | Qc Kd | eq=99% -> raise 40 | Raised to 40 (range 20-950)
+[01:13:28]    NitKing(NIT) | river | 9c 4c | eq=18% -> fold  | Folded

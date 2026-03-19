@@ -79,9 +79,11 @@ def preflop_equity(card1_str, card2_str, num_opponents=1):
         key = r1 + r2
         eq = PREFLOP_OFFSUIT.get(key, 50.0)
     
-    # Adjust for multi-way (rough approximation)
+    # Adjust for multi-way (v11: softer discount for 4-handed, was 0.85 → now 0.92)
+    # 0.85^3 = 0.614 (way too harsh — NIT folds 64% preflop)
+    # 0.92^3 = 0.779 (reasonable — equity drops ~22% vs 3 opponents)
     if num_opponents > 1:
-        eq = eq * (0.85 ** (num_opponents - 1))
+        eq = eq * (0.92 ** (num_opponents - 1))
     
     return eq
 

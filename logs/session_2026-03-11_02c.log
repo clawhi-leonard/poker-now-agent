@@ -1,0 +1,57 @@
+[02:26:20] ============================================================
+[02:26:20] 🃏 Poker Now Multi-Bot Arena v3.2 (stealth)
+[02:26:20]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[02:26:20]    Stack: 1000 | BB: 10
+[02:26:20] ============================================================
+[02:26:21] 🌐 Launching host browser with stealth...
+[02:26:26]    🌐 Using system Chrome (better reCAPTCHA scores)
+[02:26:26]    🔗 Validating existing game: https://www.pokernow.com/games/pgldcQgWTgBaxPdo5LuBVBGDg
+[02:26:34]    🪑 HOST: Sitting at seat 1...
+[02:26:34]    ✅ HOST: Already seated (you-player)
+[02:26:36] 🌐 Launching browser for AceBot...
+[02:26:40] 🤖 AceBot joining...
+[02:26:46]    🪑 AceBot: Sitting at seat 2...
+[02:26:46]    ✅ AceBot: Already seated (you-player)
+[02:26:48]    ✅ All 4 players seated!
+[02:26:49] 🌐 Launching browser for NitKing...
+[02:26:51] ❌ Fatal: BrowserContext.new_page: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurfaceTraceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 1684, in main
+    await dismiss_alerts(host_page)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 147, in make_stealth_page
+    page = ctx.pages[0] if ctx.pages else await ctx.new_page()
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 12880, in new_page
+    return mapping.from_impl(await self._impl_obj.new_page())
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_browser_context.py", line 331, in new_page
+    return from_channel(await self._channel.send("newPage", None))
+ --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-taggTraceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 1684, in main
+    await dismiss_alerts(host_page)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 147, in make_stealth_page
+    page = ctx.pages[0] if ctx.pages else await ctx.new_page()
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 12880, in new_page
+    return mapping.from_impl(await self._impl_obj.new_page())
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_browser_context.py", line 331, in new_page
+    return from_channel(await self._channel.send("newPage", None))
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserContext.new_page: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skied-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1244,804 --window-position=200,200 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_2 --remote-debugginp-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1244,804 --window-position=200,200 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_2 --remote-debugging-pipe about:blank
+<launched> pid=86120
+[pid=86120][err] [86120:7691156:0311/022650.784279:ERROR:gpu/ipc/client/command_buffer_proxy_impl.cc:287] ContextResult::kTransientFailure: Failed to send GpuControl.CreateCommandBuffer.
+[pid=86120][err] [0311/022650.937580:FATAL:third_party/crashpad/crashpad/handler/mac/exception_handler_server.cc:76] Check failed: kr == KERN_SUCCESS. mach_port_request_notification: (os/kern) invalid capability (20)
+[pid=86120][err] [0311/022650.948961:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16f50c000, 0x8000): (os/kern) invalid adg-pipe about:blank
+<launched> pid=86120
+[pid=86120][err] [86120:7691156:0311/022650.784279:ERROR:gpu/ipc/client/command_buffer_proxy_impl.cc:287] ContextResult::kTransientFailure: Failed to send GpuControl.CreateCommandBuffer.
+[pid=86120][err] [0311/022650.937580:FATAL:third_party/crashpad/crashpad/handler/mac/exception_handler_server.cc:76] Check failed: kr == KERN_SUCCESS. mach_port_request_notification: (os/kern) invalid capability (20)
+[pid=86120][err] [0311/022650.948961:WARNING:third_party/crashpad/crashpad/util/process/process_memory_mac.cc:94] mach_vm_read(0x16f50c000, 0x8000): (os/kern) invalid address (1)
+[pid=86120][err] [86120:7691156:0311/022651.516913:ERROR:content/browser/gpu/gpu_process_host.cc:996] GPU process exited unexpectedly: exit_code=15
+[02:26:51] 🧹 Cleaning up...
+
+⚠️ Crash: [Errno 35] write could not complete without blocking

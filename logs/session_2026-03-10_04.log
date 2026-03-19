@@ -1,0 +1,149 @@
+[04:10:01] ============================================================
+[04:10:01] 🃏 Poker Now Multi-Bot Arena v3.2 (stealth)
+[04:10:01]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[04:10:01]    Stack: 1000 | BB: 10
+[04:10:01] ============================================================
+[04:10:02] 🌐 Launching host browser with stealth...
+[04:10:04]    🌐 Using system Chrome (better reCAPTCHA scores)
+[04:10:04] 🎰 Creating new game...
+[04:10:10]    Clicked: a:has-text("Start a New Game")
+[04:10:15]    ⏳ reCAPTCHA challenge detected (overlay) — waiting up to 90s...
+[04:10:15]    💡 Persistent profiles should reduce reCAPTCHA frequency over time
+[04:10:15]    ✅ reCAPTCHA cleared!
+[04:10:15]    Filled host name: Clawhi
+[04:10:16]    Submitted game creation
+[04:10:17]    ✅ Game created: https://www.pokernow.com/games/pglomR7Dwh4rjRQW22CpPho5t
+[04:10:20]    🪑 HOST: Sitting at seat 1...
+[04:10:21]    HOST: Clicked seat 1
+[04:10:22]    HOST: No name input (host name pre-filled from game creation)
+[04:10:25]    ✅ HOST: Seated!
+[04:10:27] 🌐 Launching browser for AceBot...
+[04:10:28]    🌐 Using system Chrome (better reCAPTCHA scores)
+[04:10:28] 🤖 AceBot joining...
+[04:10:33]    🪑 AceBot: Sitting at seat 2...
+[04:10:33]    AceBot: Clicked seat 2
+[04:10:34]    AceBot: Name (fallback)
+[04:10:35]    AceBot: Clicked 'button:has-text("Request the Seat")'
+[04:10:37]    ✅ AceBot: Seated!
+[04:10:39]    ✅ Host approved 1 request(s) (total: 1)
+[04:10:45]    ⏳ Seated: 1/2, approved: 1
+[04:10:50]    ⏳ Seated: 1/2, approved: 1
+[04:10:55]    ⏳ Seated: 1/2, approved: 1
+[04:10:59]    ⚠️ Approval timeout. Seated: 1/2
+[04:11:00] 🌐 Launching browser for NitKing...
+[04:11:01]    🌐 Using system Chrome (better reCAPTCHA scores)
+[04:11:01] 🤖 NitKing joining...
+[04:11:06]    🪑 NitKing: Sitting at seat 3...
+[04:11:06]    NitKing: Clicked seat 3
+[04:11:08]    NitKing: Name (fallback)
+[04:11:08]    NitKing: Clicked 'button:has-text("Request the Seat")'
+[04:11:10]    ✅ NitKing: Seated!
+[04:11:12]    ✅ Host approved 1 request(s) (total: 1)
+[04:11:15]    ⏳ Seated: 2/3, approved: 1
+[04:11:20]    ⏳ Seated: 2/3, approved: 1
+[04:11:25]    ⏳ Seated: 2/3, approved: 1
+[04:11:30]    ⏳ Seated: 2/3, approved: 1
+[04:11:32]    ⚠️ Approval timeout. Seated: 2/3
+[04:11:33] 🌐 Launching browser for CallStn...
+[04:11:34]    🌐 Using system Chrome (better reCAPTCHA scores)
+[04:11:34] 🤖 CallStn joining...
+[04:11:39]    🪑 CallStn: Sitting at seat 4...
+[04:11:39]    CallStn: Clicked seat 4
+[04:11:41]    CallStn: Name (fallback)
+[04:11:41]    CallStn: Clicked 'button:has-text("Request the Seat")'
+[04:11:43]    ✅ CallStn: Seated!
+[04:11:45]    ✅ Host approved 1 request(s) (total: 1)
+[04:11:50]    ⏳ Seated: 3/4, approved: 1
+[04:11:55]    ⏳ Seated: 3/4, approved: 1
+[04:12:00]    ⏳ Seated: 3/4, approved: 1
+[04:12:05]    ⚠️ Approval timeout. Seated: 3/4
+[04:12:09]    📊 Seated: 3/4 (AceBot, NitKing, CallStn) | Empty seats: 7
+[04:12:09] 
+🎮 Starting game...
+[04:12:09]    ▶️ Game started!
+[04:12:11] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pglomR7Dwh4rjRQW22CpPho5t
+============================================================
+
+[04:12:11] 🤖 Clawhi (TAG) loop starting...
+[04:12:11] 🤖 AceBot (LAG) loop starting...
+[04:12:11] 🤖 NitKing (NIT) loop starting...
+[04:12:11] 🤖 CallStn (STATION) loop starting...
+[04:12:12]    CallStn(STATION) | preflop | Ad Qd | eq=65% -> call  | Called
+[04:12:13]    AceBot(LAG) | preflop | 6s Kd | eq=52% -> call  | Called
+[04:12:14]    NitKing(NIT) | preflop | 9h Qh | eq=56% -> check  | Checked
+[04:12:16]    AceBot(LAG) | flop | 6s Kd | eq=46% -> raise 25 | Raised to 25 (range 20-980)
+[04:12:17]    NitKing(NIT) | flop | 9h Qh | eq=94% -> raise 75 | Raised to 75 (range 50-980)
+[04:12:19]    CallStn(STATION) | flop | Ad Qd | eq=34% -> fold  | Folded
+[04:12:20]    AceBot(LAG) | flop | 6s Kd | eq=50% -> call  | Called
+[04:12:22]    AceBot(LAG) | turn | 6s Kd | eq=38% -> check  | Checked
+[04:12:24]    NitKing(NIT) | turn | 9h Qh | eq=97% -> raise 168 | Raised to 168 (range 20-905)
+[04:12:25]    AceBot(LAG) | turn | 6s Kd | eq=40% -> call  | Called
+[04:12:27]    AceBot(LAG) | river | 6s Kd | eq=21% -> check  | Checked
+[04:12:29]    NitKing(NIT) | river | 9h Qh | eq=97% -> raise 436 | Raised to 436 (range 20-737)
+[04:12:30]    AceBot(LAG) | river | 6s Kd | eq=19% -> fold  | Folded
+[04:12:34]    AceBot(LAG) | preflop | 9s 10s | eq=52% -> call  | Called
+[04:12:35]    NitKing(NIT) | preflop | 7d 10c | eq=46% -> fold  | Folded
+[04:12:37]    CallStn(STATION) | preflop | Kd 2h | eq=48% -> check  | Checked
+[04:12:39]    CallStn(STATION) | flop | Kd 2h | eq=37% -> check  | Checked
+[04:12:40]    AceBot(LAG) | flop | 9s 10s | eq=36% -> check  | Checked
+[04:12:42]    CallStn(STATION) | turn | Kd 2h | eq=31% -> check  | Checked
+[04:12:43]    AceBot(LAG) | turn | 9s 10s | eq=19% -> check  | Checked
+[04:12:44]    CallStn(STATION) | river | Kd 2h | eq=73% -> raise 37 | Raised to 37 (range 20-960)
+[04:12:45]    AceBot(LAG) | river | 9s 10s | eq=2% -> fold  | Folded
+[04:12:50]    NitKing(NIT) | preflop | 8s 9s | eq=49% -> fold  | Folded
+[04:12:51]    CallStn(STATION) | preflop | Jh 3s | eq=43% -> call  | Called
+[04:12:52]    AceBot(LAG) | preflop | Ks Ac | eq=64% -> check  | Checked
+[04:12:53]    CallStn(STATION) | flop | Jh 3s | eq=91% -> raise 32 | Raised to 32 (range 20-990)
+[04:12:55]    AceBot(LAG) | flop | Ks Ac | eq=64% -> raise 96 | Raised to 96 (range 64-697)
+[04:12:56]    CallStn(STATION) | flop | Jh 3s | eq=90% -> raise 134 | Raised to 160 (range 160-990)
+[04:12:58]    AceBot(LAG) | flop | Ks Ac | eq=63% -> raise 601 | Raised to 601 (range 224-697)
+[04:12:59]    CallStn(STATION) | flop | Jh 3s | eq=92% -> raise 830 | Raised to 990 (range 990-990)
+[04:13:00]    AceBot(LAG) | flop | Ks Ac | eq=59% -> call  | Called
+[04:13:01]    ☠️ NitKing: BUSTED (stack=0, seated=True)
+[04:13:02]    ☠️ CallStn: BUSTED (stack=0, seated=True)
+[04:13:14]    💰 NitKing: Rebuy attempt #1...
+[04:13:14]    💰 NitKing: Rebuy attempt...
+[04:13:14]    ⚠️ NitKing error (1): [Errno 35] write could not complete without blocking
+[04:13:17]    💰 CallStn: Rebuy attempt #1...
+[04:13:17]    💰 CallStn: Rebuy attempt...
+[04:13:17]    ⚠️ CallStn: Rebuy error: [Errno 35] write could not complete without blocking
+[04:13:23]    CallStn(STATION) | preflop | 6c 7h | eq=40% -> call  | Called
+[04:13:24]    💰 NitKing: Rebuy attempt #2...
+[04:13:24]    💰 NitKing: Rebuy attempt...
+[04:13:25]    ⚠️ NitKing: Rebuy error: [Errno 35] write could not complete without blocking
+[04:13:25]    🔄 NitKing: Trying full page reload rejoin...
+[04:13:25]    🔄 NitKing: Rejoin via reload...
+[04:13:29]    💰 NitKing: Rebuy attempt...
+[04:13:29]    ❌ NitKing: Rejoin failed: [Errno 35] write could not complete without blocking
+[04:13:35]    NitKing(NIT) | preflop | 9s 10s | eq=52% -> check  | Checked
+[04:13:37]    NitKing(NIT) | flop | 9s 10s | eq=38% -> check  | Checked
+[04:13:38]    CallStn(STATION) | flop | 6c 7h | eq=94% -> raise 32 | Raised to 32 (range 20-1707)
+[04:13:39]    NitKing(NIT) | flop | 9s 10s | eq=34% -> call  | Called
+[04:13:42]    NitKing(NIT) | turn | 9s 10s | eq=24% -> check  | Checked
+[04:13:43]    CallStn(STATION) | turn | 6c 7h | eq=94% -> raise 83 | Raised to 83 (range 20-1675)
+[04:13:44]    NitKing(NIT) | turn | 9s 10s | eq=26% -> fold  | Folded
+[04:13:49]    NitKing(NIT) | preflop | Jh 4h | eq=47% -> fold  | Folded
+[04:13:53]    CallStn(STATION) | preflop | 7d Kd | eq=56% -> call  | Called
+[04:13:55]    NitKing(NIT) | preflop | Kc 7s | eq=53% -> check  | Checked
+[04:13:57]    NitKing(NIT) | flop | Kc 7s | eq=72% -> raise 30 | Raised to 30 (range 20-1191)
+[04:13:58]    CallStn(STATION) | flop | 7d Kd | eq=73% -> call  | Called
+[04:14:00]    NitKing(NIT) | turn | Kc 7s | eq=85% -> raise 80 | Raised to 80 (range 20-1161)
+[04:14:01]    CallStn(STATION) | turn | 7d Kd | eq=69% -> call  | Called
+[04:14:03]    NitKing(NIT) | river | Kc 7s | eq=73% -> raise 202 | Raised to 202 (range 20-1081)
+[04:14:04]    CallStn(STATION) | river | 7d Kd | eq=79% -> raise 1659 | Raised to 1659 (range 404-1659)
+[04:14:06]    NitKing(NIT) | river | Kc 7s | eq=75% -> call  | Called
+[04:14:13]    NitKing(NIT) | preflop | 10c 10h | eq=75% -> call  | Called
+[04:14:15]    CallStn(STATION) | preflop | 4c Qc | eq=50% -> check  | Checked
+[04:14:17]    CallStn(STATION) | flop | 4c Qc | eq=59% -> check  | Checked
+[04:14:18]    NitKing(NIT) | flop | 10c 10h | eq=67% -> raise 30 | Raised to 30 (range 20-1191)
+[04:14:19]    CallStn(STATION) | flop | 4c Qc | eq=67% -> call  | Called
+[04:14:22]    CallStn(STATION) | turn | 4c Qc | eq=44% -> check  | Checked
+[04:14:23]    NitKing(NIT) | turn | 10c 10h | eq=85% -> raise 80 | Raised to 80 (range 20-1161)
+[04:14:24]    CallStn(STATION) | turn | 4c Qc | eq=44% -> call  | Called
+[04:14:26]    CallStn(STATION) | river | 4c Qc | eq=99% -> raise 208 | Raised to 208 (range 20-1659)
+[04:14:28]    NitKing(NIT) | river | 10c 10h | eq=91% -> raise 1081 | Raised to 1081 (range 416-1081)
+[04:14:29]    CallStn(STATION) | river | 4c Qc | eq=99% -> raise 1451 | Raised to 1659 (range 1659-1659)
+[04:17:11] 📊 STATUS | 21h | AceBot:3h NitKing:9h CallStn:9h
+[04:17:11]    Folds: AceBot:13% NitKing:19% CallStn:4%

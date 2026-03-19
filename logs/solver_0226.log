@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/solve_captcha.py", line 304, in <module>
+    url = asyncio.run(create_game_with_solver())
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Users/clawileonard/Projects/poker-now-agent/solve_captcha.py", line 181, in create_game_with_solver
+    ctx = await pw.chromium.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 14840, in launch_persistent_context
+    await self._impl_obj.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_browser_type.py", line 164, in launch_persistent_context
+    result = await self._channel.send_return_as_dict(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 83, in send_return_as_dict
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Applications/Google Chrome.app/Contents/MacOS/Google Chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-c
