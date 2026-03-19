@@ -1,0 +1,56 @@
+[04:13:02] ============================================================
+[04:13:02] 🃏 Poker Now Multi-Bot Arena v17.0 (serialized rebuy + global suppression)
+[04:13:02]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[04:13:02]    Stack: 5000 | BB: 10
+[04:13:02] ============================================================
+[04:13:04] 🌐 Launching host browser with stealth...
+[04:13:05] 🎰 Creating new game...
+[04:13:05]    🌐 Pre-warming with Google...
+[04:13:29]    Clicked: a:has-text("Start a New Game")
+[04:13:35]    ⏳ reCAPTCHA challenge detected (overlay) — attempting solve...
+[04:13:35]    ✅ reCAPTCHA cleared!
+[04:13:36]    Filled host name: Clawhi
+[04:13:41]    Submitted game creation
+[04:13:46]    🔒 reCAPTCHA challenge at 5s — trying audio solve...
+[04:13:46]    🔊 Audio solve attempt 1/2
+[04:13:46]    Clicked audio button
+[04:13:51]    No audio URL found - may be blocked or wrong mode
+[04:13:53]    🔊 Audio solve attempt 2/2
+[04:14:23]    Audio button click error: ElementHandle.click: Timeout 30000ms exceeded.
+Call log:
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+      - waiting 100ms
+    49 × waiting for element to be visible, enabled and stable
+       - element is not enabled
+     - retrying click action
+       - waiting 500ms
+
+[04:14:25]    No audio URL found - may be blocked or wrong mode
+[04:14:27]    ⚠️ Audio solve failed at 5s
+[04:14:37]    🔒 reCAPTCHA challenge at 15s — trying audio solve...
+[04:14:37]    🔊 Audio solve attempt 1/2
+[04:15:07]    Audio button click error: ElementHandle.click: Timeout 30000ms exceeded.
+Call log:
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+      - waiting 100ms
+    48 × waiting for element to be visible, enabled and stable
+       - element is not enabled
+     - retrying click action
+       - waiting 500ms
+
+[04:15:09]    No audio URL found - may be blocked or wrong mode
+[04:15:11]    🔊 Audio solve attempt 2/2

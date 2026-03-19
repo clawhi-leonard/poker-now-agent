@@ -1,0 +1,645 @@
+[02:28:43] ============================================================
+[02:28:43] 🃏 Poker Now Multi-Bot Arena v16.0 (host rebuy fix + false bust elimination)
+[02:28:43]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[02:28:43]    Stack: 5000 | BB: 10
+[02:28:43] ============================================================
+[02:28:44] 🌐 Launching host browser with stealth...
+[02:28:44] ❌ Fatal: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+<launched> pid=17453
+[pid=17453][out] Opening in existing browser session.
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=17453
+  - [pid=17453][out] Opening in existing browser session.
+  - [pid=17453] <gracefully close start>
+  - [pid=17453] <kill>
+  - [pid=17453] <will force kill>
+  - [pid=17453] exception while trying to kill process: Error: kill EPERM
+  - [pid=17453] <process did exit: exitCode=0, signal=null>
+  - [pid=17453] starting temporary directories cleanup
+  - [pid=17453] finished temporary directories cleanup
+  - [pid=17453] <gracefully close end>
+
+Traceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 2607, in main
+    host_browser, host_page = await make_stealth_page(pw, headless=HEADLESS, profile_id=0)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 212, in make_stealth_page
+    ctx = await pw.chromium.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 14840, in launch_persistent_context
+    await self._impl_obj.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_browser_type.py", line 164, in launch_persistent_context
+    result = await self._channel.send_return_as_dict(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 83, in send_return_as_dict
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+<launched> pid=17453
+[pid=17453][out] Opening in existing browser session.
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=17453
+  - [pid=17453][out] Opening in existing browser session.
+  - [pid=17453] <gracefully close start>
+  - [pid=17453] <kill>
+  - [pid=17453] <will force kill>
+  - [pid=17453] exception while trying to kill process: Error: kill EPERM
+  - [pid=17453] <process did exit: exitCode=0, signal=null>
+  - [pid=17453] starting temporary directories cleanup
+  - [pid=17453] finished temporary directories cleanup
+  - [pid=17453] <gracefully close end>
+
+[02:28:44] 🧹 Cleaning up...
+[02:28:44] 
+============================================================
+📊 FINAL SESSION REPORT | 0 hands
+[02:28:44] ────────────────────────────────────────────────────────────
+[02:28:44]    Bot          Style     Hands  Rebuys  Fold%  Net Chips
+[02:28:44]    ──────────── ──────── ────── ─────── ────── ──────────
+[02:28:44]    Clawhi       TAG           0       0    N/A      -5000
+[02:28:44]    AceBot       LAG           0       0    N/A      -5000
+[02:28:44]    NitKing      NIT           0       0    N/A      -5000
+[02:28:44]    CallStn      STATION       0       0    N/A      -5000
+[02:28:44] 
+   🏆 Winner: Clawhi (TAG) with -5000 chips
+[02:28:44]    💀 Loser:  CallStn (STATION) with -5000 chips
+[02:28:44] ============================================================
+[02:28:44] 👋 Done.
+[02:28:44] ============================================================
+[02:28:44] 🃏 Poker Now Multi-Bot Arena v16.0 (host rebuy fix + false bust elimination)
+[02:28:44]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[02:28:44]    Stack: 5000 | BB: 10
+[02:28:44] ============================================================
+[02:28:46] 🌐 Launching host browser with stealth...
+[02:28:46] ❌ Fatal: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+<launched> pid=17461
+[pid=17461][out] Opening in existing browser session.
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=17461
+  - [pid=17461][out] Opening in existing browser session.
+  - [pid=17461] <gracefully close start>
+  - [pid=17461] <kill>
+  - [pid=17461] <will force kill>
+  - [pid=17461] exception while trying to kill process: Error: kill EPERM
+  - [pid=17461] <process did exit: exitCode=0, signal=null>
+  - [pid=17461] starting temporary directories cleanup
+  - [pid=17461] finished temporary directories cleanup
+  - [pid=17461] <gracefully close end>
+
+Traceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 2607, in main
+    host_browser, host_page = await make_stealth_page(pw, headless=HEADLESS, profile_id=0)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 212, in make_stealth_page
+    ctx = await pw.chromium.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 14840, in launch_persistent_context
+    await self._impl_obj.launch_persistent_context(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_browser_type.py", line 164, in launch_persistent_context
+    result = await self._channel.send_return_as_dict(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 83, in send_return_as_dict
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+<launched> pid=17461
+[pid=17461][out] Opening in existing browser session.
+Call log:
+  - <launching> /Users/clawileonard/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --disable-infobars --disable-dev-shm-usage --disable-extensions --window-size=1280,800 --window-position=100,100 --user-data-dir=/Users/clawileonard/Projects/poker-now-agent/.browser_profiles/bot_0 --remote-debugging-pipe about:blank
+  - <launched> pid=17461
+  - [pid=17461][out] Opening in existing browser session.
+  - [pid=17461] <gracefully close start>
+  - [pid=17461] <kill>
+  - [pid=17461] <will force kill>
+  - [pid=17461] exception while trying to kill process: Error: kill EPERM
+  - [pid=17461] <process did exit: exitCode=0, signal=null>
+  - [pid=17461] starting temporary directories cleanup
+  - [pid=17461] finished temporary directories cleanup
+  - [pid=17461] <gracefully close end>
+
+[02:28:46] 🧹 Cleaning up...
+[02:28:46] 
+============================================================
+📊 FINAL SESSION REPORT | 0 hands
+[02:28:46] ────────────────────────────────────────────────────────────
+[02:28:46]    Bot          Style     Hands  Rebuys  Fold%  Net Chips
+[02:28:46]    ──────────── ──────── ────── ─────── ────── ──────────
+[02:28:46]    Clawhi       TAG           0       0    N/A      -5000
+[02:28:46]    AceBot       LAG           0       0    N/A      -5000
+[02:28:46]    NitKing      NIT           0       0    N/A      -5000
+[02:28:46]    CallStn      STATION       0       0    N/A      -5000
+[02:28:46] 
+   🏆 Winner: Clawhi (TAG) with -5000 chips
+[02:28:46]    💀 Loser:  CallStn (STATION) with -5000 chips
+[02:28:46] ============================================================
+[02:28:46] 👋 Done.
+[02:28:46] ============================================================
+[02:28:46] 🃏 Poker Now Multi-Bot Arena v16.0 (host rebuy fix + false bust elimination)
+[02:28:46]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[02:28:46]    Stack: 5000 | BB: 10
+[02:28:46] ============================================================
+[02:28:47] 🌐 Launching host browser with stealth...
+[02:28:48] 🎰 Creating new game...
+[02:28:48]    🌐 Pre-warming with Google...
+[02:29:18]    Clicked: a:has-text("Start a New Game")
+[02:29:26]    ⏳ reCAPTCHA challenge detected (overlay) — attempting solve...
+[02:29:26]    ✅ reCAPTCHA cleared!
+[02:29:27]    Filled host name: Clawhi
+[02:29:31]    Submitted game creation
+[02:29:36]    🔒 reCAPTCHA challenge at 5s — trying audio solve...
+[02:29:36]    🔊 Audio solve attempt 1/2
+[02:29:36]    Clicked audio button
+[02:29:41]    Audio URL: https://www.google.com/recaptcha/api2/payload?p=06AFcWeA7U3EP6HK2xfs5zeDj_WNumm7...
+[02:29:41]    Downloaded audio (34074 bytes)
+[02:29:42]    Transcribed: 'social gaming apps'
+[02:29:44]    Typed answer: social gaming apps
+[02:29:45]    Clicked Verify
+[02:29:50]    ✅ reCAPTCHA solved via audio!
+[02:29:50]    ✅ Captcha solved! Checking for redirect or re-submitting...
+[02:29:53]    ✅ Game created: https://www.pokernow.com/games/pglTqUr83-9CSAAT6LhXqPRSj
+[02:29:55]    🧹 Dismissed waiting overlay (1 elements)
+[02:29:56]    🪑 HOST: Sitting at seat 1...
+[02:29:57]    HOST: Clicked seat-1
+[02:30:00]    HOST: Form: name=False, stack=False, submitted=False, btn=?, inputs=[]
+[02:30:00]    HOST: JS form fill incomplete — trying Playwright native fill...
+[02:30:01]    HOST: ⚠️ Could not submit seat form!
+[02:30:04]    ⚠️ HOST: Not verified in DOM after submit (attempt 1)
+[02:30:04]    🔄 HOST: Seat attempt 2/3...
+[02:30:07]    HOST: Clicked seat-1
+[02:30:10]    HOST: Form: name=True, stack=True, submitted=True, btn=Take the Seat, inputs=['input:your name', 'input:your stack']
+[02:30:13]    ✅ HOST: Seated and verified (you-player)!
+[02:30:15] 🌐 Launching browser for AceBot...
+[02:30:16] 🤖 AceBot joining...
+[02:30:21]    🪑 AceBot: Sitting at seat 2...
+[02:30:22]    AceBot: Clicked seat-2
+[02:30:25]    AceBot: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[02:30:26]    ✅ AceBot: Seat requested via JS (pending host approval)
+[02:30:28]    🔑 Approving AceBot from host page...
+[02:30:28]    ✅ Host approved: 'Accept'
+[02:30:29]    ✅ Approved AceBot seat request (attempt 1)
+[02:30:33]    🔄 Reloading host page after AceBot approval...
+[02:30:37]    📊 After AceBot: 2 seated (Clawhi, AceBot)
+[02:30:37] 🌐 Launching browser for NitKing...
+[02:30:38] 🤖 NitKing joining...
+[02:30:43]    🪑 NitKing: Sitting at seat 3...
+[02:30:44]    NitKing: Clicked seat-3
+[02:30:47]    NitKing: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[02:30:48]    ✅ NitKing: Seat requested via JS (pending host approval)
+[02:30:50]    🔑 Approving NitKing from host page...
+[02:30:50]    ✅ Host approved: 'Accept'
+[02:30:51]    ✅ Approved NitKing seat request (attempt 1)
+[02:30:55]    🔄 Reloading host page after NitKing approval...
+[02:30:59]    📊 After NitKing: 3 seated (Clawhi, AceBot, NitKing)
+[02:30:59] 🌐 Launching browser for CallStn...
+[02:31:00] 🤖 CallStn joining...
+[02:31:05]    🪑 CallStn: Sitting at seat 4...
+[02:31:06]    CallStn: Clicked seat-4
+[02:31:09]    CallStn: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[02:31:11]    ✅ CallStn: Seat requested via JS (pending host approval)
+[02:31:13]    🔑 Approving CallStn from host page...
+[02:31:13]    ✅ Host approved: 'Accept'
+[02:31:14]    ✅ Approved CallStn seat request (attempt 1)
+[02:31:18]    🔄 Reloading host page after CallStn approval...
+[02:31:21]    📊 After CallStn: 4 seated (Clawhi, AceBot, NitKing, CallStn)
+[02:31:21]    🔄 Reloading host for final approval sweep...
+[02:31:25]    🔄 Final approval sweep...
+[02:31:31]    📊 Final: Seated 4/4 (Clawhi, AceBot, NitKing, CallStn) | Empty seats: 0
+[02:31:31]    🔍 Host URL: https://www.pokernow.com/games/pglTqUr83-9CSAAT6LhXqPRSj
+[02:31:31]    🔍 DOM: {'title': 'Poker Now - Poker with Friends', 'bodyClasses': '', 'tablePlayerCount': 10, 'youPlayer': True, 'iframes': 0, 'bodyText': "OPTIONSLEAVE SEATAWAY\n\nGuest\n\nSign In\nGame Configurations\nPlayers\nPreferencesVideo/Audio\nPlus\nSave Current Hand\n\nOWNER: CLAWHI\n\nNLH\n~ 10 / 20\n\n0\n\ntotal 0\n\nNo Limit Texas Hold'em\n\nSelect\n\nWAITING\n\nClaw"}
+[02:31:31] 
+🎮 Starting game...
+[02:31:31]    ▶️ Game started! (clicked 'start game')
+[02:31:33] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pglTqUr83-9CSAAT6LhXqPRSj
+============================================================
+
+[02:31:33] 🤖 Clawhi (TAG) loop starting...
+[02:31:33] 🤖 AceBot (LAG) loop starting...
+[02:31:33] 🤖 NitKing (NIT) loop starting...
+[02:31:33] 🤖 CallStn (STATION) loop starting...
+[02:31:34]    NitKing(NIT) | preflop | UTG stk=5000 | 2d Qd | eq=41% -> fold  | Folded
+[02:31:35]    CallStn(STATION) | preflop | BTN stk=5000 | 10h Kc | eq=54% -> call  | Called
+[02:31:40]    Clawhi(TAG) | preflop | SB stk=4990 | 7c 5s | eq=35% -> fold  | Folded
+[02:31:41]    AceBot(LAG) | preflop | BB stk=4980 | 3c 4s | eq=32% -> check  | Checked
+[02:31:44]    AceBot(LAG) | flop | BB stk=4980 | 3c 4s | eq=59% -> check  | Checked
+[02:31:45]    CallStn(STATION) | flop | BTN/SB stk=4980 | 10h Kc | eq=51% -> check  | Checked
+[02:31:47]    AceBot(LAG) | turn | BB stk=4980 | 3c 4s | eq=58% -> check  | Checked
+[02:31:50]    CallStn(STATION) | turn | BTN/SB stk=4980 | 10h Kc | eq=82% -> raise 44 | Raised to 44 (target 44, range 0-4980, tier2_arrows)
+[02:31:53]    AceBot(LAG) | turn | BB stk=4980 | 3c 4s | eq=58% -> raise 132 | Raised to 132 (target 132, range 0-4980, tier2_arrows)
+[02:31:54]    CallStn(STATION) | turn | BTN/SB stk=4936 | 10h Kc | eq=85% -> raise 203 | Raised to 220 (target 203, range 0-4980, tier1_mouse)
+[02:31:56]    AceBot(LAG) | turn | BB stk=4848 | 3c 4s | eq=55% -> raise 396 | Raised to 350 (target 396, range 0-4980, tier1_mouse)
+[02:31:58]    CallStn(STATION) | turn | BTN/SB stk=4760 | 10h Kc | eq=83% -> raise 660 | Raised to 624 (target 660, range 0-4980, tier1_mouse)
+[02:32:00]    AceBot(LAG) | turn | BB stk=4630 | 3c 4s | eq=54% -> raise 1050 | Raised to 1018 (target 1050, range 0-4980, tier1_mouse)
+[02:32:02]    CallStn(STATION) | turn | BTN/SB stk=4356 | 10h Kc | eq=83% -> call  | Called
+[02:32:03]    AceBot(LAG) | river | BB stk=3962 | 3c 4s | eq=64% -> check  | Checked
+[02:32:04]    CallStn(STATION) | river | BTN/SB stk=3962 | 10h Kc | eq=82% -> check  | Checked
+[02:32:12]    CallStn(STATION) | preflop | UTG stk=6048 | 10h 3d | eq=34% -> call  | Called
+[02:32:17]    Clawhi(TAG) | preflop | BTN stk=4990 | 7s 4d | eq=30% -> fold  | Folded
+[02:32:18]    AceBot(LAG) | preflop | ? stk=3952 | 8h Ks | eq=50% -> call  | Called
+[02:32:19]    NitKing(NIT) | preflop | ? stk=4980 | 2c 9h | eq=34% -> check  | Checked
+[02:32:21]    AceBot(LAG) | flop | ? stk=3942 | 8h Ks | eq=52% -> check  | Checked
+[02:32:22]    NitKing(NIT) | flop | ? stk=4980 | 2c 9h | eq=25% -> check  | Checked
+[02:32:23]    CallStn(STATION) | flop | ? stk=6028 | 10h 3d | eq=31% -> check  | Checked
+[02:32:24]    AceBot(LAG) | turn | ? stk=3942 | 8h Ks | eq=56% -> check  | Checked
+[02:32:26]    NitKing(NIT) | turn | ? stk=4980 | 2c 9h | eq=56% -> check  | Checked
+[02:32:27]    CallStn(STATION) | turn | ? stk=6028 | 10h 3d | eq=17% -> check  | Checked
+[02:32:30]    AceBot(LAG) | river | ? stk=3942 | 8h Ks | eq=57% -> raise 36 | Raised to 36 (target 36, range 0-3942, tier2_arrows)
+[02:32:31]    NitKing(NIT) | river | ? stk=4980 | 2c 9h | eq=19% -> fold  | Folded
+[02:32:33]    CallStn(STATION) | river | ? stk=6028 | 10h 3d | eq=6% -> fold  | Folded
+[02:32:40]    Clawhi(TAG) | preflop | UTG stk=4990 | 8h 4h | eq=34% -> fold  | Folded
+[02:32:41]    AceBot(LAG) | preflop | BTN stk=4002 | 4d 5h | eq=32% -> fold  | Folded
+[02:32:42]    NitKing(NIT) | preflop | ? stk=4970 | 10c Ah | eq=62% -> call  | Called
+[02:32:44]    CallStn(STATION) | preflop | ? stk=6008 | Kh 5d | eq=51% -> check  | Checked
+[02:32:45]    NitKing(NIT) | flop | ? stk=4960 | 10c Ah | eq=60% -> check  | Checked
+[02:32:46]    CallStn(STATION) | flop | ? stk=6008 | Kh 5d | eq=48% -> check  | Checked
+[02:32:49]    NitKing(NIT) | turn | ? stk=4960 | 10c Ah | eq=85% -> raise 36 | Raised to 36 (target 36, range 0-4960, tier2_arrows)
+[02:32:50]    CallStn(STATION) | turn | ? stk=6008 | Kh 5d | eq=50% -> call  | Called
+[02:32:53]    NitKing(NIT) | river | ? stk=4924 | 10c Ah | eq=81% -> raise 100 | Raised to 100 (target 100, range 0-4924, tier2_arrows)
+[02:32:54]    CallStn(STATION) | river | ? stk=5972 | Kh 5d | eq=37% -> call  | Called
+[02:33:03]    AceBot(LAG) | preflop | UTG stk=4002 | 4h 8s | eq=31% -> fold  | Folded
+[02:33:04]    NitKing(NIT) | preflop | BTN stk=5136 | 7s 4s | eq=36% -> fold  | Folded
+[02:33:05]    CallStn(STATION) | preflop | ? stk=5862 | 9c Kc | eq=59% -> call  | Called
+[02:33:10]    Clawhi(TAG) | preflop | ? stk=4970 | Qh 10s | eq=56% -> check  | Checked
+[02:33:12]    CallStn(STATION) | flop | ? stk=5852 | 9c Kc | eq=60% -> check  | Checked
+[02:33:21]    Clawhi(TAG) | flop | ? stk=4970 | Qh 10s | eq=72% -> raise 33 | Raised to 33 (target 33, range 0-4970, tier2_arrows)
+[02:33:22]    CallStn(STATION) | flop | ? stk=5852 | 9c Kc | eq=58% -> call  | Called
+[02:33:24]    CallStn(STATION) | turn | ? stk=5819 | 9c Kc | eq=57% -> check  | Checked
+[02:33:31]    Clawhi(TAG) | turn | ? stk=4937 | Qh 10s | eq=88% -> raise 95 | Raised to 95 (target 95, range 0-4937, tier2_arrows)
+[02:33:32]    CallStn(STATION) | turn | ? stk=5819 | 9c Kc | eq=52% -> call  | Called
+[02:33:35]    CallStn(STATION) | river | ? stk=5724 | 9c Kc | eq=21% -> check  | Checked
+[02:33:42]    Clawhi(TAG) | river | ? stk=4842 | Qh 10s | eq=94% -> raise 266 | Raised to 266 (target 266, range 0-4842, tier2_arrows)
+[02:33:43]    CallStn(STATION) | river | ? stk=5724 | 9c Kc | eq=25% -> call  | Called
+[02:33:50]    NitKing(NIT) | preflop | UTG stk=5136 | 9h 10d | eq=42% -> fold  | Folded
+[02:33:52]    CallStn(STATION) | preflop | BTN stk=5458 | 5h 7h | eq=38% -> call  | Called
+[02:33:58]    Clawhi(TAG) | preflop | SB stk=5394 | 5c 4d | eq=32% -> fold  | Folded
+[02:33:59]    AceBot(LAG) | preflop | BB stk=3982 | 10c 6s | eq=44% -> check  | Checked
+[02:34:01]    AceBot(LAG) | flop | BB stk=3982 | 10c 6s | eq=30% -> check  | Checked
+[02:34:04]    CallStn(STATION) | flop | BTN/SB stk=5438 | 5h 7h | eq=66% -> raise 38 | Raised to 38 (target 38, range 0-5438, tier2_arrows)
+[02:34:06]    AceBot(LAG) | flop | BB stk=3982 | 10c 6s | eq=33% -> call  | Called
+[02:34:08]    AceBot(LAG) | turn | BB stk=3944 | 10c 6s | eq=29% -> check  | Checked
+[02:34:11]    CallStn(STATION) | turn | BTN/SB stk=5400 | 5h 7h | eq=67% -> raise 97 | Raised to 97 (target 97, range 0-5400, tier2_arrows)
+[02:34:12]    AceBot(LAG) | turn | BB stk=3944 | 10c 6s | eq=24% -> fold  | Folded
+[02:34:17]    CallStn(STATION) | preflop | UTG stk=5526 | 3d 6s | eq=28% -> fold  | Folded
+[02:34:20]    Clawhi(TAG) | preflop | BTN stk=5394 | 8s 10h | eq=44% -> call  | Called
+[02:34:22]    AceBot(LAG) | preflop | SB stk=3934 | 7h Qh | eq=48% -> call  | Called
+[02:34:22]    NitKing(NIT) | preflop | BB stk=5116 | 6d 5c | eq=34% -> check  | Checked
+[02:34:24]    AceBot(LAG) | flop | SB stk=3924 | 7h Qh | eq=25% -> check  | Checked
+[02:34:25]    NitKing(NIT) | flop | BB stk=5116 | 6d 5c | eq=20% -> check  | Checked
+[02:34:31]    Clawhi(TAG) | flop | BTN stk=5374 | 8s 10h | eq=67% -> raise 47 | Raised to 47 (target 47, range 0-5374, tier2_arrows)
+[02:34:34]    AceBot(LAG) | flop | SB stk=3924 | 7h Qh | eq=44% -> raise 141 | Raised to 141 (target 141, range 0-3924, tier2_arrows)
+[02:34:36]    NitKing(NIT) | flop | BB stk=5116 | 6d 5c | eq=10% -> fold  | Folded
+[02:34:42]    Clawhi(TAG) | flop | BTN/SB stk=5327 | 8s 10h | eq=67% -> raise 204 | Raised to 204 (target 204, range 0-5374, tier2_arrows)
+[02:34:52]    Clawhi(TAG) | flop | BTN/SB stk=5327 | 8s 10h | eq=68% -> raise 196 | Raised to 196 (target 196, range 0-5374, tier2_arrows)
+[02:35:02]    Clawhi(TAG) | flop | BTN/SB stk=5327 | 8s 10h | eq=70% -> raise 199 | Raised to 199 (target 199, range 0-5374, tier2_arrows)
+[02:35:11]    Clawhi(TAG) | preflop | UTG stk=5327 | 6h Jc | eq=39% -> fold  | Folded
+[02:35:12]    AceBot(LAG) | preflop | BTN stk=4031 | 8s 4c | eq=34% -> call  | Called
+[02:35:13]    NitKing(NIT) | preflop | SB stk=5106 | 3h 7d | eq=31% -> fold  | Folded
+[02:35:14]    CallStn(STATION) | preflop | BB stk=5506 | 7s 6s | eq=43% -> check  | Checked
+[02:35:18]    CallStn(STATION) | flop | BB stk=5506 | 7s 6s | eq=59% -> raise 37 | Raised to 37 (target 37, range 0-5506, tier2_arrows)
+[02:35:20]    AceBot(LAG) | flop | BTN/SB stk=4011 | 8s 4c | eq=24% -> fold  | Folded
+[02:35:24]    AceBot(LAG) | preflop | UTG stk=4011 | 4d 3c | eq=27% -> fold  | Folded
+[02:35:25]    NitKing(NIT) | preflop | BTN stk=5106 | 3h 9c | eq=34% -> fold  | Folded
+[02:35:26]    CallStn(STATION) | preflop | ? stk=5546 | As 10d | eq=62% -> call  | Called
+[02:35:34]    Clawhi(TAG) | preflop | ? stk=5307 | Jc Ks | eq=59% -> check  | Checked
+[02:35:36]    CallStn(STATION) | flop | ? stk=5536 | As 10d | eq=51% -> check  | Checked
+[02:35:44]    Clawhi(TAG) | flop | ? stk=5307 | Jc Ks | eq=42% -> raise 30 | Raised to 30 (target 30, range 0-5307, tier2_arrows)
+[02:35:45]    CallStn(STATION) | flop | ? stk=5536 | As 10d | eq=50% -> call  | Called
+[02:35:48]    CallStn(STATION) | turn | ? stk=5506 | As 10d | eq=47% -> check  | Checked
+[02:35:55]    Clawhi(TAG) | turn | ? stk=5277 | Jc Ks | eq=74% -> raise 88 | Raised to 88 (target 88, range 0-5277, tier2_arrows)
+[02:35:58]    CallStn(STATION) | turn | ? stk=5506 | As 10d | eq=44% -> raise 220 | Raised to 220 (target 220, range 0-5506, tier2_arrows)
+[02:36:03]    Clawhi(TAG) | turn | ? stk=5189 | Jc Ks | eq=78% -> raise 355 | Raised to 352 (target 355, range 0-5277, tier1_mouse)
+[02:36:05]    CallStn(STATION) | turn | ? stk=5286 | As 10d | eq=39% -> call  | Called
+[02:36:07]    CallStn(STATION) | river | ? stk=5154 | As 10d | eq=46% -> check  | Checked
+[02:36:13]    Clawhi(TAG) | river | ? stk=4925 | Jc Ks | eq=93% -> raise 723 | Raised to 685 (target 723, range 0-4925, tier1_mouse)
+[02:36:14]    CallStn(STATION) | river | ? stk=5154 | As 10d | eq=49% -> call  | Called
+[02:36:23]    NitKing(NIT) | preflop | UTG stk=5106 | Kh Ks | eq=69% -> raise 60 | Raised to 60 (target 60, range 0-5106, tier2_arrows)
+[02:36:25]    CallStn(STATION) | preflop | BTN stk=4469 | Qs 10s | eq=49% -> call  | Called
+[02:36:29]    Clawhi(TAG) | preflop | SB stk=6404 | 8s 8c | eq=58% -> call  | Called
+[02:36:30]    AceBot(LAG) | preflop | BB stk=3991 | 5h Ah | eq=49% -> call  | Called
+[02:36:33] 📊 STATUS | 45h | Clawhi:10h AceBot:12h NitKing:11h CallStn:12h
+[02:36:33]    Folds: Clawhi:25% AceBot:20% NitKing:41% CallStn:5%
+[02:36:33]    🎚️ Slider: 26/26 (100%) | T1:6 T2:20 T3:0 | Fallback calls:0
+[02:36:37]    Clawhi(TAG) | flop | SB stk=6354 | 8s 8c | eq=34% -> check  | Checked
+[02:36:39]    AceBot(LAG) | flop | BB stk=3951 | 5h Ah | eq=24% -> check  | Checked
+[02:36:43]    NitKing(NIT) | flop | UTG stk=5046 | Kh Ks | eq=81% -> raise 214 | Raised to 214 (target 214, range 0-5046, tier2_arrows)
+[02:36:44]    CallStn(STATION) | flop | BTN stk=4409 | Qs 10s | eq=72% -> call  | Called
+[02:36:46]    Clawhi(TAG) | flop | SB stk=6354 | 8s 8c | eq=46% -> call  | Called
+[02:36:48]    AceBot(LAG) | flop | BB stk=3951 | 5h Ah | eq=16% -> raise 535 | Raised to 504 (target 535, range 0-3951, tier1_mouse)
+[02:36:49]    NitKing(NIT) | flop | UTG stk=4832 | Kh Ks | eq=50% -> raise 4832 | Raised to 4882 (target 4832, range 0-5046, tier1_mouse)
+[02:36:51]    CallStn(STATION) | flop | BTN stk=4195 | Qs 10s | eq=38% -> fold  | Folded
+[02:36:51]    📉 NitKing: Low stack (164 < 1500) — proactive rebuy
+[02:36:51]    💰 NitKing: Rebuy attempt (v16)...
+[02:36:51]    🔍 NitKing: step1=None pending=False btns=['', 'options', 'leave seat', 'away', 'select', 'nitking']
+[02:36:51]    🚪 NitKing: Leaving seat before reload...
+[02:36:54]    Clawhi(TAG) | flop | ? stk=6140 | 8s 8c | eq=47% -> fold  | Folded
+[02:36:54]    🔄 NitKing: Reloading page for clean seat selection...
+[02:36:55]    AceBot(LAG) | flop | ? stk=3447 | 5h Ah | eq=45% -> fold  | Folded
+[02:37:02]    🪑 NitKing: Clicked seat button for rebuy
+[02:37:02]    Clawhi(TAG) | preflop | BTN stk=6140 | 8c Jh | eq=46% -> call  | Called
+[02:37:04]    AceBot(LAG) | preflop | SB stk=3437 | 9s 4d | eq=35% -> fold  | Folded
+[02:37:04]    💰 NitKing: Form submitted (btn=request the seat)
+[02:37:05]    CallStn(STATION) | preflop | BB stk=4175 | Ad 6h | eq=56% -> check  | Checked
+[02:37:06]    ✅ NitKing: Rebuy seat request submitted (pending host approval)
+[02:37:09]    CallStn(STATION) | flop | BB stk=4175 | Ad 6h | eq=89% -> raise 44 | Raised to 44 (target 44, range 0-4175, tier2_arrows)
+[02:37:11]    ✅ NitKing: Proactive rebuy successful!
+[02:37:31]    ⚠️ NitKing: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:37:31]    ☠️ NitKing: BUSTED (stack=None, seated=False, last_known=4832)
+[02:37:34]    ✅ Host approved via notification: notif:accept
+[02:37:34]    ✅ Host approved: 'Accept'
+[02:37:35]    ✅ Host: Approved rebuy seat request(s) (no reload)
+[02:37:38]    AceBot(LAG) | preflop | BTN stk=3437 | 7d Jc | eq=40% -> call  | Called
+[02:37:38]    ⚠️ Clawhi: Possible bust (stack=None, seated=False) — confirming (1/5)...
+[02:37:39]    CallStn(STATION) | preflop | BB stk=4215 | 5s Js | eq=40% -> call  | Called
+[02:37:40]    🔍 Clawhi: Bust suspicious (last_known=6120) — reloading to verify...
+[02:37:45]    ✅ Clawhi: FALSE BUST — actually seated with stack=6100 after reload
+[02:37:45]    💰 NitKing: Rebuy attempt #1...
+[02:37:45]    💰 NitKing: Rebuy attempt (v16)...
+[02:37:45]    🔍 NitKing: step1=None pending=False btns=['', 'options', 'select', 'nitking', 'callstn', 'clawhi']
+[02:37:45]    🔄 NitKing: Reloading page for clean seat selection...
+[02:37:48]    Clawhi(TAG) | preflop | UTG stk=6100 | 7c 6s | eq=34% -> check  | Checked
+[02:37:50]    CallStn(STATION) | flop | BB stk=4205 | 5s Js | eq=30% -> check  | Checked
+[02:37:52]    🔍 NitKing: Seated but stack=21 (< 1500) — leaving to re-sit with fresh chips
+[02:37:57]    Clawhi(TAG) | flop | UTG stk=6100 | 7c 6s | eq=33% -> check  | Checked
+[02:37:58]    AceBot(LAG) | flop | BTN stk=3417 | 7d Jc | eq=31% -> check  | Checked
+[02:38:00]    CallStn(STATION) | turn | BB stk=4205 | 5s Js | eq=18% -> check  | Checked
+[02:38:06]    ✅ NitKing: Detected as seated via you-player — rebuy may have already worked
+[02:38:06]    ✅ NitKing: Rebuy successful! (cooldown 15s)
+[02:38:07]    Clawhi(TAG) | turn | UTG stk=6100 | 7c 6s | eq=77% -> raise 51 | Raised to 51 (target 51, range 0-6100, tier2_arrows)
+[02:38:08]    AceBot(LAG) | turn | BTN stk=3417 | 7d Jc | eq=28% -> call  | Called
+[02:38:10]    CallStn(STATION) | turn | BB stk=4205 | 5s Js | eq=18% -> fold  | Folded
+[02:38:15]    Clawhi(TAG) | river | BB stk=6049 | 7c 6s | eq=37% -> check  | Checked
+[02:38:18]    AceBot(LAG) | river | BTN stk=3366 | 7d Jc | eq=76% -> raise 136 | Raised to 136 (target 136, range 0-3366, tier2_arrows)
+[02:38:21]    ⚠️ NitKing: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:38:22]    ☠️ NitKing: BUSTED (stack=None, seated=False, last_known=4832)
+[02:38:24]    Clawhi(TAG) | river | BB stk=6049 | 7c 6s | eq=33% -> call  | Called
+[02:38:35]    💰 NitKing: Rebuy attempt #1...
+[02:38:35]    💰 NitKing: Rebuy attempt (v16)...
+[02:38:35]    🔍 NitKing: step1=None pending=False btns=['', 'options', 'leave seat', 'away', 'select', 'nitking']
+[02:38:35]    🚪 NitKing: Leaving seat before reload...
+[02:38:37]    CallStn(STATION) | preflop | BTN stk=4205 | 2h Jd | eq=39% -> call  | Called
+[02:38:38]    🔄 NitKing: Reloading page for clean seat selection...
+[02:38:39]    Clawhi(TAG) | preflop | SB stk=5903 | 3d 3s | eq=49% -> call  | Called
+[02:38:42]    AceBot(LAG) | preflop | BB stk=3644 | 5s Qh | eq=44% -> raise 60 | Raised to 60 (target 60, range 0-3664, tier2_arrows)
+[02:38:43]    CallStn(STATION) | preflop | BTN stk=4185 | 2h Jd | eq=39% -> call  | Called
+[02:38:45]    🔍 NitKing: Seated but stack=21 (< 1500) — leaving to re-sit with fresh chips
+[02:38:48]    Clawhi(TAG) | preflop | SB stk=5893 | 3d 3s | eq=49% -> call  | Called
+[02:38:58]    Clawhi(TAG) | flop | SB stk=5853 | 3d 3s | eq=92% -> raise 161 | Raised to 161 (target 161, range 0-5853, tier2_arrows)
+[02:38:59]    ✅ NitKing: Detected as seated via you-player — rebuy may have already worked
+[02:38:59]    ✅ NitKing: Rebuy successful! (cooldown 15s)
+[02:38:59]    AceBot(LAG) | flop | BB stk=3604 | 5s Qh | eq=21% -> fold  | Folded
+[02:39:00]    CallStn(STATION) | flop | BTN/SB stk=4145 | 2h Jd | eq=37% -> call  | Called
+[02:39:07]    Clawhi(TAG) | turn | BB stk=5692 | 3d 3s | eq=93% -> raise 451 | Raised to 399 (target 451, range 0-5692, tier1_mouse)
+[02:39:08]    CallStn(STATION) | turn | BTN/SB stk=3984 | 2h Jd | eq=35% -> call  | Called
+[02:39:16]    Clawhi(TAG) | river | BB stk=5293 | 3d 3s | eq=97% -> raise 1169 | Raised to 1137 (target 1169, range 0-5293, tier1_mouse)
+[02:39:17]    CallStn(STATION) | river | BTN/SB stk=3585 | 2h Jd | eq=26% -> fold  | Folded
+[02:39:22]    CallStn(STATION) | preflop | UTG stk=3585 | 3d 7c | eq=29% -> fold  | Folded
+[02:39:25]    Clawhi(TAG) | preflop | BTN stk=6593 | 2h 6h | eq=32% -> fold  | Folded
+[02:39:26]    AceBot(LAG) | preflop | ? stk=3594 | 6d 5h | eq=37% -> call  | Called
+[02:39:27]    NitKing(NIT) | preflop | ? stk=4980 | Qs 4c | eq=47% -> check  | Checked
+[02:39:30]    AceBot(LAG) | flop | ? stk=3584 | 6d 5h | eq=52% -> raise 30 | Raised to 30 (target 30, range 0-3584, tier2_arrows)
+[02:39:32]    NitKing(NIT) | flop | ? stk=4980 | Qs 4c | eq=48% -> call  | Called
+[02:39:35]    AceBot(LAG) | turn | ? stk=3554 | 6d 5h | eq=55% -> raise 61 | Raised to 61 (target 61, range 0-3554, tier2_arrows)
+[02:39:36]    NitKing(NIT) | turn | ? stk=4950 | Qs 4c | eq=36% -> call  | Called
+[02:39:39]    AceBot(LAG) | river | ? stk=3493 | 6d 5h | eq=86% -> raise 199 | Raised to 199 (target 199, range 0-3493, tier2_arrows)
+[02:39:40]    NitKing(NIT) | river | ? stk=4889 | Qs 4c | eq=17% -> fold  | Folded
+[02:39:48]    Clawhi(TAG) | preflop | UTG stk=6593 | 2s 3d | eq=25% -> fold  | Folded
+[02:39:49]    AceBot(LAG) | preflop | BTN stk=3715 | 9h 4c | eq=35% -> call  | Called
+[02:39:51]    NitKing(NIT) | preflop | SB stk=4879 | 6c 9s | eq=39% -> fold  | Folded
+[02:39:52]    CallStn(STATION) | preflop | BB stk=3565 | 7s Js | eq=50% -> check  | Checked
+[02:39:56]    CallStn(STATION) | flop | BB stk=3565 | 7s Js | eq=63% -> raise 39 | Raised to 39 (target 39, range 0-3565, tier2_arrows)
+[02:39:57]    AceBot(LAG) | flop | BTN/SB stk=3695 | 9h 4c | eq=34% -> call  | Called
+[02:39:59]    CallStn(STATION) | turn | BB stk=3526 | 7s Js | eq=44% -> check  | Checked
+[02:40:02]    AceBot(LAG) | turn | BTN/SB stk=3656 | 9h 4c | eq=72% -> raise 105 | Raised to 105 (target 105, range 0-3656, tier2_arrows)
+[02:40:03]    CallStn(STATION) | turn | BB stk=3526 | 7s Js | eq=46% -> call  | Called
+[02:40:06]    CallStn(STATION) | river | BB stk=3421 | 7s Js | eq=44% -> raise 218 | Raised to 189 (target 218, range 0-3421, tier1_mouse)
+[02:40:08]    AceBot(LAG) | river | BTN/SB stk=3551 | 9h 4c | eq=69% -> raise 567 | Raised to 541 (target 567, range 0-3551, tier1_mouse)
+[02:40:09]    CallStn(STATION) | river | BB stk=3232 | 7s Js | eq=45% -> call  | Called
+[02:40:17]    AceBot(LAG) | preflop | UTG stk=4430 | Qd 3s | eq=39% -> fold  | Folded
+[02:40:18]    NitKing(NIT) | preflop | BTN stk=4879 | 5c Ks | eq=47% -> call  | Called
+[02:40:19]    CallStn(STATION) | preflop | SB stk=2870 | Jd Qh | eq=52% -> call  | Called
+[02:40:26]    Clawhi(TAG) | preflop | BB stk=6573 | 8c 5s | eq=36% -> check  | Checked
+[02:40:28]    CallStn(STATION) | flop | SB stk=2860 | Jd Qh | eq=40% -> check  | Checked
+[02:40:35]    Clawhi(TAG) | flop | BB stk=6573 | 8c 5s | eq=51% -> check  | Checked
+[02:40:38]    NitKing(NIT) | flop | BTN stk=4859 | 5c Ks | eq=51% -> raise 33 | Raised to 33 (target 33, range 0-4859, tier2_arrows)
+[02:40:39]    CallStn(STATION) | flop | SB stk=2860 | Jd Qh | eq=53% -> call  | Called
+[02:40:43]    Clawhi(TAG) | flop | BB stk=6573 | 8c 5s | eq=32% -> call  | Called
+[02:40:46]    CallStn(STATION) | turn | SB stk=2827 | Jd Qh | eq=59% -> raise 117 | Raised to 117 (target 117, range 0-2827, tier2_arrows)
+[02:40:51]    Clawhi(TAG) | turn | BB stk=6540 | 8c 5s | eq=30% -> call  | Called
+[02:40:53]    NitKing(NIT) | turn | BTN stk=4826 | 5c Ks | eq=29% -> call  | Called
+[02:40:54]    CallStn(STATION) | river | SB stk=2710 | Jd Qh | eq=28% -> check  | Checked
+[02:41:00]    Clawhi(TAG) | river | BB stk=6423 | 8c 5s | eq=36% -> check  | Checked
+[02:41:01]    NitKing(NIT) | river | BTN stk=4709 | 5c Ks | eq=41% -> check  | Checked
+[02:41:08]    NitKing(NIT) | preflop | UTG stk=4709 | 9s 2d | eq=31% -> fold  | Folded
+[02:41:09]    CallStn(STATION) | preflop | BTN stk=3220 | 9h 8c | eq=42% -> call  | Called
+[02:41:15]    Clawhi(TAG) | preflop | SB stk=6413 | 7c 3c | eq=34% -> fold  | Folded
+[02:41:17]    AceBot(LAG) | preflop | BB stk=4410 | 5c 3h | eq=33% -> check  | Checked
+[02:41:21]    AceBot(LAG) | flop | BB stk=4410 | 5c 3h | eq=55% -> raise 31 | Raised to 31 (target 31, range 0-4410, tier2_arrows)
+[02:41:22]    CallStn(STATION) | flop | BTN/SB stk=3200 | 9h 8c | eq=69% -> call  | Called
+[02:41:25]    AceBot(LAG) | turn | BB stk=4379 | 5c 3h | eq=92% -> raise 100 | Raised to 100 (target 100, range 0-4379, tier2_arrows)
+[02:41:26]    CallStn(STATION) | turn | BTN/SB stk=3169 | 9h 8c | eq=69% -> call  | Called
+[02:41:28]    AceBot(LAG) | river | BB stk=4279 | 5c 3h | eq=88% -> raise 280 | Raised to 239 (target 280, range 0-4279, tier1_mouse)
+[02:41:30]    CallStn(STATION) | river | BTN/SB stk=3069 | 9h 8c | eq=75% -> raise 717 | Raised to 701 (target 717, range 0-3069, tier1_mouse)
+[02:41:31]    AceBot(LAG) | river | BB stk=4040 | 5c 3h | eq=88% -> raise 4040 | Raised to 4081 (target 4040, range 0-4279, tier1_mouse)
+[02:41:33]    CallStn(STATION) | river | BTN/SB stk=2368 | 9h 8c | eq=76% -> call  | Called
+[02:41:33]    📉 AceBot: Low stack (198 < 1500) — proactive rebuy
+[02:41:33]    💰 AceBot: Rebuy attempt (v16)...
+[02:41:33]    🔍 AceBot: step1=None pending=False btns=['', 'options', 'leave seat', 'away', 'select', 'acebot']
+[02:41:33]    🚪 AceBot: Leaving seat before reload...
+[02:41:33] 📊 STATUS | 76h | Clawhi:17h AceBot:20h NitKing:18h CallStn:21h
+[02:41:33]    Folds: Clawhi:21% AceBot:18% NitKing:34% CallStn:9%
+[02:41:33]    Rebuys: NitKing:2
+[02:41:33]    🎚️ Slider: 50/50 (100%) | T1:15 T2:35 T3:0 | Fallback calls:0
+[02:41:36]    🔄 AceBot: Reloading page for clean seat selection...
+[02:41:40]    ⚠️ CallStn: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:41:41]    ☠️ CallStn: BUSTED (stack=None, seated=False, last_known=6)
+[02:41:44]    🪑 AceBot: Clicked seat button for rebuy
+[02:41:46]    💰 AceBot: Form submitted (btn=request the seat)
+[02:41:48]    ✅ AceBot: Rebuy seat request submitted (pending host approval)
+[02:41:53]    ✅ AceBot: Proactive rebuy successful!
+[02:41:56]    Clawhi(TAG) | preflop | BTN/SB stk=6403 | 10c 9c | eq=52% -> call  | Error: 
+[02:41:56]    💰 CallStn: Rebuy attempt #1...
+[02:41:56]    💰 CallStn: Rebuy attempt (v16)...
+[02:41:56]    🔍 CallStn: step1=None pending=False btns=['', 'options', 'clawhi', 'sit', 'nitking', 'sit']
+[02:41:56]    🔄 CallStn: Reloading page for clean seat selection...
+[02:41:57]    ✅ Host approved: 'Accept'
+[02:41:58]    ✅ Host approved: 'Ok'
+[02:41:59]    ✅ Host: Approved rebuy seat request(s) (no reload)
+[02:41:59]    NitKing(NIT) | preflop | BB stk=4689 | Qh 5c | eq=44% -> check  | Checked
+[02:42:00]    Clawhi(TAG) | preflop | BTN stk=6393 | 10c 9c | eq=48% -> check  | Checked
+[02:42:01]    NitKing(NIT) | flop | BB stk=4689 | Qh 5c | eq=38% -> check  | Checked
+[02:42:04]    🪑 CallStn: Clicked seat button for rebuy
+[02:42:04]    NitKing(NIT) | turn | BB stk=4689 | Qh 5c | eq=22% -> check  | Checked
+[02:42:05]    💰 CallStn: Form submitted (btn=request the seat)
+[02:42:06]    ✅ Host approved via notification: notif:accept
+[02:42:07]    ✅ CallStn: Rebuy seat request submitted (pending host approval)
+[02:42:11]    Clawhi(TAG) | turn | BTN stk=6393 | 10c 9c | eq=71% -> raise 34 | Called (panel failed, key)
+[02:42:12]    ✅ CallStn: Rebuy successful! (cooldown 15s)
+[02:42:13]    ⚠️ Clawhi: Possible bust (stack=None, seated=False) — confirming (1/5)...
+[02:42:13]    ⚠️ AceBot: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:42:14]    ☠️ AceBot: BUSTED (stack=None, seated=False, last_known=4040)
+[02:42:14]    ☠️ Clawhi: BUSTED (stack=None, seated=False, last_known=5)
+[02:42:23]    💰 Clawhi: Rebuy attempt #1...
+[02:42:23]    💰 Clawhi: Rebuy attempt (v16)...
+[02:42:23]    🔍 Clawhi: step1=None pending=False btns=[]
+[02:42:23]    🔄 Clawhi: Reloading page for clean seat selection...
+[02:42:25]    💰 AceBot: Rebuy attempt #1...
+[02:42:27]    ⚠️ CallStn: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:42:28]    ☠️ CallStn: BUSTED (stack=None, seated=False, last_known=6)
+[02:42:31]    🔍 Clawhi: Seated but stack=3 (< 1500) — leaving to re-sit with fresh chips
+[02:42:33]    NitKing(NIT) | river | BB stk=4689 | Qh 5c | eq=5% -> check  | Checked
+[02:42:34]    🪑 Clawhi: Host seat click via: own-player-click
+[02:42:34]    🪑 Clawhi: Clicked seat button for rebuy
+[02:42:36]    ⚠️ Clawhi: Form fill result: {'name': False, 'stack': False, 'submitted': False}
+[02:42:36]    ⚠️ Clawhi: Failed to fill rebuy seat form
+[02:42:36]    💰 AceBot: Rebuy attempt (v16)...
+[02:42:36]    🔍 AceBot: step1=None pending=False btns=['', 'options', 'select', 'acebot', 'nitking', 'callstn']
+[02:42:36]    🔄 AceBot: Reloading page for clean seat selection...
+[02:42:41]    NitKing(NIT) | preflop | BTN stk=4689 | 5d 5c | eq=55% -> call  | Called
+[02:42:42]    💰 CallStn: Rebuy attempt #1...
+[02:42:43]    🔍 AceBot: Seated but stack=61 (< 1500) — leaving to re-sit with fresh chips
+[02:42:55]    💰 Clawhi: Rebuy attempt #2...
+[02:42:57]    ✅ AceBot: Detected as seated via you-player — rebuy may have already worked
+[02:42:57]    ✅ AceBot: Rebuy successful! (cooldown 15s)
+[02:42:57]    💰 CallStn: Rebuy attempt (v16)...
+[02:42:57]    🔍 CallStn: step1=None pending=False btns=['', 'options', 'leave seat', 'away', 'select', 'callstn']
+[02:42:57]    🚪 CallStn: Leaving seat before reload...
+[02:43:01]    🔄 CallStn: Reloading page for clean seat selection...
+[02:43:01]    NitKing(NIT) | flop | BTN/SB stk=4669 | 5d 5c | eq=53% -> check  | Checked
+[02:43:04]    NitKing(NIT) | turn | BTN/SB stk=4669 | 5d 5c | eq=49% -> check  | Checked
+[02:43:06]    NitKing(NIT) | river | BTN/SB stk=4669 | 5d 5c | eq=45% -> check  | Checked
+[02:43:08]    🔍 CallStn: Seated but stack=51 (< 1500) — leaving to re-sit with fresh chips
+[02:43:14]    ⚠️ AceBot: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:43:15]    ☠️ AceBot: BUSTED (stack=None, seated=False, last_known=1)
+[02:43:22]    ✅ CallStn: Detected as seated via you-player — rebuy may have already worked
+[02:43:22]    ✅ CallStn: Rebuy successful! (cooldown 15s)
+[02:43:22]    💰 Clawhi: Rebuy attempt (v16)...
+[02:43:22]    🔍 Clawhi: step1=None pending=False btns=['', 'options', 'sign in', 'game configurations', 'players', 'preferences']
+[02:43:22]    🔄 Clawhi: Reloading page for clean seat selection...
+[02:43:25]    CallStn(STATION) | preflop | BTN/SB stk=4980 | 8d Ah | eq=58% -> call  | Called
+[02:43:25]    💰 AceBot: Rebuy attempt #1...
+[02:43:28]    NitKing(NIT) | preflop | BB stk=4699 | 10c Ac | eq=62% -> raise 60 | Raised to 60 (target 60, range 0-4719, tier2_arrows)
+[02:43:29]    CallStn(STATION) | preflop | BTN/SB stk=4970 | 8d Ah | eq=58% -> call  | Called
+[02:43:29]    🪑 Clawhi: Host seat click via: any-seat-button
+[02:43:29]    🪑 Clawhi: Clicked seat button for rebuy
+[02:43:30]    NitKing(NIT) | flop | BB stk=4659 | 10c Ac | eq=50% -> check  | Checked
+[02:43:30]    💰 Clawhi: Form submitted (btn=take the seat)
+[02:43:32]    ✅ Clawhi: Host re-seated (instant)
+[02:43:34]    CallStn(STATION) | flop | BTN stk=4930 | 8d Ah | eq=77% -> raise 101 | Raised to 101 (target 101, range 0-4930, tier2_arrows)
+[02:43:34]    ✅ Clawhi: Rebuy successful! (cooldown 15s)
+[02:43:34]    💰 AceBot: Rebuy attempt (v16)...
+[02:43:34]    🔍 AceBot: step1=None pending=False btns=['', 'options', 'clawhi', 'sit', 'nitking', 'callstn']
+[02:43:34]    🔄 AceBot: Reloading page for clean seat selection...
+[02:43:35]    NitKing(NIT) | flop | BB stk=4659 | 10c Ac | eq=30% -> fold  | Folded
+[02:43:40]    📊 NitKing (NIT): 25 hands
+[02:43:40]    NitKing(NIT) | preflop | BTN stk=4659 | 9h As | eq=55% -> call  | Called
+[02:43:41]    CallStn(STATION) | preflop | SB stk=5040 | 6c Qc | eq=48% -> call  | Called
+[02:43:42]    🪑 AceBot: Clicked seat button for rebuy
+[02:43:44]    💰 AceBot: Form submitted (btn=request the seat)
+[02:43:45]    ✅ Host approved from Options menu (v12 fallback)
+[02:43:46]    ✅ Host: Post-rebuy approval sweep (reload) successful
+[02:43:46]    ✅ AceBot: Rebuy seat request submitted (pending host approval)
+[02:43:51]    ✅ AceBot: Rebuy successful! (cooldown 15s)
+[02:43:56]    Clawhi(TAG) | preflop | BB stk=4980 | 5s 4c | eq=30% -> check  | Checked
+[02:43:57]    CallStn(STATION) | flop | SB stk=5030 | 6c Qc | eq=10% -> check  | Checked
+[02:44:05]    Clawhi(TAG) | flop | BB stk=4980 | 5s 4c | eq=13% -> check  | Checked
+[02:44:06]    ⚠️ AceBot: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:44:07]    ☠️ AceBot: BUSTED (stack=None, seated=False, last_known=1)
+[02:44:08]    NitKing(NIT) | flop | BTN stk=4639 | 9h As | eq=53% -> raise 36 | Raised to 36 (target 36, range 0-4639, tier2_arrows)
+[02:44:09]    CallStn(STATION) | flop | SB stk=5030 | 6c Qc | eq=15% -> fold  | Folded
+[02:44:13]    Clawhi(TAG) | flop | SB stk=4980 | 5s 4c | eq=12% -> fold  | Folded
+[02:44:17]    💰 AceBot: Rebuy attempt #1...
+[02:44:17]    💰 AceBot: Rebuy attempt (v16)...
+[02:44:17]    🔍 AceBot: step1=None pending=False btns=['', 'options', 'leave seat', 'away', 'select', 'acebot']
+[02:44:17]    🚪 AceBot: Leaving seat before reload...
+[02:44:18]    NitKing(NIT) | preflop | UTG stk=4699 | Qh 3h | eq=41% -> fold  | Folded
+[02:44:19]    CallStn(STATION) | preflop | BTN stk=5030 | 2d 9d | eq=37% -> call  | Called
+[02:44:21]    🔄 AceBot: Reloading page for clean seat selection...
+[02:44:22]    Clawhi(TAG) | preflop | SB stk=4970 | Jh 10h | eq=52% -> call  | Called
+[02:44:28]    🔍 AceBot: Seated but stack=62 (< 1500) — leaving to re-sit with fresh chips
+[02:44:31]    Clawhi(TAG) | flop | SB stk=4960 | Jh 10h | eq=21% -> raise 25 | Raised to 20 (target 25, range 0-4960, tier1_mouse)
+[02:44:42]    ✅ AceBot: Detected as seated via you-player — rebuy may have already worked
+[02:44:42]    ✅ AceBot: Rebuy successful! (cooldown 15s)
+[02:44:45]    AceBot(LAG) | flop | BB stk=4980 | 6h Jd | eq=15% -> fold  | Folded
+[02:44:47]    CallStn(STATION) | flop | BTN/SB stk=5010 | 2d 9d | eq=17% -> call  | Called
+[02:44:56]    Clawhi(TAG) | turn | BB stk=4940 | Jh 10h | eq=39% -> raise 45 | Raised to 45 (target 45, range 0-4940, tier2_arrows)
+[02:44:57]    CallStn(STATION) | turn | BTN/SB stk=4990 | 2d 9d | eq=17% -> fold  | Folded
+[02:45:02]    📊 CallStn (STATION): 25 hands
+[02:45:02]    CallStn(STATION) | preflop | UTG stk=4990 | Ah Qd | eq=54% -> call  | Called
+[02:45:05]    Clawhi(TAG) | preflop | BTN stk=5040 | 8c 4s | eq=31% -> fold  | Folded
+[02:45:06]    AceBot(LAG) | preflop | ? stk=4970 | Js 8h | eq=46% -> call  | Called
+[02:45:09]    NitKing(NIT) | preflop | ? stk=4679 | Qc 3d | eq=42% -> raise 60 | Raised to 60 (target 60, range 0-4699, tier2_arrows)
+[02:45:10]    CallStn(STATION) | preflop | ? stk=4970 | Ah Qd | eq=58% -> call  | Called
+[02:45:11]    AceBot(LAG) | preflop | ? stk=4960 | Js 8h | eq=46% -> call  | Called
+[02:45:14]    AceBot(LAG) | flop | ? stk=4920 | Js 8h | eq=38% -> check  | Checked
+[02:45:15]    NitKing(NIT) | flop | ? stk=4639 | Qc 3d | eq=33% -> check  | Checked
+[02:45:16]    CallStn(STATION) | flop | ? stk=4930 | Ah Qd | eq=53% -> check  | Checked
+[02:45:18]    AceBot(LAG) | turn | ? stk=4920 | Js 8h | eq=19% -> check  | Checked
+[02:45:21]    NitKing(NIT) | turn | ? stk=4639 | Qc 3d | eq=42% -> raise 100 | Raised to 100 (target 100, range 0-4639, tier2_arrows)
+[02:45:22]    CallStn(STATION) | turn | ? stk=4930 | Ah Qd | eq=57% -> call  | Called
+[02:45:24]    AceBot(LAG) | turn | ? stk=4920 | Js 8h | eq=16% -> fold  | Folded
+[02:45:25]    NitKing(NIT) | river | ? stk=4539 | Qc 3d | eq=35% -> check  | Checked
+[02:45:27]    CallStn(STATION) | river | ? stk=4830 | Ah Qd | eq=47% -> check  | Checked
+[02:45:36]    Clawhi(TAG) | preflop | UTG stk=5040 | 5s 2s | eq=30% -> fold  | Folded
+[02:45:38]    AceBot(LAG) | preflop | BTN stk=4920 | 10c As | eq=57% -> call  | Called
+[02:45:39]    NitKing(NIT) | preflop | SB stk=4529 | 7s Qs | eq=48% -> call  | Called
+[02:45:40]    CallStn(STATION) | preflop | BB stk=5190 | Kd 7d | eq=51% -> check  | Checked
+[02:45:41]    NitKing(NIT) | flop | SB stk=4519 | 7s Qs | eq=54% -> check  | Checked
+[02:45:45]    CallStn(STATION) | flop | BB stk=5190 | Kd 7d | eq=81% -> raise 53 | Raised to 53 (target 53, range 0-5190, tier2_arrows)
+[02:45:48]    AceBot(LAG) | flop | BTN stk=4900 | 10c As | eq=53% -> raise 159 | Raised to 159 (target 159, range 0-4900, tier2_arrows)
+[02:45:50]    NitKing(NIT) | flop | SB stk=4519 | 7s Qs | eq=53% -> call  | Called
+[02:45:51]    CallStn(STATION) | flop | BB stk=5137 | Kd 7d | eq=72% -> call  | Called
+[02:45:53]    NitKing(NIT) | turn | SB stk=4360 | 7s Qs | eq=47% -> raise 331 | Raised to 291 (target 331, range 0-4360, tier1_mouse)
+[02:45:54]    CallStn(STATION) | turn | BB stk=5031 | Kd 7d | eq=58% -> call  | Called
+[02:45:56]    AceBot(LAG) | turn | BTN stk=4741 | 10c As | eq=65% -> raise 888 | Raised to 855 (target 888, range 0-4741, tier1_mouse)
+[02:45:57]    NitKing(NIT) | turn | SB stk=4069 | 7s Qs | eq=46% -> call  | Called
+[02:45:59]    CallStn(STATION) | turn | BB stk=4740 | Kd 7d | eq=64% -> call  | Called
+[02:46:00]    NitKing(NIT) | river | SB stk=3505 | 7s Qs | eq=51% -> check  | Checked
+[02:46:01]    CallStn(STATION) | river | BB stk=4176 | Kd 7d | eq=70% -> check  | Checked
+[02:46:03]    AceBot(LAG) | river | BTN stk=3886 | 10c As | eq=84% -> check  | Checked
+[02:46:04]    📊 AceBot (LAG): 25 hands
+[02:46:13]    AceBot(LAG) | preflop | UTG stk=6988 | Ks Kh | eq=69% -> raise 60 | Raised to 60 (target 60, range 0-6988, tier2_arrows)
+[02:46:14]    NitKing(NIT) | preflop | BTN stk=3505 | 9s 10c | eq=42% -> fold  | Folded
+[02:46:15]    CallStn(STATION) | preflop | ? stk=4166 | 3s 7h | eq=31% -> fold  | Folded
+[02:46:15]    📊 Clawhi (TAG): 25 hands
+[02:46:24]    Clawhi(TAG) | preflop | ? stk=5020 | Js 9c | eq=52% -> call  | Called
+[02:46:33] 📊 STATUS | 111h | Clawhi:25h AceBot:26h NitKing:31h CallStn:29h
+[02:46:33]    Folds: Clawhi:22% AceBot:18% NitKing:24% CallStn:10%
+[02:46:33]    Rebuys: Clawhi:1 AceBot:3 NitKing:2 CallStn:1
+[02:46:33]    🎚️ Slider: 62/63 (98%) | T1:18 T2:44 T3:0 | Fallback calls:0
+[02:46:35]    Clawhi(TAG) | flop | ? stk=4980 | Js 9c | eq=69% -> raise 105 | Raised to 105 (target 105, range 0-4980, tier2_arrows)
+[02:46:38]    AceBot(LAG) | flop | ? stk=6928 | Ks Kh | eq=76% -> raise 315 | Raised to 315 (target 315, range 0-6928, tier2_arrows)
+[02:46:45]    Clawhi(TAG) | flop | ? stk=4875 | Js 9c | eq=71% -> raise 453 | Raised to 408 (target 453, range 0-4980, tier1_mouse)
+[02:46:55]    Clawhi(TAG) | flop | ? stk=4875 | Js 9c | eq=70% -> raise 455 | Raised to 411 (target 455, range 0-4980, tier1_mouse)
+[02:47:05]    Clawhi(TAG) | flop | ? stk=4875 | Js 9c | eq=73% -> raise 460 | Raised to 416 (target 460, range 0-4980, tier1_mouse)
+[02:47:14]    NitKing(NIT) | preflop | UTG stk=3505 | Qd 2c | eq=38% -> fold  | Folded
+[02:47:16]    CallStn(STATION) | preflop | BTN stk=4166 | 3h 3d | eq=49% -> call  | Called
+[02:47:26]    ⚠️ Host: Rebuy approval check error: Page.evaluate: Target page, context or browser has been clos
+[02:47:26]    ⚠️ Clawhi: Possible bust (stack=None, seated=False) — confirming (1/5)...
+[02:47:26]    ⚠️ AceBot: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:47:26]    ⚠️ CallStn: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:47:26]    ⚠️ NitKing: Possible bust (stack=None, seated=False) — confirming (1/3)...
+[02:47:26]    ⚠️ Clawhi: Browser/page closed — exiting loop
+[02:47:27]    ☠️ AceBot: BUSTED (stack=None, seated=False, last_known=7143)
+[02:47:27]    ☠️ CallStn: BUSTED (stack=None, seated=False, last_known=4146)
+[02:47:27]    ☠️ NitKing: BUSTED (stack=None, seated=False, last_known=3505)
+[02:47:38]    💰 AceBot: Rebuy attempt #1...
+[02:47:38]    💰 AceBot: Rebuy attempt (v16)...
+[02:47:38]    ⚠️ AceBot: Rebuy error: Page.evaluate: Target page, context or browser has been clos
+[02:47:40]    💰 NitKing: Rebuy attempt #1...
+[02:47:40]    💰 NitKing: Rebuy attempt (v16)...
+[02:47:40]    ⚠️ NitKing: Rebuy error: Page.evaluate: Target page, context or browser has been clos
+[02:47:42]    💰 CallStn: Rebuy attempt #1...
+[02:47:42]    💰 CallStn: Rebuy attempt (v16)...
+[02:47:42]    ⚠️ CallStn: Rebuy error: Page.evaluate: Target page, context or browser has been clos

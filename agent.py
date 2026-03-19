@@ -19,8 +19,10 @@ from scrape import get_poker_page, scrape_state, state_to_text
 from act import execute_action
 from hand_eval import get_equity, detect_draws, preflop_equity
 from opponent_model import OpponentModel
+from tracker import SessionTracker
 
-tracker = OpponentModel()
+opp_tracker = OpponentModel()
+session_tracker = None  # initialized in run()
 
 # ---- Local Decision Engine ----
 
@@ -344,6 +346,8 @@ async def decide_and_act(page, state, state_text):
             amt = max_raise
         decision = (decision[0], amt)
 
+    street = state.get("street", "preflop")
+    
     if use_llm:
         try:
             action, amount = await llm_decision(state, state_text, equity, draws)
@@ -352,27 +356,44 @@ async def decide_and_act(page, state, state_text):
             api_ms = int((time.time() - t0) * 1000)
             result = await execute_action(page, action, amount)
             total_ms = int((time.time() - t0) * 1000)
+            # Track action + LLM usage
+            if session_tracker:
+                session_tracker.record_action(street, action)
+                session_tracker.record_llm_call()
             return f"[{total_ms}ms | LLM:{api_ms}ms | eq={equity:.0f}%] {result}"
         except Exception as e:
-            result = await execute_action(page, "check" if can_check else "call")
+            fallback = "check" if can_check else "call"
+            result = await execute_action(page, fallback)
             ms = int((time.time() - t0) * 1000)
+            if session_tracker:
+                session_tracker.record_action(street, fallback)
+                session_tracker.record_llm_call()
             return f"[{ms}ms | LLM ERR] {result}: {str(e)[:40]}"
     else:
         action, amount = decision
         result = await execute_action(page, action, amount)
         ms = int((time.time() - t0) * 1000)
+        # Track action
+        if session_tracker:
+            session_tracker.record_action(street, action)
+            session_tracker.record_local_decision()
         draw_str = f" draws={','.join(draws)}" if draws else ""
         amt_str = f" amt={amount}" if amount else ""
         return f"[{ms}ms | LOCAL | eq={equity:.0f}%{draw_str}{amt_str}] {result}"
 
 
 async def run(poll_ms=250):
+    global session_tracker
     print(f"🃏 Poker Agent v3 | {PLAYER_NAME} | {MODEL}")
     print(f"   Hybrid: preflop lookup + MC equity + LLM for complex spots")
     print(f"   Connecting to {CDP_ENDPOINT}...")
 
     pw, page = await get_poker_page()
     print(f"   ✅ Connected | Polling every {poll_ms}ms\n")
+
+    # Initialize session tracker
+    session_tracker = SessionTracker(bot_name=PLAYER_NAME, buy_in=1000, bot_version="v3", mode="single")
+    print(f"   📊 Session tracker started: {session_tracker.session['id']}")
 
     last_act_time = 0
     last_state_key = None
@@ -396,8 +417,15 @@ async def run(poll_ms=250):
             # New hand detection
             cards = tuple(state.get("my_cards", []))
             if cards and cards != last_cards and last_cards:
-                tracker.end_hand()
-                tracker.new_hand()
+                opp_tracker.end_hand()
+                opp_tracker.new_hand()
+                # Track stack at start of each new hand
+                my_stack_now = None
+                for p in state.get("players", []):
+                    if p.get("is_me"):
+                        try: my_stack_now = int(p["stack"])
+                        except: pass
+                session_tracker.new_hand(my_stack_now)
             last_cards = cards
 
             if state.get("is_my_turn"):
@@ -448,7 +476,7 @@ async def run(poll_ms=250):
                     if not p.get("is_me") and p.get("status") and p["status"] != "active":
                         status = p["status"].lower()
                         if "fold" in status:
-                            tracker.record_action(p["name"], "fold", street)
+                            opp_tracker.record_action(p["name"], "fold", street)
                 
                 # Parse game log for detailed opponent actions
                 import re as _re
@@ -462,13 +490,13 @@ async def run(poll_ms=250):
                             continue
                         ll = log_line.lower()
                         if "raises" in ll or "bets" in ll:
-                            tracker.record_action(pname, "raise", street)
+                            opp_tracker.record_action(pname, "raise", street)
                         elif "calls" in ll:
-                            tracker.record_action(pname, "call", street)
+                            opp_tracker.record_action(pname, "call", street)
                         elif "checks" in ll:
-                            tracker.record_action(pname, "check", street)
+                            opp_tracker.record_action(pname, "check", street)
                         elif "folds" in ll:
-                            tracker.record_action(pname, "fold", street)
+                            opp_tracker.record_action(pname, "fold", street)
 
                 # Get exploit info for logging
                 opp_names = [p["name"] for p in state.get("players", [])
@@ -501,6 +529,30 @@ async def run(poll_ms=250):
     except KeyboardInterrupt:
         print("\n👋 Stopping.")
     finally:
+        # Save session data
+        if session_tracker:
+            # Get final stack
+            try:
+                final_state = await scrape_state(page)
+                for p in final_state.get("players", []):
+                    if p.get("is_me"):
+                        try:
+                            final_stack = int(p["stack"])
+                            session_tracker.record_stack(final_stack)
+                        except:
+                            pass
+            except:
+                pass
+            
+            result = session_tracker.end_session()
+            print(f"\n📊 SESSION REPORT")
+            print(f"   Hands: {result['hands_played']} | PnL: {result['pnl']:+d}")
+            print(f"   VPIP: {result.get('vpip', 0)}% | PFR: {result.get('pfr', 0)}%")
+            print(f"   BB/100: {result.get('bb_per_100', 0)}")
+            print(f"   LLM calls: {result['llm_calls']} | Local: {result['local_decisions']}")
+            print(f"   Peak: {result['peak_stack']} | Min: {result['min_stack']}")
+            print(f"   Saved to data/sessions.json")
+        
         await pw.stop()
 
 

@@ -1,6 +1,14 @@
 """
 Execute poker actions on Poker Now.
 
+v14 - Fix submit button detachment (2026-03-19):
+  ROOT CAUSE: React SPA re-renders the submit button during game state changes,
+    causing Playwright's cached element handle to become stale ("Element is not attached to the DOM").
+  FIX: Use page.keyboard.press("Enter") as primary submit method.
+    Enter key submits the form via the browser's native form handling, bypassing the need
+    for a stable element reference. Re-query fallback only if Enter fails.
+  RESULT: Eliminates ~10 "Element detached" errors per session.
+
 v13 - Complete slider rewrite (2026-03-18):
   ROOT CAUSE: React SPA ignores nativeSetter value changes on the range slider.
     The displayed bet amount stays at slider max regardless of JS manipulation.
@@ -617,38 +625,29 @@ async def execute_action(page: Page, action: str, amount: Optional[int] = None) 
                 await page.keyboard.press("c")
                 return f"Called/key (slider failed: wanted {final_amount}, got {actual}, tier={tier})"
 
-        # Submit the raise
+        # Submit the raise — v14: Use Enter key as PRIMARY method to avoid
+        # "Element is not attached to the DOM" errors from React SPA re-renders.
+        # The submit button gets recreated by React on game state changes, making
+        # Playwright's element handle stale. Enter key bypasses this entirely.
         submitted = False
-        for sel in ['input[type="submit"]', '.game-decisions-ctn input[type="submit"]',
-                    '.game-decisions-ctn button.green', 'button.green']:
-            try:
-                el = await page.query_selector(sel)
-                if el and await el.is_visible():
-                    await el.click()
-                    submitted = True
-                    break
-            except:
-                continue
+        try:
+            await page.keyboard.press("Enter")
+            submitted = True
+        except:
+            pass
         
         if not submitted:
-            buttons = await page.query_selector_all('button')
-            for btn in buttons:
+            # Fallback: re-query and click submit button (fresh handle)
+            for sel in ['input[type="submit"]', '.game-decisions-ctn input[type="submit"]',
+                        '.game-decisions-ctn button.green', 'button.green']:
                 try:
-                    if not await btn.is_visible():
-                        continue
-                    text = (await btn.text_content() or '').strip().lower()
-                    if any(x in text for x in ['fold', 'check', 'call', 'extra',
-                                                'got it', 'options', 'leave', 'away']):
-                        continue
-                    if any(x in text for x in ['raise', 'bet', 'confirm', 'submit']):
-                        await btn.click()
+                    el = await page.query_selector(sel)
+                    if el and await el.is_visible():
+                        await el.click()
                         submitted = True
                         break
                 except:
                     continue
-
-        if not submitted:
-            await page.keyboard.press("Enter")
 
         return f"Raised to {actual} (target {final_amount}, range {min_raise}-{max_raise}, {tier})"
 

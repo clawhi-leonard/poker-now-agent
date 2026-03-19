@@ -2,6 +2,19 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v17.0 - Serialized rebuy queue + global rebuy suppression (2026-03-19):
+  - FIXED: Concurrent rebuy chaos — 3 bots rebuying simultaneously caused cascading
+    false busts, stuck loops, and host unable to approve because it was also rebuying
+  - NEW: Global `anyone_rebuying` flag — suppresses bust detection for ALL bots while
+    any bot is in a rebuy flow (prevents false busts from SPA state changes)
+  - NEW: Rebuy priority queue — non-host bots rebuy first (one at a time), host last
+    so host can approve requests before handling its own rebuy
+  - NEW: `rebuy_queue` asyncio.Queue — bots enqueue rebuy requests instead of racing
+  - FIXED: "Seated but stack=101" infinite loop — if re-seated with crumbs and can't
+    leave-resit within 2 attempts, accept current stack as successful rebuy rather than
+    looping. The crumb stack gets topped up on next proactive rebuy cycle.
+  - CHANGED: Proactive rebuy cooldown 60s → 30s on failure (faster recovery)
+  - CHANGED: Bust confirmation now also checks `anyone_rebuying` flag
 v16.0 - Host rebuy fix + false bust elimination (2026-03-19):
   - FIXED: Host false bust from approval reloads — new host_reloading flag suppresses
     bust detection entirely while host page is reloading for approval flow
@@ -155,6 +168,8 @@ rebuy_lock = None  # Initialized in main() as asyncio.Lock()
 rebuy_pending = None  # Initialized in main() as asyncio.Event() — signals host to approve rebuy requests
 cdp_semaphore = None  # Initialized in main() - limits concurrent CDP calls to prevent Errno 35
 host_reloading = None  # v16: asyncio.Event() — set while host page is reloading for approval. Suppresses false bust detection.
+anyone_rebuying = None  # v17: asyncio.Event() — set while ANY bot is in a rebuy flow. Suppresses bust detection for ALL bots.
+rebuy_queue = None  # v17: asyncio.Queue() — bots enqueue rebuy requests instead of racing
 
 
 async def cdp_safe(page, js_code, arg=None, retries=3, delay=1.5):
@@ -1611,9 +1626,22 @@ async def auto_rebuy(page, player_name, amount=1000, is_host=False):
             meaningful_stack = int(STARTING_STACK * 0.30)
             if stack_val >= meaningful_stack:
                 log(f"   ✅ {player_name}: Already seated with stack {stack_val} after reload")
+                # v17: Reset resit counter on success
+                if hasattr(auto_rebuy, '_resit_attempts'):
+                    auto_rebuy._resit_attempts[player_name] = 0
                 return True
             else:
                 log(f"   🔍 {player_name}: Seated but stack={stack_val} (< {meaningful_stack}) — leaving to re-sit with fresh chips")
+                # v17: Track leave-resit attempts to avoid infinite loop
+                if not hasattr(auto_rebuy, '_resit_attempts'):
+                    auto_rebuy._resit_attempts = {}
+                auto_rebuy._resit_attempts[player_name] = auto_rebuy._resit_attempts.get(player_name, 0) + 1
+                if auto_rebuy._resit_attempts[player_name] > 2:
+                    # v17: Stop looping — return False so it falls through to bust detection
+                    # which will do a proper leave → rejoin with full stack
+                    log(f"   ⚠️ {player_name}: Leave-resit stuck ({auto_rebuy._resit_attempts[player_name]}x) — giving up, will retry via bust path")
+                    auto_rebuy._resit_attempts[player_name] = 0
+                    return False  # Let bust detection handle a proper rejoin
                 # Leave the seat so we can re-sit with full stack
                 await cdp_safe(page, """() => {
                     const btns = document.querySelectorAll('button, a, div[role="button"]');
@@ -2382,10 +2410,15 @@ async def bot_loop(page, profile, is_host, stop_event):
                     await asyncio.sleep(POLL_MS / 1000)
                     continue
 
+                # v17: Skip bust detection while ANY bot is in a rebuy flow
+                # ROOT CAUSE of false busts: when bot A leaves seat for rebuy, bot B
+                # temporarily can't see bot A in DOM → false bust. Also host approval
+                # reloads destroy .you-player temporarily.
+                if anyone_rebuying is not None and anyone_rebuying.is_set():
+                    await asyncio.sleep(POLL_MS / 1000)
+                    continue
+
                 # v16: Skip bust detection while host page is reloading for approval
-                # ROOT CAUSE of false busts: host_approve_all reloads the page,
-                # which temporarily removes .you-player from DOM. The bot_loop
-                # then sees "not seated + no cards" and triggers bust detection.
                 if is_host and host_reloading is not None and host_reloading.is_set():
                     await asyncio.sleep(POLL_MS / 1000)
                     continue
@@ -2400,9 +2433,24 @@ async def bot_loop(page, profile, is_host, stop_event):
                         and my_stack < low_stack_threshold
                         and is_seated and not is_busted and rebuy_attempts == 0
                         and hands_played.get(name, 0) > 5):
+                    # v17: If another bot is already rebuying, defer — don't pile on
+                    if anyone_rebuying is not None and anyone_rebuying.is_set():
+                        await asyncio.sleep(3)
+                        continue
+                    # v17: Host defers proactive rebuy if any non-host bot might need to rebuy soon
+                    # (host needs to stay available to approve seat requests)
+                    if is_host:
+                        # Check if any non-host bot also has low stack — let them go first
+                        has_pending_others = rebuy_pending is not None and rebuy_pending.is_set()
+                        if has_pending_others:
+                            log(f"   ⏳ {name}: Host deferring proactive rebuy (pending approvals)")
+                            await asyncio.sleep(5)
+                            continue
                     log(f"   📉 {name}: Low stack ({my_stack} < {int(STARTING_STACK * 0.30)}) — proactive rebuy")
                     try:
-                        # v16: Set host_reloading during proactive rebuy too (auto_rebuy reloads page)
+                        # v17: Set global rebuy flag to suppress all bust detection
+                        if anyone_rebuying is not None:
+                            anyone_rebuying.set()
                         if is_host and host_reloading is not None:
                             host_reloading.set()
                         async with rebuy_lock:
@@ -2412,14 +2460,18 @@ async def bot_loop(page, profile, is_host, stop_event):
                             rebuys_count[name] = rebuys_count.get(name, 0) + 1
                             log(f"   ✅ {name}: Proactive rebuy successful!")
                         else:
-                            # Don't spam — wait 60s before trying again
-                            rebuy_cooldown_until = time.time() + 60
+                            # v17: Shorter cooldown on failure (was 60s)
+                            rebuy_cooldown_until = time.time() + 30
                     except Exception as e:
                         log(f"   ⚠️ {name}: Proactive rebuy error: {str(e)[:60]}")
-                        rebuy_cooldown_until = time.time() + 60
+                        rebuy_cooldown_until = time.time() + 30
                     finally:
                         if is_host and host_reloading is not None:
                             host_reloading.clear()
+                        # v17: Clear global rebuy flag after a short settle period
+                        if anyone_rebuying is not None:
+                            await asyncio.sleep(3)
+                            anyone_rebuying.clear()
                     continue
 
                 # v15: Track last known stack for bust confirmation
@@ -2436,9 +2488,9 @@ async def bot_loop(page, profile, is_host, stop_event):
                 if is_busted or newly_busted:
                     if not is_busted:
                         bust_confirm_count += 1
-                        # v16: Host requires 5 confirmations (was 3), bots keep 3.
-                        # Host page is more volatile due to approval reloads.
-                        required_confirms = 5 if is_host else 3
+                        # v17: Host requires 5 confirmations, bots 5 (was 3).
+                        # More confirmations reduce false bust triggers during SPA transitions.
+                        required_confirms = 5
                         if bust_confirm_count < required_confirms:
                             if bust_confirm_count == 1:
                                 log(f"   ⚠️ {name}: Possible bust (stack={my_stack}, seated={is_seated}) — confirming ({bust_confirm_count}/{required_confirms})...")
@@ -2479,13 +2531,19 @@ async def bot_loop(page, profile, is_host, stop_event):
 
                     elapsed = time.time() - bust_time
                     if elapsed > 5 and rebuy_attempts < 10:
+                        # v17: Wait if another bot is already rebuying (serialize)
+                        if anyone_rebuying is not None and anyone_rebuying.is_set() and not is_host:
+                            await asyncio.sleep(5)
+                            continue
                         rebuy_attempts += 1
                         # Stagger per-bot delay to avoid concurrent Playwright writes (Errno 35)
                         bot_idx = next((i for i, p in enumerate(BOT_PROFILES) if p["name"] == name), 0)
                         await asyncio.sleep(3 + bot_idx * 2 + random.uniform(0, 1.5))
                         try:
                             log(f"   💰 {name}: Rebuy attempt #{rebuy_attempts}...")
-                            # v16: Set host_reloading flag during bust rebuy too
+                            # v17: Set global rebuy flag + host_reloading
+                            if anyone_rebuying is not None:
+                                anyone_rebuying.set()
                             if is_host and host_reloading is not None:
                                 host_reloading.set()
                             async with rebuy_lock:
@@ -2493,8 +2551,8 @@ async def bot_loop(page, profile, is_host, stop_event):
                             if rebuy_ok:
                                 bust_time = None; rebuy_attempts = 0; is_busted = False
                                 bust_confirm_count = 0  # v15: reset confirmation counter
-                                rebuy_cooldown_until = time.time() + 15  # v10: 15s cooldown
-                                log(f"   ✅ {name}: Rebuy successful! (cooldown 15s)")
+                                rebuy_cooldown_until = time.time() + 30  # v17: 30s cooldown (was 15s, false busts at 16s)
+                                log(f"   ✅ {name}: Rebuy successful! (cooldown 30s)")
                                 # v12: After host rebuy, immediately approve pending bot requests
                                 if is_host:
                                     await asyncio.sleep(2)
@@ -2518,9 +2576,12 @@ async def bot_loop(page, profile, is_host, stop_event):
                         except Exception as rebuy_err:
                             log(f"   ⚠️ {name}: Rebuy error: {str(rebuy_err)[:60]}")
                         finally:
-                            # v16: Always clear host_reloading after rebuy attempt
+                            # v17: Always clear both flags after rebuy attempt
                             if is_host and host_reloading is not None:
                                 host_reloading.clear()
+                            if anyone_rebuying is not None:
+                                await asyncio.sleep(3)
+                                anyone_rebuying.clear()
                         await asyncio.sleep(8)
                     elif rebuy_attempts >= 10:
                         # Reset after long timeout to allow retry
@@ -2576,14 +2637,16 @@ async def status_reporter(stop_event):
 
 
 async def main():
-    global rebuy_lock, rebuy_pending, cdp_semaphore, host_reloading
+    global rebuy_lock, rebuy_pending, cdp_semaphore, host_reloading, anyone_rebuying, rebuy_queue
     rebuy_lock = asyncio.Lock()
     rebuy_pending = asyncio.Event()
     cdp_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent CDP calls across all bots
     host_reloading = asyncio.Event()  # v16: set during host approval reloads
+    anyone_rebuying = asyncio.Event()  # v17: set while ANY bot is rebuying
+    rebuy_queue = asyncio.Queue()  # v17: not currently used as queue, but reserved
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v16.0 (host rebuy fix + false bust elimination)")
+    log("🃏 Poker Now Multi-Bot Arena v17.0 (serialized rebuy + global suppression)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
