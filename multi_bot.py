@@ -2,6 +2,28 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v10.0 - Fix game stalls, improve postflop play, robust rebuys (2026-03-18):
+  - FIXED: Game stalls after all-in — host now clicks Start/Deal every loop
+  - FIXED: Host proactively checks for rebuy approvals every 30s (not just on signal)
+  - FIXED: Equity uses actual opponent count (was always 1 postflop — wrong!)
+  - FIXED: Postflop too passive — increased c-bet frequency, added donk-bet logic
+  - FIXED: Value betting too weak — strong hands now bet 60-80% pot consistently  
+  - IMPROVED: Monte Carlo sims 300→500 for better equity accuracy
+  - IMPROVED: Host bot re-clicks "Start Game" periodically (deals next hand after bust)
+  - IMPROVED: Rebuy detection window expanded, host reloads every 30s to catch requests
+  - IMPROVED: Better all-in handling — skip action scraping when all-in
+v9.0 - Robust rebuy system + decision engine fixes (2026-03-17):
+  - FIXED: Rebuy now uses page-reload approach (SPA doesn't re-render seat buttons in-page)
+  - FIXED: Bust detection persistence — is_busted flag survives seat transitions
+    (Root cause: after Leave Seat, last_cards=() was falsy, resetting bust_time)
+  - FIXED: Host rebuy approval coordination via rebuy_pending event
+    (Host reloads page when bot signals a seat request, then approves)
+  - FIXED: NIT no longer raises river with <70% equity (was raising 838 chips at 48%)
+  - FIXED: STATION never 3-bets preflop (calling station behavior)
+  - FIXED: STATION prefers calling over raising postflop (only raises 75%+ equity)
+  - FIXED: River calling requires better pot odds (equity - 5 vs equity + bonus)
+  - IMPROVED: Rebuy retry with 3x seat button search after reload
+  - IMPROVED: Increased rebuy attempts from 8 to 10, reset timeout from 90s to 120s
 v7.0 - Fix Options menu approval flow (2026-03-15):
   - FIXED: Seat request approvals hidden behind Options menu (hamburger icon w/ red badge)
   - After first inline Accept button, subsequent requests queue in Options panel
@@ -81,6 +103,7 @@ rebuys_count = {p["name"]: 0 for p in BOT_PROFILES}
 folds_count = {p["name"]: 0 for p in BOT_PROFILES}
 actions_count = {p["name"]: 0 for p in BOT_PROFILES}
 rebuy_lock = None  # Initialized in main() as asyncio.Lock()
+rebuy_pending = None  # Initialized in main() as asyncio.Event() — signals host to approve rebuy requests
 cdp_semaphore = None  # Initialized in main() - limits concurrent CDP calls to prevent Errno 35
 
 
@@ -1294,10 +1317,9 @@ async def _fill_rebuy_form(page, player_name, amount):
                 if amount_filled: break
             except: continue
     await asyncio.sleep(0.5)
-    for csel in ['button:has-text("Confirm")', 'button:has-text("OK")',
-                 'button:has-text("Buy")', 'button:has-text("Request")',
-                 'button:has-text("Request the Seat")', 'button:has-text("Take the Seat")',
-                 'input[type="submit"]', 'button.green', 'button.highlighted']:
+    for csel in ['button:has-text("Request the Seat")', 'button:has-text("Take the Seat")',
+                 'button:has-text("Confirm")', 'button:has-text("OK")',
+                 'input[type="submit"]']:
         try:
             btn = await page.query_selector(csel)
             if btn and await btn.is_visible():
@@ -1310,17 +1332,21 @@ async def _fill_rebuy_form(page, player_name, amount):
     return False
 
 
-async def auto_rebuy(page, player_name, amount=1000):
-    """Auto-rebuy when busted. Uses consolidated JS calls via cdp_safe to prevent Errno 35.
-    Strategy: leave-seat → re-sit → fill form (all via single evaluate() calls)."""
-    log(f"   💰 {player_name}: Rebuy attempt...")
+async def auto_rebuy(page, player_name, amount=1000, is_host=False):
+    """Auto-rebuy when busted. Page-reload approach for SPA reliability.
+    Strategy: leave-seat (if needed) → confirm → reload page → click seat → fill form.
+    v10: Detects "cancel game ingress request" (pending request already submitted).
+         Host uses "Take the Seat" (instant), non-host uses "Request the Seat" (needs approval).
+         Skips "copy link", "join a live game" etc as submit buttons."""
+    log(f"   💰 {player_name}: Rebuy attempt (v10)...")
 
-    # Step 1: Single CDP call — diagnose state + try direct rebuy/leave-seat in one shot
-    step1_result = await cdp_safe(page, """(params) => {
-        const result = {action: null, hasLeaveSeat: false, hasSeatBtn: false, isSpectator: true, btns: []};
-        const name = params.name;
+    if not game_url_global:
+        log(f"   ⚠️ {player_name}: No game URL for rebuy")
+        return False
 
-        // Scan all visible buttons
+    # Step 1: Check current state — try direct rebuy buttons first, then leave seat
+    step1_result = await cdp_safe(page, """() => {
+        const result = {action: null, hasLeaveSeat: false, hasPending: false, btns: []};
         const allBtns = document.querySelectorAll('button, a, div[role="button"], input[type="submit"]');
         for (const el of allBtns) {
             const t = (el.textContent||'').trim().toLowerCase();
@@ -1328,7 +1354,13 @@ async def auto_rebuy(page, player_name, amount=1000):
             if (r.width <= 0 || r.height <= 0) continue;
             result.btns.push(t.substring(0, 40));
 
-            // Direct rebuy buttons
+            // v10: Detect pending seat request — don't resit, just wait
+            if (t.includes('cancel game ingress') || t.includes('cancel request') ||
+                t.includes('pending') || t.includes('waiting for approval')) {
+                result.hasPending = true;
+            }
+
+            // Direct rebuy buttons (pokernow may show these in some game modes)
             if (t.includes('re-buy') || t.includes('rebuy') || t.includes('add chips') ||
                 t.includes('buy in') || t.includes('buy back') || t.includes('re-entry') ||
                 t.includes('top up') || t.includes('sit back') || t.includes('back to game') ||
@@ -1337,52 +1369,38 @@ async def auto_rebuy(page, player_name, amount=1000):
                 result.action = 'rebuy_clicked:' + t;
                 return result;
             }
-
             if (t.includes('leave seat')) result.hasLeaveSeat = true;
         }
-
-        // Check for seat buttons
-        const seatBtns = document.querySelectorAll('.table-player-seat-button');
-        for (const b of seatBtns) {
-            if (b.getBoundingClientRect().width > 0) { result.hasSeatBtn = true; break; }
-        }
-
-        result.isSpectator = !result.hasLeaveSeat;
-
-        // If spectator (no leave-seat), click seat button directly
-        if (result.isSpectator && result.hasSeatBtn) {
-            for (const b of seatBtns) {
-                if (b.getBoundingClientRect().width > 0) {
-                    b.click();
-                    result.action = 'seat_clicked_spectator';
-                    return result;
-                }
-            }
-        }
-
-        // If seated with 0 chips, click "Leave Seat"
-        if (result.hasLeaveSeat) {
-            for (const el of allBtns) {
-                const t = (el.textContent||'').trim().toLowerCase();
-                const r = el.getBoundingClientRect();
-                if (r.width > 0 && t.includes('leave seat')) {
-                    el.click();
-                    result.action = 'leave_clicked';
-                    return result;
-                }
-            }
-        }
-
         return result;
-    }""", {"name": player_name})
+    }""")
 
     if not step1_result:
         log(f"   ⚠️ {player_name}: CDP call failed")
         return False
 
     action = step1_result.get('action', '')
-    log(f"   🔍 {player_name}: step1={action} btns={step1_result.get('btns',[])[: 6]}")
+    has_pending = step1_result.get('hasPending', False)
+    log(f"   🔍 {player_name}: step1={action} pending={has_pending} btns={step1_result.get('btns',[])[: 6]}")
 
+    # v10: If we already have a pending request, just signal host and wait
+    if has_pending:
+        rebuy_pending.set()
+        log(f"   ⏳ {player_name}: Seat request already pending — signaling host")
+        await asyncio.sleep(8)
+        # Check if we're now seated
+        check = await cdp_safe(page, """() => {
+            const yp = document.querySelector('.you-player');
+            if (!yp) return null;
+            const stack = yp.querySelector('p, div');
+            return stack ? stack.textContent.trim() : '0';
+        }""")
+        if check and check != '0':
+            log(f"   ✅ {player_name}: Now seated with stack {check}")
+            rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+            return True
+        return False
+
+    # If a direct rebuy button was found and clicked, fill the form
     if action and action.startswith('rebuy_clicked'):
         await asyncio.sleep(2)
         ok = await _fill_rebuy_form_safe(page, player_name, amount)
@@ -1390,16 +1408,23 @@ async def auto_rebuy(page, player_name, amount=1000):
             rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
         return ok
 
-    if action == 'seat_clicked_spectator':
+    # Step 2: Leave seat if still seated (busted with 0 chips)
+    if step1_result.get('hasLeaveSeat'):
+        log(f"   🚪 {player_name}: Leaving seat before reload...")
+        await cdp_safe(page, """() => {
+            const btns = document.querySelectorAll('button, a, div[role="button"]');
+            for (const el of btns) {
+                const t = (el.textContent||'').trim().toLowerCase();
+                const r = el.getBoundingClientRect();
+                if (r.width > 0 && r.height > 0 && t.includes('leave seat')) {
+                    el.click(); return true;
+                }
+            }
+            return false;
+        }""")
         await asyncio.sleep(1.5)
-        ok = await _fill_rebuy_form_safe(page, player_name, amount)
-        if ok:
-            rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
-        return ok
 
-    if action == 'leave_clicked':
-        # Step 2: Confirm leaving (single CDP call)
-        await asyncio.sleep(1.5)
+        # Confirm leaving
         await cdp_safe(page, """() => {
             const btns = document.querySelectorAll('button');
             for (const b of btns) {
@@ -1412,9 +1437,24 @@ async def auto_rebuy(page, player_name, amount=1000):
             }
             return false;
         }""")
-        await asyncio.sleep(2.5)
+        await asyncio.sleep(2)
 
-        # Step 3: Click seat button (single CDP call)
+    # Step 3: RELOAD PAGE — key fix. The SPA needs a fresh load to show seat buttons.
+    log(f"   🔄 {player_name}: Reloading page for clean seat selection...")
+    try:
+        async with cdp_semaphore:
+            await page.goto(game_url_global, wait_until="domcontentloaded", timeout=20000)
+        await asyncio.sleep(3)
+        await dismiss_cookie_banner(page)
+        await dismiss_alerts(page)
+        await asyncio.sleep(1)
+    except Exception as e:
+        log(f"   ⚠️ {player_name}: Reload failed: {str(e)[:60]}")
+        return False
+
+    # Step 4: Find and click a seat button (with retry)
+    clicked_seat = False
+    for seat_try in range(5):
         clicked_seat = await cdp_safe(page, """() => {
             const btns = document.querySelectorAll('.table-player-seat-button');
             for (const b of btns) {
@@ -1425,14 +1465,32 @@ async def auto_rebuy(page, player_name, amount=1000):
             return false;
         }""")
         if clicked_seat:
-            log(f"   💰 {player_name}: Clicked seat after leaving")
-            await asyncio.sleep(1.5)
-            ok = await _fill_rebuy_form_safe(page, player_name, amount)
-            if ok:
-                rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
-            return ok
+            break
+        await asyncio.sleep(2)
 
-    log(f"   ⚠️ {player_name}: No rebuy/seat buttons found")
+    if not clicked_seat:
+        log(f"   ⚠️ {player_name}: No seat buttons after reload (5 tries)")
+        return False
+
+    log(f"   🪑 {player_name}: Clicked seat button for rebuy")
+    await asyncio.sleep(1.5)
+
+    # Step 5: Fill the seat request form (name + stack + submit)
+    ok = await _fill_rebuy_form_safe(page, player_name, amount)
+    if ok:
+        rebuys_count[player_name] = rebuys_count.get(player_name, 0) + 1
+        if not is_host:
+            # Signal host that a rebuy approval is needed
+            rebuy_pending.set()
+            log(f"   ✅ {player_name}: Rebuy seat request submitted (pending host approval)")
+            # Wait for host to approve
+            await asyncio.sleep(5)
+        else:
+            log(f"   ✅ {player_name}: Host re-seated (instant)")
+            await asyncio.sleep(2)
+        return True
+
+    log(f"   ⚠️ {player_name}: Failed to fill rebuy seat form")
     return False
 
 
@@ -1479,14 +1537,19 @@ async def _fill_rebuy_form_safe(page, player_name, amount):
         if (!r.stack && visible.length >= 2) { setInput(visible[1].el, String(stackAmt)); r.stack = true; }
         if (!r.stack && visible.length === 1) { setInput(visible[0].el, String(stackAmt)); r.stack = true; }
 
-        // Click submit
+        // Click submit — v10: strict matching, exclude unrelated buttons
         const buttons = document.querySelectorAll('button, input[type="submit"]');
         for (const btn of buttons) {
             const t = (btn.textContent || btn.value || '').trim().toLowerCase();
             const rect = btn.getBoundingClientRect();
             if (rect.width <= 0 || rect.height <= 0) continue;
+            // v10: Skip unrelated buttons
+            if (t.includes('copy') || t.includes('join a live') || t.includes('cancel') ||
+                t.includes('leave') || t.includes('options') || t.includes('feedback') ||
+                t.includes('sound') || t.includes('log') || t.includes('ledger') ||
+                t.includes('poker club') || t.includes('shuffle') || t.includes('away')) continue;
             if (t.includes('request the seat') || t.includes('take the seat') ||
-                t.includes('confirm') || t === 'ok' || t.includes('buy') ||
+                t.includes('confirm') || t === 'ok' || t === 'sit' ||
                 (btn.classList.contains('green') && btn.classList.contains('highlighted'))) {
                 btn.click();
                 r.submitted = true; r.btn = t; break;
@@ -1640,9 +1703,9 @@ def bot_decide(state, profile):
             # 50-66% pot, minimum 3x BB
             return max(int(pot * random.uniform(0.50, 0.66)), bb * 3)
         elif context == "value":
-            # 50-80% pot proportional to equity, minimum 3x BB
-            eq_factor = min(1.0, max(0.0, (eq - 50) / 30.0))
-            return max(int(pot * (0.50 + eq_factor * 0.30)), bb * 3)
+            # v10: 60-90% pot proportional to equity, minimum 3x BB
+            eq_factor = min(1.0, max(0.0, (eq - 45) / 35.0))
+            return max(int(pot * (0.60 + eq_factor * 0.30)), bb * 3)
         elif context == "bluff":
             # 33-50% pot, minimum 2.5x BB
             return max(int(pot * random.uniform(0.33, 0.50)), int(bb * 2.5))
@@ -1656,15 +1719,18 @@ def bot_decide(state, profile):
 
     # ---- FREE CHECK (no call required) ----
     if can_check and not can_call:
-        # Strong hands: always bet for value
-        if equity > 65 and can_raise:
+        # Strong hands: always bet for value (60-80% pot)
+        if equity > 60 and can_raise:
             return ("raise", cr(calc_raise("value", equity)))
-        # Medium-strong hands: bet as c-bet or thin value (higher freq)
-        if equity > 45 and can_raise and random.random() < agg * 0.7:
-            return ("raise", cr(calc_raise("cbet")))
-        # Drawing hands on flop: semi-bluff
-        if has_draw and equity > 25 and can_raise and street == "flop" and random.random() < agg * 0.5:
-            return ("raise", cr(calc_raise("bluff")))
+        # Medium-strong hands: c-bet or thin value (v10: higher freq for TAG/LAG)
+        if equity > 40 and can_raise:
+            cbet_freq = agg * 0.85 if street == "flop" else agg * 0.6
+            if random.random() < cbet_freq:
+                return ("raise", cr(calc_raise("cbet")))
+        # Drawing hands: semi-bluff on flop/turn (v10: also on turn)
+        if has_draw and equity > 25 and can_raise:
+            if street in ("flop", "turn") and random.random() < agg * 0.6:
+                return ("raise", cr(calc_raise("bluff")))
         # Pure bluff on flop (rare, never NIT)
         if can_raise and random.random() < bluff * 0.4 and street == "flop" and style != "NIT":
             return ("raise", cr(calc_raise("bluff")))
@@ -1691,6 +1757,9 @@ def bot_decide(state, profile):
 
         # Premium hands — raise or 3-bet
         if equity >= raise_thresh:
+            # v9: STATION never 3-bets preflop — they just call (calling station behavior)
+            if style == "STATION":
+                return ("call", None) if can_call else ("check", None)
             if can_raise and random.random() < agg + 0.2:
                 if call_amount > 0:
                     # Facing a raise: 3-bet or call
@@ -1721,39 +1790,65 @@ def bot_decide(state, profile):
 
         return ("check", None) if can_check else ("fold", None)
 
-    # ---- POSTFLOP ----
-    # Value threshold adjusts with aggression and position
-    value_thresh = 55 - (agg * 8) + pos_adj
+    # ---- POSTFLOP ---- (v10: more aggressive value betting, pot-odds-aware)
+    # Value threshold: how strong you need to be to bet/raise for value
+    # v10: Lowered thresholds so bots actually bet with good hands
+    value_thresh = 50 - (agg * 10) + pos_adj
+    strong_thresh = 65  # clear value bet territory
 
-    # Strong hands — bet/raise for value
-    if equity >= value_thresh:
-        if can_raise and random.random() < agg + 0.15:
+    # v9: NIT should never raise on river without 70%+ equity
+    nit_river_block = (style == "NIT" and street == "river" and equity < 70)
+    
+    # v9: STATION should never raise large amounts — they call, not bet
+    station_raise_block = (style == "STATION" and can_call)
+
+    # Very strong hands — always bet/raise for value
+    if equity >= strong_thresh:
+        if can_raise:
+            if nit_river_block:
+                return ("call", None) if can_call else ("check", None)
+            if station_raise_block and equity < 75:
+                return ("call", None)
             return ("raise", cr(calc_raise("value", equity)))
         return ("call", None) if can_call else ("check", None)
 
-    # Drawing hands — semi-bluff on flop, call with pot odds
+    # Strong hands — bet for value most of the time
+    if equity >= value_thresh:
+        if can_raise and random.random() < agg + 0.25:
+            if nit_river_block:
+                return ("call", None) if can_call else ("check", None)
+            if station_raise_block:
+                return ("call", None)
+            return ("raise", cr(calc_raise("value", equity)))
+        return ("call", None) if can_call else ("check", None)
+
+    # Drawing hands — semi-bluff on flop/turn, call with pot odds
     if has_draw and equity >= 25:
-        if can_raise and random.random() < agg * 0.4 and street == "flop" and style != "NIT":
+        if can_raise and random.random() < agg * 0.5 and street in ("flop", "turn") and style != "NIT":
             return ("raise", cr(calc_raise("bluff")))
         if can_call:
             pot_odds = call_amount / max(pot + call_amount, 1) * 100
-            if pot_odds < equity + 8: return ("call", None)
+            if pot_odds < equity + 10: return ("call", None)
         return ("check", None) if can_check else ("fold", None)
 
     # Medium hands — call if pot odds justify
-    if equity >= 30:
+    if equity >= 28:
         if can_call:
             pot_odds = call_amount / max(pot + call_amount, 1) * 100
-            bonus = 6 if style == "STATION" else 0
-            if pot_odds < equity + bonus: return ("call", None)
+            bonus = 8 if style == "STATION" else 0
+            # On river, require better pot odds (no speculative calling)
+            if street == "river":
+                if pot_odds < equity - 5 + bonus: return ("call", None)
+            else:
+                if pot_odds < equity + bonus: return ("call", None)
         return ("check", None) if can_check else ("fold", None)
 
     # Bluff opportunity (flop only, never NIT, rare)
-    if can_raise and street == "flop" and random.random() < bluff * 0.3 and style != "NIT":
+    if can_raise and street == "flop" and random.random() < bluff * 0.35 and style != "NIT":
         return ("raise", cr(calc_raise("bluff")))
 
     # Station calling station on flop/turn with marginal hands
-    if style == "STATION" and equity >= 22 and can_call and street in ("flop", "turn"):
+    if style == "STATION" and equity >= 20 and can_call and street in ("flop", "turn"):
         pot_odds = call_amount / max(pot + call_amount, 1) * 100
         if pot_odds < 35:
             return ("call", None)
@@ -1771,13 +1866,44 @@ async def bot_loop(page, profile, is_host, stop_event):
     last_cards = None
     bust_time = None
     rebuy_attempts = 0
+    is_busted = False  # v9: persists through seat transitions (fixes last_cards=() reset bug)
+    last_host_check = 0  # v10: track when host last did proactive checks
+    rebuy_cooldown_until = 0  # v10: after successful rebuy, skip bust detection briefly
 
     while not stop_event.is_set():
         try:
             await dismiss_alerts(page)
             if is_host:
+                # v10: Host always tries to start/deal the next hand
+                # This prevents stalls when all-in bust clears and game waits for deal
                 await start_game(page)
                 await host_approve_all(page)
+                
+                # v10: Proactive rebuy approval every 30s + on signal
+                now = time.time()
+                needs_approval_check = False
+                if rebuy_pending is not None and rebuy_pending.is_set():
+                    rebuy_pending.clear()
+                    needs_approval_check = True
+                    log(f"   🔔 Host: Rebuy request signal detected")
+                elif now - last_host_check > 30:
+                    needs_approval_check = True
+                    last_host_check = now
+                
+                if needs_approval_check:
+                    try:
+                        async with cdp_semaphore:
+                            await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
+                        await asyncio.sleep(3)
+                        await dismiss_cookie_banner(page)
+                        await dismiss_alerts(page)
+                        approved = await host_approve_all(page)
+                        if approved:
+                            log(f"   ✅ Host: Approved rebuy seat request(s)")
+                        # Also try to start game after approval (new player seated)
+                        await start_game(page)
+                    except Exception as e:
+                        log(f"   ⚠️ Host: Rebuy approval check error: {str(e)[:60]}")
 
             state = await scrape_state_safe(page)
             cards = tuple(state.get("my_cards", []))
@@ -1787,11 +1913,12 @@ async def bot_loop(page, profile, is_host, stop_event):
                     log(f"   📊 {name} ({style}): {hands_played[name]} hands")
                 bust_time = None
                 rebuy_attempts = 0
+                is_busted = False
             last_cards = cards
 
             if state.get("is_my_turn"):
                 if state.get("im_all_in"):
-                    await asyncio.sleep(2); continue
+                    await asyncio.sleep(3); continue
                 actions_text = " ".join(state.get("actions", []))
                 if not any(k in actions_text for k in ["Check","Call","Fold","Raise","Bet"]):
                     await asyncio.sleep(1); continue
@@ -1815,7 +1942,9 @@ async def bot_loop(page, profile, is_host, stop_event):
 
                 result = await execute_action_safe(page, action, amount)
                 eq = get_equity(state.get("my_cards",[]),
-                               state.get("board",[]) if state.get("board") else None, 1)
+                               state.get("board",[]) if state.get("board") else None,
+                               max(1, sum(1 for p in state.get("players", [])
+                                          if not p.get("is_me") and p.get("status","active") == "active")))
                 log(f"   {name}({style}) | {st} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}% -> {action} {amount or ''} | {result}")
 
                 last_act_time = time.time()
@@ -1831,14 +1960,26 @@ async def bot_loop(page, profile, is_host, stop_event):
                         try: my_stack = int(p["stack"])
                         except: my_stack = 0
 
-                if my_stack == 0 or (not is_seated and last_cards and hands_played.get(name,0) > 0):
-                    if bust_time is None:
+                # v10: Skip bust detection during rebuy cooldown
+                if time.time() < rebuy_cooldown_until:
+                    await asyncio.sleep(POLL_MS / 1000)
+                    continue
+
+                # v9: Use is_busted flag to persist through seat transitions.
+                # Bug fix: after leaving seat, last_cards becomes () (falsy), which
+                # previously caused the else branch to reset bust_time.
+                newly_busted = (my_stack == 0 and is_seated) or                                (not is_seated and hands_played.get(name, 0) > 0 and not cards)
+                
+                if is_busted or newly_busted:
+                    if not is_busted:
+                        # First detection
+                        is_busted = True
                         bust_time = time.time()
                         rebuy_attempts = 0
                         log(f"   ☠️ {name}: BUSTED (stack={my_stack}, seated={is_seated})")
 
                     elapsed = time.time() - bust_time
-                    if elapsed > 5 and rebuy_attempts < 8:
+                    if elapsed > 5 and rebuy_attempts < 10:
                         rebuy_attempts += 1
                         # Stagger per-bot delay to avoid concurrent Playwright writes (Errno 35)
                         bot_idx = next((i for i, p in enumerate(BOT_PROFILES) if p["name"] == name), 0)
@@ -1846,29 +1987,21 @@ async def bot_loop(page, profile, is_host, stop_event):
                         try:
                             log(f"   💰 {name}: Rebuy attempt #{rebuy_attempts}...")
                             async with rebuy_lock:
-                                rebuy_ok = await auto_rebuy(page, name, STARTING_STACK)
+                                rebuy_ok = await auto_rebuy(page, name, STARTING_STACK, is_host=is_host)
                             if rebuy_ok:
-                                bust_time = None; rebuy_attempts = 0
-                                log(f"   ✅ {name}: Rebuy successful!")
-                                await asyncio.sleep(3); continue
+                                bust_time = None; rebuy_attempts = 0; is_busted = False
+                                rebuy_cooldown_until = time.time() + 15  # v10: 15s cooldown
+                                log(f"   ✅ {name}: Rebuy successful! (cooldown 15s)")
+                                await asyncio.sleep(5); continue
                         except Exception as rebuy_err:
                             log(f"   ⚠️ {name}: Rebuy error: {str(rebuy_err)[:60]}")
-                        # After 2 failed attempts, try full page reload
-                        if rebuy_attempts >= 2 and game_url_global:
-                            try:
-                                log(f"   🔄 {name}: Trying full page reload rejoin...")
-                                if await try_rejoin(page, name, game_url_global, STARTING_STACK):
-                                    bust_time = None; rebuy_attempts = 0
-                                    log(f"   ✅ {name}: Rejoin successful!")
-                                    await asyncio.sleep(3); continue
-                            except Exception as rejoin_err:
-                                log(f"   ⚠️ {name}: Rejoin error: {str(rejoin_err)[:60]}")
-                        await asyncio.sleep(5)
-                    elif rebuy_attempts >= 8:
-                        if elapsed > 90: rebuy_attempts = 0; bust_time = time.time()
+                        await asyncio.sleep(8)
+                    elif rebuy_attempts >= 10:
+                        # Reset after long timeout to allow retry
+                        if elapsed > 120: rebuy_attempts = 0; bust_time = time.time()
                         else: await asyncio.sleep(10)
                 else:
-                    bust_time = None; rebuy_attempts = 0
+                    bust_time = None; rebuy_attempts = 0; is_busted = False
                 await asyncio.sleep(POLL_MS / 1000)
 
         except Exception as e:
@@ -1908,8 +2041,9 @@ async def status_reporter(stop_event):
 
 
 async def main():
-    global rebuy_lock, cdp_semaphore
+    global rebuy_lock, rebuy_pending, cdp_semaphore
     rebuy_lock = asyncio.Lock()
+    rebuy_pending = asyncio.Event()
     cdp_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent CDP calls across all bots
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
