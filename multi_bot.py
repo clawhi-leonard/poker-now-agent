@@ -2,6 +2,33 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v16.0 - Host rebuy fix + false bust elimination (2026-03-19):
+  - FIXED: Host false bust from approval reloads — new host_reloading flag suppresses
+    bust detection entirely while host page is reloading for approval flow
+  - FIXED: Host "No seat buttons after reload" — completely rewritten host rebuy path:
+    * Host as owner may auto-seat on reload → detect and return success immediately
+    * Host tries "Take the Seat" button, own-name seat, any seat button, PW selectors
+    * 4 methods instead of 1 (was only checking .table-player-seat-button)
+  - FIXED: Host bust confirmation requires 5 checks (was 3) + reload-and-verify for
+    hosts with recent high stacks (catches SPA glitch false positives)
+  - FIXED: Approval reload now checks pot size (pot > 2BB = hand in progress → skip reload)
+  - FIXED: host_reloading flag set/cleared around ALL host page reloads
+  - Root cause summary: host page serves dual role (player + admin). Reloads for admin
+    tasks (approval) destroy player state, causing cascading false busts + failed rebuys.
+v15.0 - Fix false bust detection + rebuy reliability (2026-03-19):
+  - FIXED: False bust detection during host approval reloads — now requires 3 consecutive
+    bust readings before triggering rebuy (was triggering on 1 SPA re-render glitch)
+  - FIXED: Host rebuy "no seat buttons" — double-reload with longer wait (5s+2s vs 3s+1s)
+    and check if already seated after reload (host auto-seats as game owner)
+  - FIXED: Host approval reload destroys game state mid-hand — now checks for active cards
+    before reloading (was only checking is_my_turn, missing hands where waiting for others)
+  - FIXED: Approval check interval 20s → 30s to reduce unnecessary reloads
+  - Root cause: host bot was both playing AND approving rebuys; approval reloads caused
+    SPA to lose .you-player element, triggering false bust → failed rebuy loop
+v14.0 - Fix submit detachment + proactive rebuy (2026-03-19):
+  - FIXED: "Element is not attached to DOM" errors (~10/session) → Enter key as primary submit
+  - ADDED: Proactive rebuy when stack < 30% of starting (no more NitKing stuck at 2242 for 60+ hands)
+  - Enter key bypasses React SPA re-render issue that recreates submit button mid-click
 v13.0 - Slider rewrite + deeper stacks (2026-03-18):
   - REWRITE: act.py slider uses 3-tier approach (mouse drag → arrow keys → text input)
   - FIXED: Slider going to max (70% failure rate) → call fallback when all tiers fail
@@ -127,6 +154,7 @@ starting_stacks = {}  # v12: track initial stack after first sit-down
 rebuy_lock = None  # Initialized in main() as asyncio.Lock()
 rebuy_pending = None  # Initialized in main() as asyncio.Event() — signals host to approve rebuy requests
 cdp_semaphore = None  # Initialized in main() - limits concurrent CDP calls to prevent Errno 35
+host_reloading = None  # v16: asyncio.Event() — set while host page is reloading for approval. Suppresses false bust detection.
 
 
 async def cdp_safe(page, js_code, arg=None, retries=3, delay=1.5):
@@ -834,12 +862,15 @@ async def seat_at_table(page, player_name, stack, seat_number, is_host=False):
                 const r = btn.getBoundingClientRect();
                 if (r.width <= 0 || r.height <= 0) continue;
                 const tl = t.toLowerCase();
-                // Skip non-seat buttons explicitly
+                // Skip non-seat buttons explicitly (v16: added avatar, define, config, etc.)
                 if (tl.includes('copy') || tl.includes('share') || tl.includes('invite') ||
                     tl.includes('link') || tl.includes('start') || tl.includes('deal') ||
                     tl.includes('sign') || tl.includes('login') || tl.includes('option') ||
                     tl.includes('leave') || tl.includes('away') || tl.includes('chat') ||
-                    tl.includes('emoji') || tl.includes('log') || tl.includes('ledger')) continue;
+                    tl.includes('emoji') || tl.includes('log') || tl.includes('ledger') ||
+                    tl.includes('avatar') || tl.includes('define') || tl.includes('config') ||
+                    tl.includes('preference') || tl.includes('video') || tl.includes('audio') ||
+                    tl.includes('save') || tl.includes('plus') || tl.includes('player')) continue;
                 // Prefer exact seat-submit text
                 if (tl.includes(submitText) || tl.includes('take the seat') ||
                     tl.includes('request the seat') || tl === 'confirm' || tl === 'ok') {
@@ -1397,11 +1428,12 @@ async def _fill_rebuy_form(page, player_name, amount):
 
 async def auto_rebuy(page, player_name, amount=1000, is_host=False):
     """Auto-rebuy when busted. Page-reload approach for SPA reliability.
-    Strategy: leave-seat (if needed) → confirm → reload page → click seat → fill form.
-    v10: Detects "cancel game ingress request" (pending request already submitted).
-         Host uses "Take the Seat" (instant), non-host uses "Request the Seat" (needs approval).
-         Skips "copy link", "join a live game" etc as submit buttons."""
-    log(f"   💰 {player_name}: Rebuy attempt (v10)...")
+    v16: Completely rewritten host rebuy path.
+      - Host owner is auto-seated on reload → skip seat button search
+      - Host uses "Take the Seat" (instant) → no approval needed
+      - Non-host uses "Request the Seat" (needs host approval)
+    Strategy: leave-seat → reload → (host: click own seat / non-host: click empty seat) → fill form."""
+    log(f"   💰 {player_name}: Rebuy attempt (v16)...")
 
     if not game_url_global:
         log(f"   ⚠️ {player_name}: No game URL for rebuy")
@@ -1532,36 +1564,205 @@ async def auto_rebuy(page, player_name, amount=1000, is_host=False):
         await asyncio.sleep(2)
 
     # Step 3: RELOAD PAGE — key fix. The SPA needs a fresh load to show seat buttons.
-    log(f"   🔄 {player_name}: Reloading page for clean seat selection...")
-    try:
-        async with cdp_semaphore:
-            await page.goto(game_url_global, wait_until="domcontentloaded", timeout=20000)
-        await asyncio.sleep(3)
-        await dismiss_cookie_banner(page)
-        await dismiss_alerts(page)
-        await asyncio.sleep(1)
-    except Exception as e:
-        log(f"   ⚠️ {player_name}: Reload failed: {str(e)[:60]}")
-        return False
+    # v16: Host-specific path — owner may auto-seat or need to click their existing seat.
+    for reload_try in range(2):
+        log(f"   🔄 {player_name}: Reloading page for clean seat selection...{' (retry)' if reload_try > 0 else ''}")
+        try:
+            if is_host and host_reloading is not None:
+                host_reloading.set()
+            async with cdp_semaphore:
+                await page.goto(game_url_global, wait_until="domcontentloaded", timeout=20000)
+            await asyncio.sleep(5)
+            await dismiss_cookie_banner(page)
+            await dismiss_alerts(page)
+            await asyncio.sleep(2)
+        except Exception as e:
+            log(f"   ⚠️ {player_name}: Reload failed: {str(e)[:60]}")
+            if is_host and host_reloading is not None:
+                host_reloading.clear()
+            if reload_try == 0:
+                await asyncio.sleep(3)
+                continue
+            return False
+        finally:
+            if is_host and host_reloading is not None:
+                host_reloading.clear()
 
-    # Step 4: Find and click a seat button (with retry)
-    clicked_seat = False
-    for seat_try in range(5):
-        clicked_seat = await cdp_safe(page, """() => {
-            const btns = document.querySelectorAll('.table-player-seat-button');
-            for (const b of btns) {
-                if (b.getBoundingClientRect().width > 0) {
-                    b.click(); return true;
+        # v16: After reload, check if already seated with meaningful stack (owner auto-seats)
+        already_check = await cdp_safe(page, """() => {
+            const yp = document.querySelector('.table-player.you-player');
+            if (!yp) return {seated: false};
+            // Check stack — look for the stack text in the player element
+            const texts = yp.querySelectorAll('p, span, div');
+            let stackText = '0';
+            for (const t of texts) {
+                const val = t.textContent.trim().replace(/,/g, '');
+                if (/^\\d+$/.test(val) && parseInt(val) > 0) {
+                    stackText = val; break;
                 }
             }
-            return false;
+            return {seated: true, stack: stackText};
         }""")
+        if already_check and already_check.get('seated'):
+            stack_val = int(already_check.get('stack', '0') or '0')
+            # v16: Only consider "already seated" as success if stack is meaningful
+            # (> 30% of starting stack). Otherwise the bot is seated with leftover crumbs
+            # from an all-in and needs to properly leave + re-sit with fresh chips.
+            meaningful_stack = int(STARTING_STACK * 0.30)
+            if stack_val >= meaningful_stack:
+                log(f"   ✅ {player_name}: Already seated with stack {stack_val} after reload")
+                return True
+            else:
+                log(f"   🔍 {player_name}: Seated but stack={stack_val} (< {meaningful_stack}) — leaving to re-sit with fresh chips")
+                # Leave the seat so we can re-sit with full stack
+                await cdp_safe(page, """() => {
+                    const btns = document.querySelectorAll('button, a, div[role="button"]');
+                    for (const el of btns) {
+                        const t = (el.textContent||'').trim().toLowerCase();
+                        const r = el.getBoundingClientRect();
+                        if (r.width > 0 && r.height > 0 && t.includes('leave seat')) {
+                            el.click(); return true;
+                        }
+                    }
+                    return false;
+                }""")
+                await asyncio.sleep(1.5)
+                # Confirm leaving
+                await cdp_safe(page, """() => {
+                    const btns = document.querySelectorAll('button');
+                    for (const b of btns) {
+                        const t = (b.textContent||'').trim().toLowerCase();
+                        const r = b.getBoundingClientRect();
+                        if (r.width <= 0 || r.height <= 0) continue;
+                        if (t === 'yes' || t === 'confirm' || t === 'ok' || t === 'leave') {
+                            b.click(); return true;
+                        }
+                    }
+                    return false;
+                }""")
+                await asyncio.sleep(2)
+
+        # v16: HOST-SPECIFIC PATH — the owner doesn't see .table-player-seat-button
+        # because they're already recognized as the owner. Instead, look for:
+        # 1. Their own seat (may show as "waiting" or with 0 stack) — click it
+        # 2. "Take the Seat" button might already be visible
+        # 3. Any empty seat button as fallback
+        clicked_seat = False
+
+        if is_host:
+            # v16.1: Host rebuy path — DON'T click the host's player element
+            # (it opens avatar dialog, not seat form). Instead:
+            # 1. Look for "Take the Seat" button (appears when host left seat)
+            # 2. Look for any .table-player-seat-button (empty seat)
+            # 3. Use Playwright selectors as fallback
+            host_seat_result = await cdp_safe(page, """() => {
+                // Method 1: "Take the Seat" button already visible
+                const btns = document.querySelectorAll('button');
+                for (const b of btns) {
+                    const t = (b.textContent || '').trim().toLowerCase();
+                    const r = b.getBoundingClientRect();
+                    if (r.width > 0 && r.height > 0 && t.includes('take the seat')) {
+                        b.click();
+                        return 'take-the-seat';
+                    }
+                }
+                
+                // Method 2: Any visible seat button (.table-player-seat-button)
+                const seatBtns = document.querySelectorAll('.table-player-seat-button');
+                for (const b of seatBtns) {
+                    if (b.getBoundingClientRect().width > 0) {
+                        b.click();
+                        return 'seat-button';
+                    }
+                }
+                
+                // Method 3: Look for "Sit" text button
+                for (const b of btns) {
+                    const t = (b.textContent || '').trim().toLowerCase();
+                    const r = b.getBoundingClientRect();
+                    if (r.width > 0 && r.height > 0 && (t === 'sit' || t === 'sit down')) {
+                        b.click();
+                        return 'sit-text-button';
+                    }
+                }
+                
+                return null;
+            }""")
+            
+            if host_seat_result:
+                log(f"   🪑 {player_name}: Host seat click via: {host_seat_result}")
+                clicked_seat = True
+            else:
+                # v16.1: Playwright selector fallback for host
+                for sel in ['.table-player-seat-button', 'button:has-text("Take the Seat")',
+                            'button:has-text("Sit")']:
+                    try:
+                        el = await page.query_selector(sel)
+                        if el and await el.is_visible():
+                            await asyncio.wait_for(el.click(), timeout=5.0)
+                            log(f"   🪑 {player_name}: Host seat via PW selector: {sel}")
+                            clicked_seat = True
+                            break
+                    except: continue
+        else:
+            # Non-host path: look for seat buttons (original behavior)
+            for seat_try in range(5):
+                clicked_seat = await cdp_safe(page, """() => {
+                    const btns = document.querySelectorAll('.table-player-seat-button');
+                    for (const b of btns) {
+                        if (b.getBoundingClientRect().width > 0) {
+                            b.click(); return true;
+                        }
+                    }
+                    return false;
+                }""")
+                if clicked_seat:
+                    break
+                await asyncio.sleep(2)
+
         if clicked_seat:
             break
-        await asyncio.sleep(2)
+        
+        # v16.1: Enhanced already-seated check with stack verification
+        # Don't treat "seated with crumbs" as success — need meaningful stack
+        already_seated2 = await cdp_safe(page, """(params) => {
+            const name = params.name;
+            const minStack = params.minStack;
+            // Check .you-player with stack
+            const yp = document.querySelector('.table-player.you-player');
+            if (yp) {
+                const texts = yp.querySelectorAll('p, span, div');
+                let stackVal = 0;
+                for (const t of texts) {
+                    const val = t.textContent.trim().replace(/,/g, '');
+                    if (/^\\d+$/.test(val)) { stackVal = parseInt(val); break; }
+                }
+                if (stackVal >= minStack) return {how: 'you-player', stack: stackVal};
+                return null;  // Seated with crumbs — not a successful rebuy
+            }
+            // Check by name with stack
+            const players = document.querySelectorAll('.table-player');
+            for (const p of players) {
+                const nameEl = p.querySelector('a');
+                if (nameEl && nameEl.textContent.trim().toLowerCase() === name.toLowerCase()) {
+                    const texts = p.querySelectorAll('p, span, div');
+                    let stackVal = 0;
+                    for (const t of texts) {
+                        const val = t.textContent.trim().replace(/,/g, '');
+                        if (/^\\d+$/.test(val)) { stackVal = parseInt(val); break; }
+                    }
+                    if (stackVal >= minStack) return {how: 'by-name', stack: stackVal};
+                    return null;
+                }
+            }
+            return null;
+        }""", {"name": player_name, "minStack": int(STARTING_STACK * 0.30)})
+        if already_seated2:
+            log(f"   ✅ {player_name}: Detected as seated via {already_seated2.get('how')} (stack={already_seated2.get('stack')})")
+            return True
 
     if not clicked_seat:
-        log(f"   ⚠️ {player_name}: No seat buttons after reload (5 tries)")
+        log(f"   ⚠️ {player_name}: No seat buttons after reload (2 reloads)")
         return False
 
     log(f"   🪑 {player_name}: Clicked seat button for rebuy")
@@ -1635,11 +1836,15 @@ async def _fill_rebuy_form_safe(page, player_name, amount):
             const t = (btn.textContent || btn.value || '').trim().toLowerCase();
             const rect = btn.getBoundingClientRect();
             if (rect.width <= 0 || rect.height <= 0) continue;
-            // v10: Skip unrelated buttons
+            // v16: Skip unrelated buttons (added avatar, define, share, invite, sign)
             if (t.includes('copy') || t.includes('join a live') || t.includes('cancel') ||
                 t.includes('leave') || t.includes('options') || t.includes('feedback') ||
                 t.includes('sound') || t.includes('log') || t.includes('ledger') ||
-                t.includes('poker club') || t.includes('shuffle') || t.includes('away')) continue;
+                t.includes('poker club') || t.includes('shuffle') || t.includes('away') ||
+                t.includes('avatar') || t.includes('define') || t.includes('share') ||
+                t.includes('invite') || t.includes('sign') || t.includes('config') ||
+                t.includes('preference') || t.includes('player') || t.includes('video') ||
+                t.includes('audio') || t.includes('save') || t.includes('plus')) continue;
             if (t.includes('request the seat') || t.includes('take the seat') ||
                 t.includes('confirm') || t === 'ok' || t === 'sit' ||
                 (btn.classList.contains('green') && btn.classList.contains('highlighted'))) {
@@ -1790,21 +1995,27 @@ def bot_decide(state, profile):
         m = re.search(r"Call\s+(\d+)", a)
         if m: call_amount = int(m.group(1))
 
-    # v11: Re-raise cap — prevent escalation wars
-    # Heuristic: if the call amount is already large relative to the pot/street, cap raising.
-    # Preflop: if call > 8x BB, we're facing a 4-bet+ → don't re-raise (call or fold)
-    # Postflop: if call > 50% of pot AND pot > 10x BB, we're in re-raise territory → cap
-    # Also count raises in game log as backup signal
+    # v14: Re-raise cap — prevent escalation wars (improved from v11)
+    # ROOT CAUSE: bots re-raise each other 5+ times on flop until all-in.
+    # SIMPLE FIX: cap at 1 raise per bot per street postflop.
+    # If you've already bet/raised this street and face a re-raise, just call/fold.
+    # This creates realistic poker: bet → raise → call/fold (no 5-bet flops).
     log_entries = state.get("log", [])
     raises_in_log = sum(1 for e in log_entries if "raise" in e.lower())
     
     raise_capped = False
     if street == "preflop" and call_amount > bb * 8:
         raise_capped = True  # Facing 4-bet+, just call or fold
-    elif street != "preflop" and call_amount > pot * 0.5 and pot > bb * 10:
-        raise_capped = True  # Pot already escalated significantly  
-    elif raises_in_log >= 4:
-        raise_capped = True  # Many raises in recent log (cross-street but still a signal)
+    elif street != "preflop" and call_amount > 0 and pot > bb * 8:
+        # v14 KEY FIX: If we're FACING a bet/raise postflop AND the pot is already
+        # meaningful, only raise with very strong hands (equity > 80%).
+        # Otherwise call or fold — no re-raise wars.
+        if equity < 80:
+            raise_capped = True  # Only premium hands can re-raise postflop
+    elif street != "preflop" and pot > STARTING_STACK * 0.30:
+        raise_capped = True  # Pot already > 30% of buy-in = no more raising
+    elif raises_in_log >= 3:
+        raise_capped = True  # Multiple raises visible in log
     
     if raise_capped:
         can_raise = False  # Force call/fold only
@@ -1813,7 +2024,7 @@ def bot_decide(state, profile):
     # Lowered from v10 since the multiway discount is softer now
     PREFLOP_THRESHOLDS = {
         "NIT":     {"raise": 58, "call": 50, "fold": 45},
-        "TAG":     {"raise": 52, "call": 44, "fold": 40},
+        "TAG":     {"raise": 52, "call": 44, "fold": 44},  # v14: tightened from 40 (was 19% fold, target 25-30%)
         "LAG":     {"raise": 46, "call": 38, "fold": 34},
         "STATION": {"raise": 55, "call": 32, "fold": 32},  # v12: raised from 28 (was calling trash like 4c3h)
     }
@@ -2024,6 +2235,8 @@ async def bot_loop(page, profile, is_host, stop_event):
     is_busted = False  # v9: persists through seat transitions (fixes last_cards=() reset bug)
     last_host_check = 0  # v10: track when host last did proactive checks
     rebuy_cooldown_until = 0  # v10: after successful rebuy, skip bust detection briefly
+    bust_confirm_count = 0  # v15: require consecutive bust detections to avoid false triggers
+    last_known_stack = None  # v15: track last known stack for bust confirmation
 
     while not stop_event.is_set():
         try:
@@ -2035,38 +2248,51 @@ async def bot_loop(page, profile, is_host, stop_event):
                 await host_approve_all(page)
                 
                 # v12: More aggressive rebuy approval — check every 15s or on signal
-                # Reduced from 60s to catch rebuy requests faster after mass busts
                 now = time.time()
                 needs_approval_check = False
                 if rebuy_pending is not None and rebuy_pending.is_set():
                     rebuy_pending.clear()
                     needs_approval_check = True
-                elif now - last_host_check > 15:  # v12: 60s → 15s
+                elif now - last_host_check > 15:
                     needs_approval_check = True
                 
                 if needs_approval_check and now >= rebuy_cooldown_until:
                     try:
-                        # v12: First try approval WITHOUT reloading (keeps game state intact)
+                        # v16: First try approval WITHOUT reloading (keeps game state intact)
                         approved = await host_approve_all(page)
                         if approved:
                             log(f"   ✅ Host: Approved rebuy seat request(s) (no reload)")
                             await start_game(page)
                             last_host_check = now
-                        elif now - last_host_check > 20:  # v12: 60s → 20s
+                        elif now - last_host_check > 30:
                             # Reload to catch queued requests not visible on current page
+                            # v16: Check MORE thoroughly before reloading — any game activity means skip
                             state_peek = await scrape_state_safe(page)
-                            if not state_peek.get("is_my_turn"):
-                                async with cdp_semaphore:
-                                    await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
-                                await asyncio.sleep(3)
-                                await dismiss_cookie_banner(page)
-                                await dismiss_alerts(page)
-                                approved = await host_approve_all(page)
-                                if approved:
-                                    log(f"   ✅ Host: Approved rebuy seat request(s) (after reload)")
-                                await start_game(page)
-                                last_host_check = now
+                            has_cards = bool(state_peek.get("my_cards"))
+                            is_turn = state_peek.get("is_my_turn")
+                            # v16: Also check if any opponent is mid-action (pot > BB means hand in progress)
+                            pot_val = int(state_peek.get("pot_total") or state_peek.get("pot") or 0)
+                            hand_in_progress = has_cards or is_turn or pot_val > BIG_BLIND * 2
+                            if not hand_in_progress:
+                                # v16: Set host_reloading flag to suppress false bust detection
+                                host_reloading.set()
+                                try:
+                                    async with cdp_semaphore:
+                                        await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
+                                    await asyncio.sleep(3)
+                                    await dismiss_cookie_banner(page)
+                                    await dismiss_alerts(page)
+                                    approved = await host_approve_all(page)
+                                    if approved:
+                                        log(f"   ✅ Host: Approved rebuy seat request(s) (after reload)")
+                                    await start_game(page)
+                                    last_host_check = now
+                                finally:
+                                    # v16: Clear flag after reload completes + extra settle time
+                                    await asyncio.sleep(2)
+                                    host_reloading.clear()
                     except Exception as e:
+                        host_reloading.clear()  # v16: always clear on error
                         log(f"   ⚠️ Host: Rebuy approval check error: {str(e)[:60]}")
 
             # v11: Dismiss cookie banner every iteration to prevent click interception
@@ -2156,18 +2382,100 @@ async def bot_loop(page, profile, is_host, stop_event):
                     await asyncio.sleep(POLL_MS / 1000)
                     continue
 
-                # v9: Use is_busted flag to persist through seat transitions.
-                # Bug fix: after leaving seat, last_cards becomes () (falsy), which
-                # previously caused the else branch to reset bust_time.
-                newly_busted = (my_stack == 0 and is_seated) or                                (not is_seated and hands_played.get(name, 0) > 0 and not cards)
+                # v16: Skip bust detection while host page is reloading for approval
+                # ROOT CAUSE of false busts: host_approve_all reloads the page,
+                # which temporarily removes .you-player from DOM. The bot_loop
+                # then sees "not seated + no cards" and triggers bust detection.
+                if is_host and host_reloading is not None and host_reloading.is_set():
+                    await asyncio.sleep(POLL_MS / 1000)
+                    continue
+
+                # v14: Proactive rebuy when stack is meaningfully low (don't wait for bust)
+                # NitKing was dropping to 2242 and staying there for 60+ hands playing too tight
+                # Only trigger for stacks above BB*5 (50) to avoid false triggers on near-zero
+                # post-all-in stacks (those should go through bust detection below)
+                low_stack_threshold = int(STARTING_STACK * 0.30)
+                min_viable_stack = BIG_BLIND * 5  # 50 — below this, let bust handler deal with it
+                if (my_stack is not None and my_stack > min_viable_stack 
+                        and my_stack < low_stack_threshold
+                        and is_seated and not is_busted and rebuy_attempts == 0
+                        and hands_played.get(name, 0) > 5):
+                    log(f"   📉 {name}: Low stack ({my_stack} < {int(STARTING_STACK * 0.30)}) — proactive rebuy")
+                    try:
+                        # v16: Set host_reloading during proactive rebuy too (auto_rebuy reloads page)
+                        if is_host and host_reloading is not None:
+                            host_reloading.set()
+                        async with rebuy_lock:
+                            rebuy_ok = await auto_rebuy(page, name, STARTING_STACK, is_host=is_host)
+                        if rebuy_ok:
+                            rebuy_cooldown_until = time.time() + 20
+                            rebuys_count[name] = rebuys_count.get(name, 0) + 1
+                            log(f"   ✅ {name}: Proactive rebuy successful!")
+                        else:
+                            # Don't spam — wait 60s before trying again
+                            rebuy_cooldown_until = time.time() + 60
+                    except Exception as e:
+                        log(f"   ⚠️ {name}: Proactive rebuy error: {str(e)[:60]}")
+                        rebuy_cooldown_until = time.time() + 60
+                    finally:
+                        if is_host and host_reloading is not None:
+                            host_reloading.clear()
+                    continue
+
+                # v15: Track last known stack for bust confirmation
+                if my_stack is not None and my_stack > 0:
+                    last_known_stack = my_stack
+
+                # v15: Bust detection with confirmation — require 3 consecutive
+                # detections to avoid false triggers from SPA re-renders during
+                # host approval reloads. The host page especially loses .you-player
+                # momentarily during approval flows.
+                newly_busted = (my_stack == 0 and is_seated) or \
+                               (not is_seated and hands_played.get(name, 0) > 0 and not cards)
                 
                 if is_busted or newly_busted:
                     if not is_busted:
-                        # First detection
+                        bust_confirm_count += 1
+                        # v16: Host requires 5 confirmations (was 3), bots keep 3.
+                        # Host page is more volatile due to approval reloads.
+                        required_confirms = 5 if is_host else 3
+                        if bust_confirm_count < required_confirms:
+                            if bust_confirm_count == 1:
+                                log(f"   ⚠️ {name}: Possible bust (stack={my_stack}, seated={is_seated}) — confirming ({bust_confirm_count}/{required_confirms})...")
+                            await asyncio.sleep(POLL_MS / 1000)
+                            continue
+                        # v16: Extra validation for host — reload page and re-check before confirming bust
+                        if is_host and last_known_stack and last_known_stack > low_stack_threshold:
+                            # Host had a big stack recently — very likely a false bust from SPA reload
+                            log(f"   🔍 {name}: Bust suspicious (last_known={last_known_stack}) — reloading to verify...")
+                            try:
+                                async with cdp_semaphore:
+                                    await page.goto(game_url_global, wait_until="domcontentloaded", timeout=15000)
+                                await asyncio.sleep(4)
+                                await dismiss_cookie_banner(page)
+                                await dismiss_alerts(page)
+                                # Re-check if actually seated
+                                recheck = await scrape_state_safe(page)
+                                recheck_seated = any(p.get("is_me") for p in recheck.get("players", []))
+                                recheck_stack = None
+                                for p in recheck.get("players", []):
+                                    if p.get("is_me"):
+                                        try: recheck_stack = int(p["stack"])
+                                        except: pass
+                                if recheck_seated and recheck_stack and recheck_stack > 0:
+                                    log(f"   ✅ {name}: FALSE BUST — actually seated with stack={recheck_stack} after reload")
+                                    bust_confirm_count = 0
+                                    last_known_stack = recheck_stack
+                                    await asyncio.sleep(POLL_MS / 1000)
+                                    continue
+                            except Exception as e:
+                                log(f"   ⚠️ {name}: Bust verification reload failed: {str(e)[:60]}")
+                        # Confirmed bust
                         is_busted = True
                         bust_time = time.time()
                         rebuy_attempts = 0
-                        log(f"   ☠️ {name}: BUSTED (stack={my_stack}, seated={is_seated})")
+                        bust_confirm_count = 0
+                        log(f"   ☠️ {name}: BUSTED (stack={my_stack}, seated={is_seated}, last_known={last_known_stack})")
 
                     elapsed = time.time() - bust_time
                     if elapsed > 5 and rebuy_attempts < 10:
@@ -2177,10 +2485,14 @@ async def bot_loop(page, profile, is_host, stop_event):
                         await asyncio.sleep(3 + bot_idx * 2 + random.uniform(0, 1.5))
                         try:
                             log(f"   💰 {name}: Rebuy attempt #{rebuy_attempts}...")
+                            # v16: Set host_reloading flag during bust rebuy too
+                            if is_host and host_reloading is not None:
+                                host_reloading.set()
                             async with rebuy_lock:
                                 rebuy_ok = await auto_rebuy(page, name, STARTING_STACK, is_host=is_host)
                             if rebuy_ok:
                                 bust_time = None; rebuy_attempts = 0; is_busted = False
+                                bust_confirm_count = 0  # v15: reset confirmation counter
                                 rebuy_cooldown_until = time.time() + 15  # v10: 15s cooldown
                                 log(f"   ✅ {name}: Rebuy successful! (cooldown 15s)")
                                 # v12: After host rebuy, immediately approve pending bot requests
@@ -2205,13 +2517,17 @@ async def bot_loop(page, profile, is_host, stop_event):
                                 await asyncio.sleep(3); continue
                         except Exception as rebuy_err:
                             log(f"   ⚠️ {name}: Rebuy error: {str(rebuy_err)[:60]}")
+                        finally:
+                            # v16: Always clear host_reloading after rebuy attempt
+                            if is_host and host_reloading is not None:
+                                host_reloading.clear()
                         await asyncio.sleep(8)
                     elif rebuy_attempts >= 10:
                         # Reset after long timeout to allow retry
                         if elapsed > 120: rebuy_attempts = 0; bust_time = time.time()
                         else: await asyncio.sleep(10)
                 else:
-                    bust_time = None; rebuy_attempts = 0; is_busted = False
+                    bust_time = None; rebuy_attempts = 0; is_busted = False; bust_confirm_count = 0
                 await asyncio.sleep(POLL_MS / 1000)
 
         except Exception as e:
@@ -2260,13 +2576,14 @@ async def status_reporter(stop_event):
 
 
 async def main():
-    global rebuy_lock, rebuy_pending, cdp_semaphore
+    global rebuy_lock, rebuy_pending, cdp_semaphore, host_reloading
     rebuy_lock = asyncio.Lock()
     rebuy_pending = asyncio.Event()
     cdp_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent CDP calls across all bots
+    host_reloading = asyncio.Event()  # v16: set during host approval reloads
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v13.0 (slider rewrite + 5000 stacks)")
+    log("🃏 Poker Now Multi-Bot Arena v16.0 (host rebuy fix + false bust elimination)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
