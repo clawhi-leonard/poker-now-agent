@@ -190,9 +190,44 @@ for s in ['h','s','d','c']:
         DECK.append((r, s))
 
 
+def _build_playable_set():
+    """Build the set of preflop hands a typical player would play (top ~45%).
+    Used to filter MC opponent hands — prevents equity inflation from hand-vs-random.
+    A hand is 'playable' if its preflop equity >= 36 (roughly top 45% of hands)."""
+    playable = set()
+    min_eq = 36  # ~top 45% of starting hands
+    for key, eq in PREFLOP_OFFSUIT.items():
+        if eq >= min_eq:
+            playable.add(key)
+    for key, eq in PREFLOP_SUITED.items():
+        if eq >= min_eq:
+            playable.add(key + "s")
+    return playable
+
+_PLAYABLE_HANDS = _build_playable_set()
+
+def _is_playable(card1, card2):
+    """Check if a 2-card hand is in the playable range (top ~45%).
+    card1, card2 are tuples like ('K', 's')."""
+    r1, s1 = card1
+    r2, s2 = card2
+    v1, v2 = RANK_ORDER.get(r1, 0), RANK_ORDER.get(r2, 0)
+    if v1 < v2:
+        r1, r2 = r2, r1
+        s1, s2 = s2, s1
+    if r1 == r2:
+        return (r1 + r2) in _PLAYABLE_HANDS
+    if s1 == s2:
+        return (r1 + r2 + "s") in _PLAYABLE_HANDS
+    return (r1 + r2) in _PLAYABLE_HANDS
+
+
 def monte_carlo_equity(my_cards, board_cards, num_opponents=1, simulations=200, is_plo=False):
     """
     Monte Carlo simulation of win rate. Returns 0.0-1.0.
+    v19: Opponents draw from a filtered range (top ~45% of hands) instead of
+    pure random. This fixes the hand-vs-random inflation where both players
+    show 80%+ equity simultaneously.
     For PLO: must use exactly 2 hole + 3 board. Opponents get 4 cards too.
     For NLHE: best 5 from 7.
     """
@@ -225,7 +260,22 @@ def monte_carlo_equity(my_cards, board_cards, num_opponents=1, simulations=200, 
         beaten_all = True
         tied_any = False
         for opp in range(num_opponents):
+            # v19: For NLHE postflop, filter opponent hands to playable range
+            # Try up to 5 draws to find a playable hand, then accept whatever we get
+            # (avoids infinite loop while still filtering most trash)
             opp_cards = remaining[idx:idx+opp_hole_count]
+            if not is_plo and opp_hole_count == 2 and len(board) > 0:
+                best_opp = opp_cards
+                for attempt in range(5):
+                    candidate_start = idx + attempt * opp_hole_count
+                    if candidate_start + opp_hole_count > len(remaining):
+                        break
+                    candidate = remaining[candidate_start:candidate_start+opp_hole_count]
+                    if _is_playable(candidate[0], candidate[1]):
+                        best_opp = candidate
+                        idx = candidate_start  # advance idx to where we found it
+                        break
+                opp_cards = best_opp
             idx += opp_hole_count
             if idx > len(remaining):
                 break

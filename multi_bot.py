@@ -2,6 +2,16 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v19.0 - TAG/NIT fold rate tuning + anti-stutter + range-filtered equity (2026-03-19):
+  - FIXED: TAG fold rate 17% → target 25-30% (fold threshold 44→46, call 44→46)
+  - FIXED: NIT fold rate 25% → target 30-40% (fold threshold 45→48, call 50→52)
+  - FIXED: Flop re-raise stutter — bot raised 3x consecutively on same street
+    when SPA didn't reflect action immediately. New anti-stutter: tracks last raise
+    per bot per street, downgrades raise to call/check within 4s window.
+  - IMPROVED: Monte Carlo equity now filters opponent hands to playable range
+    (top ~45% of hands). Fixes hand-vs-random inflation where both players
+    show 80%+ equity simultaneously. Opponents dealt from realistic range.
+
 v18.0 - River value betting + LAG fold fix + crumbs add-chips (2026-03-19):
   - FIXED: River value bet missing — bots were checking back 70-80% equity rivers
     Free-check section now ALWAYS bets river with equity > 70% (50-75% pot)
@@ -2139,18 +2149,13 @@ def detect_big_blind(state):
 
 def bot_decide(state, profile):
     """
-    Decision engine v12: bet capping, NIT postflop fix, STATION fold fix, chip tracking.
+    Decision engine v19: TAG/NIT fold tightening + range-filtered equity.
     
-    v12 changes:
-      - Max single bet = 2x pot on any street (unless all-in with <25% stack remaining)
-      - NIT postflop: max raise = pot unless equity > 80%
-      - STATION fold threshold 28 → 32 (stop calling with 4c3h, 8s3c)
-      - Position + stack logged in action output
-    
-    v11 changes:
-      - Re-raise cap: facing 4-bet+ preflop → call/fold only
-      - Preflop thresholds lowered for 4-handed (0.92 multiway discount)
-      - Position adjustments: BTN -7, CO -5, UTG +3, SB +3
+    v19 changes:
+      - TAG fold threshold 44→46 (target 25-30% fold rate, was 17%)
+      - NIT fold threshold 45→48, call 50→52 (target 30-40%, was 25%)
+      - MC equity uses opponent range filter (top ~45% of hands, not random)
+      - Anti-stutter: tracks last raise, prevents duplicate raises on same street
     """
     actions_str = " ".join(state.get("actions", []))
     can_check = "Check" in actions_str
@@ -2226,13 +2231,14 @@ def bot_decide(state, profile):
     if raise_capped:
         can_raise = False  # Force call/fold only
 
-    # v11: Per-style equity thresholds (recalibrated for 4-handed with 0.92 discount)
-    # Lowered from v10 since the multiway discount is softer now
+    # v19: Per-style equity thresholds (recalibrated for 4-handed)
+    # TAG fold 44→46 (was 17% fold rate, target 25-30%)
+    # NIT fold 45→48 (was 25% fold rate, target 30-40%)
     PREFLOP_THRESHOLDS = {
-        "NIT":     {"raise": 58, "call": 50, "fold": 45},
-        "TAG":     {"raise": 52, "call": 44, "fold": 44},  # v14: tightened from 40 (was 19% fold, target 25-30%)
-        "LAG":     {"raise": 46, "call": 38, "fold": 38},  # v18: raised fold from 34→38 (was 3-7% fold, target ~15%)
-        "STATION": {"raise": 55, "call": 32, "fold": 32},  # v12: raised from 28 (was calling trash like 4c3h)
+        "NIT":     {"raise": 58, "call": 52, "fold": 48},  # v19: fold 45→48, call 50→52 (target 30-40% fold)
+        "TAG":     {"raise": 52, "call": 46, "fold": 46},  # v19: fold 44→46, call 44→46 (target 25-30% fold)
+        "LAG":     {"raise": 46, "call": 38, "fold": 38},  # v18: fold 34→38 (target ~15% fold) ✅
+        "STATION": {"raise": 55, "call": 32, "fold": 32},  # v12: fold 28→32 (target 5-10%) ✅
     }
     thresholds = PREFLOP_THRESHOLDS.get(style, PREFLOP_THRESHOLDS["TAG"])
 
@@ -2584,6 +2590,14 @@ async def bot_loop(page, profile, is_host, stop_event):
                     await asyncio.sleep(0.5); continue
                 if state_key == last_state_key and time.time() - last_act_time < 5.0:
                     await asyncio.sleep(0.3); continue
+                # v19: Anti-stutter — if we just raised on this street with these cards,
+                # don't raise again for 4s. Prevents 3x consecutive raise stutter when
+                # SPA doesn't immediately reflect the action.
+                if hasattr(bot_loop, '_last_raise_key') and bot_loop._last_raise_key.get(name):
+                    lr = bot_loop._last_raise_key[name]
+                    if lr[0] == (cards, tuple(state.get("board",[])), st) and time.time() - lr[1] < 4.0:
+                        # Same hand+street, recent raise — skip raising, allow check/call/fold only
+                        state["_skip_raise"] = True
 
                 action, amount = bot_decide(state, profile)
                 if action == "fold" and "Check" in actions_text:
@@ -2593,7 +2607,23 @@ async def bot_loop(page, profile, is_host, stop_event):
                     folds_count[name] = folds_count.get(name, 0) + 1
                 actions_count[name] = actions_count.get(name, 0) + 1
 
+                # v19: Anti-stutter — if _skip_raise is set, downgrade raise to call/check
+                if state.get("_skip_raise") and action == "raise":
+                    if "Call" in actions_text:
+                        action = "call"
+                        amount = None
+                        log(f"   {name}: anti-stutter → downgraded raise to call (same street, recent raise)")
+                    elif "Check" in actions_text:
+                        action = "check"
+                        amount = None
+                        log(f"   {name}: anti-stutter → downgraded raise to check (same street, recent raise)")
+
                 result = await execute_action_safe(page, action, amount)
+                # v19: Track last raise for anti-stutter
+                if not hasattr(bot_loop, '_last_raise_key'):
+                    bot_loop._last_raise_key = {}
+                if action == "raise":
+                    bot_loop._last_raise_key[name] = ((cards, tuple(state.get("board",[])), st), time.time())
                 eq = get_equity(state.get("my_cards",[]),
                                state.get("board",[]) if state.get("board") else None,
                                max(1, sum(1 for p in state.get("players", [])

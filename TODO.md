@@ -1,6 +1,23 @@
 # Poker Now AI Agent - TODO
 
-## Status: v18 — River value betting, LAG fold fix, 97% slider, 288+ hands
+## Status: v19 — TAG/NIT fold tuning, anti-stutter, range-filtered equity, 98% slider, 300+ hands
+
+### Completed (2026-03-19 7AM — v19)
+- [x] **FIXED: TAG fold rate 17% → 25%** — raised fold/call threshold 44→46
+  - Now correctly folding 8s6c(34%), 5h10d(35%), 4d3d(30%), 7c3c(37%)
+  - Still playing QcAc(60%), KsAc(64%), 8c8d(69%) — proper TAG behavior
+- [x] **FIXED: NIT fold rate 25% → 34%** — raised fold threshold 45→48, call 50→52
+  - Now correctly folding Qh3c(42%), 9s7d(41%), Kd8s(46%)
+  - Still playing AsAh(72%), KcJd(55%), AcTh(57%) — tight but playable
+- [x] **FIXED: Flop re-raise stutter** — new anti-stutter tracks last raise per bot
+  - Detects if bot raised same hand+street within 4s → downgrades to call/check
+  - 4 correct triggers in 300-hand session, prevented all short-window stutters
+  - LIMITATION: 20s+ SPA freezes not covered (need extended window in v20)
+- [x] **IMPROVED: MC equity range filter** — opponents dealt from top ~45% of hands
+  - Fixes hand-vs-random inflation (both players showing 80%+ equity simultaneously)
+  - More realistic equity values — medium hands get lower equity vs skilled opponents
+  - Side effect: slightly inflates all fold rates (~3-5%), which is acceptable
+- [x] **Session results:** 300+ actions, 0 errors, 98% slider accuracy (best ever), 4 anti-stutter saves
 
 ### Completed (2026-03-19 5AM — v18)
 - [x] **FIXED: River value bet missing** — bots were checking back 70-80%+ equity rivers
@@ -34,24 +51,24 @@
 - [x] 5000 stacks (500BB) — deeper play, fewer busts
 - [x] Enter key for submit — zero "Element detached" errors
 
-### Priority 0: TAG/NIT Fold Rate Tuning (MEDIUM)
-- TAG (Clawhi) at 17% fold — target 25-30%. Consider fold threshold 44 → 46.
-- NIT (NitKing) at 25% fold — target 30-40%. Consider fold threshold 45 → 48.
-- LAG (AceBot) at 14% — ✅ perfect for 4-handed.
-- STATION (CallStn) at 10% — ✅ correct for calling station.
+### Priority 0: Extended Anti-Stutter (LOW-MEDIUM)
+- 4s window catches quick stutters but not 20s+ SPA freezes
+- End-of-session saw Clawhi raise 3x on same flop over 20s (SPA never updated)
+- **TODO:** Extend window to 8s, or track board+street state to detect SPA freezes
+- **TODO:** If same cards + same board + same street → only allow 1 raise per decision cycle
 
-### Priority 1: Fix Crumbs Rebuy — Different Seat Approach (MEDIUM)
+### Priority 1: LAG Fold Rate Fine-Tuning (LOW)
+- LAG (AceBot) at 19% fold — target ~15%. Range-filtered equity inflated it from 14%.
+- Consider lowering LAG fold threshold 38→36 to compensate for range filter
+- Monitor: if 19% produces better results than 14%, leave it (tighter LAG is still viable)
+- TAG at 25% ✅, NIT at 34% ✅, STATION at 8% ✅ — all on target
+
+### Priority 2: Fix Crumbs Rebuy — Different Seat Approach (MEDIUM)
 - **Root cause:** Pokernow auto-seats the bot with previous crumb stack on reload
 - **Add Chips is NOT available** in pokernow Options menu (v18 confirmed)
 - **TODO:** After leaving seat, click a DIFFERENT empty seat (not the one pokernow remembers)
 - **TODO:** Track which seat the bot was in, target a different one on rebuy
 - **TODO:** Try clicking empty seat directly without reload (avoid auto-seat trigger)
-
-### Priority 2: MC Equity vs Random (MEDIUM)
-- Both players showing 80%+ equity simultaneously — impossible
-- MC sim uses hand-vs-random, not hand-vs-hand
-- **TODO:** Use opponent range modeling to estimate actual equity vs likely holdings
-- This affects decision quality in multiway pots
 
 ### Priority 3: GTO & Analytics (LOW)
 - Balanced ranges, mixed strategies
@@ -74,6 +91,12 @@
 - **raise_capped must NOT block river opening bets** — only prevents re-raise wars
 - **LAG fold threshold 38 produces ~14% fold rate** in 4-handed (perfect for LAG)
 - **River value betting is the single biggest EV improvement** — was leaving massive value on table
+- **Range-filtered MC equity is more realistic** — opponents dealt from top ~45% of hands
+- **Range filter inflates fold rates ~3-5%** — need to compensate thresholds slightly
+- **Anti-stutter 4s window catches quick stutters** but not 20s+ SPA freezes
+- **TAG fold threshold 46 produces 25% fold rate** — perfect for 4-handed TAG
+- **NIT fold threshold 48/call 52 produces 34% fold rate** — perfect for 4-handed NIT
+- **98% slider accuracy is the new stable baseline** — T1(mouse) + T2(arrows) combo
 
 ### Metrics History
 | Version | Hands/min | Slider% | Error% | Rebuy Success | Notes |
@@ -82,4 +105,5 @@
 | v16 | 7.4 | 99% | 0% | ~85% | Enter key fix, host rebuy fix |
 | v17 | ~5.0* | 94% | 0% | ~80% | Serialized rebuys, crumbs fix |
 | v18 | ~7.5 | 97% | 0% | 100% | River value betting, LAG fold fix |
+| v19 | ~7.5 | 98% | 0% | 100% | Fold tuning, anti-stutter, range equity |
 *v17 rate lower due to more rebuy time from crumbs loop
