@@ -2204,6 +2204,9 @@ def bot_decide(state, profile, opponent_model=None):
       - MAJOR: Board texture analysis with dynamic bet sizing (0.9x-1.1x modifiers)
       - ENHANCED: Real-time [dry]/[wet]/[very_wet] classification each street
     """
+    # Initialize my_stack first to prevent reference errors
+    my_stack = 1000
+    
     actions_str = " ".join(state.get("actions", []))
     can_check = "Check" in actions_str
     can_raise = "Raise" in actions_str or "Bet" in actions_str
@@ -2223,11 +2226,11 @@ def bot_decide(state, profile, opponent_model=None):
     draws = detect_draws(my_cards, board) if board else []
     has_draw = len(draws) > 0
 
-    my_stack = 1000
+    # Get actual stack size from player data
     for p in state.get("players", []):
         if p.get("is_me"):
             try: my_stack = int(p["stack"])
-            except: pass
+            except: my_stack = 1000  # Keep default if parsing fails
 
     agg = profile["aggression"]
     bluff = profile["bluff_freq"]
@@ -2839,9 +2842,17 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model, perf_trac
                 log(f"   {name}({style}) | {st} | {pos_str}{stack_str} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}%{board_info}{opp_info} -> {action} {amount or ''} | {result}")
 
                 # v24: Track decision for performance analytics
-                if perf_tracker and my_stack:
+                # v25: Fixed my_stack scope issue - get stack from state in main loop
+                current_stack = 1000  # Default
+                for p in state.get("players", []):
+                    if p.get("is_me"):
+                        try: current_stack = int(p["stack"])
+                        except: current_stack = 1000
+                        break
+                        
+                if perf_tracker and current_stack > 0:
                     texture_type = analyze_board_texture(state.get('board', [])).get('type') if state.get('board') else None
-                    perf_tracker.track_decision(name, action, amount or 0, eq, texture_type, st, my_stack)
+                    perf_tracker.track_decision(name, action, amount or 0, eq, texture_type, st, current_stack)
 
                 last_act_time = time.time()
                 last_state_key = state_key
@@ -3063,9 +3074,20 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model, perf_trac
 
 
 async def status_reporter(stop_event, perf_tracker=None):
+    last_total_hands = 0
     while not stop_event.is_set():
-        await asyncio.sleep(300)
+        # v25: Dynamic status frequency - faster updates during active play
         total = sum(hands_played.values())
+        hands_since_last = total - last_total_hands
+        
+        if hands_since_last >= 3:  # Active play - update every 60s
+            sleep_time = 60
+            last_total_hands = total
+        else:  # Slower play - standard 300s interval
+            sleep_time = 300
+            
+        await asyncio.sleep(sleep_time)
+        
         parts = [f"{n}:{h}h" for n,h in hands_played.items() if h > 0]
         fp = []
         for n in hands_played:
@@ -3073,11 +3095,28 @@ async def status_reporter(stop_event, perf_tracker=None):
             f = folds_count.get(n,0)
             if a > 0: fp.append(f"{n}:{100*f/a:.0f}%")
         rp = [f"{n}:{c}" for n,c in rebuys_count.items() if c > 0]
-        log(f"📊 STATUS | {total}h | {' '.join(parts)}")
-        if fp: log(f"   Folds: {' '.join(fp)}")
-        if rp: log(f"   Rebuys: {' '.join(rp)}")
         
-        # v24: Performance analytics
+        # v25: Enhanced live dashboard with BB/hour prominence
+        if perf_tracker and total > 0:
+            summary = perf_tracker.get_session_summary()
+            bb_summary = []
+            for bot_name, perf in summary["bot_performance"].items():
+                bb_hr = perf["bb_per_hour"]
+                bb_total = perf["bb_won"]
+                if bb_hr != 0:  # Only show active earners/losers
+                    bb_summary.append(f"{bot_name}:{bb_hr:+.1f}bb/hr")
+            
+            log(f"📊 LIVE DASHBOARD | {total}h ({summary['session_duration_minutes']:.1f}m)")
+            if bb_summary:
+                log(f"   💰 BB/Hour: {' '.join(bb_summary)}")
+            log(f"   🎯 Hands: {' '.join(parts)}")
+        else:
+            log(f"📊 STATUS | {total}h | {' '.join(parts)}")
+            
+        if fp: log(f"   📉 Folds: {' '.join(fp)}")
+        if rp: log(f"   🔄 Rebuys: {' '.join(rp)}")
+        
+        # v24: Full performance analytics (every status update)
         if perf_tracker:
             perf_tracker.log_performance(log)
         # v13: Log slider stats

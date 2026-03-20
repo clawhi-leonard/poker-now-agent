@@ -418,27 +418,72 @@ def analyze_board_texture(board_cards_str):
             if gaps <= 2:  # Allow some gaps for draw potential
                 straight_potential = True
     
-    # Classify board type
+    # v25: Enhanced texture classification with specific draw patterns
     wetness_score = 0
-    if flush_potential: wetness_score += 1
-    if straight_potential: wetness_score += 1
-    if pair_potential: wetness_score += 0.5
+    draw_type = "none"
     
-    if len(board_cards_str) >= 3:  # Flop or later
-        # Additional wetness factors
-        if max_suit >= 3: wetness_score += 1  # Flush draw or made flush
-        if len([r for r in ranks if r >= 10]) >= 2: wetness_score += 0.5  # High cards (broadway)
+    # Specific pattern analysis
+    if max_suit >= 3:  # Flush draw/made flush
+        wetness_score += 2
+        draw_type = "flush_heavy"
+    elif flush_potential:  # Flush potential (2-suited)
+        wetness_score += 1
+        if draw_type == "none":
+            draw_type = "flush_draw"
     
-    # Determine type and bet size modifier
+    if straight_potential:
+        # More sophisticated straight analysis
+        if len(sorted_ranks) >= 3:
+            # Check for "scary" straight boards like 789, JQK
+            consecutive = 0
+            for i in range(1, len(sorted_ranks)):
+                if sorted_ranks[i] - sorted_ranks[i-1] == 1:
+                    consecutive += 1
+            if consecutive >= 2:  # 3 connected cards
+                wetness_score += 2
+                draw_type = "straight_heavy" if draw_type == "none" else "combo_draw"
+            else:
+                wetness_score += 1
+                if draw_type == "none":
+                    draw_type = "straight_draw"
+    
+    if pair_potential:
+        wetness_score += 0.5
+        if draw_type == "none":
+            draw_type = "paired"
+    
+    # Additional sophisticated factors
+    if len(board_cards_str) >= 3:
+        # Broadway cards increase action potential
+        broadway_count = len([r for r in ranks if r >= 10])
+        if broadway_count >= 2:
+            wetness_score += 0.5
+            
+        # Low boards (under 8) are typically drier
+        if all(r <= 8 for r in ranks):
+            wetness_score -= 0.3
+    
+    # v25: Enhanced classification with specific modifiers per draw type
     if wetness_score >= 2.5:
         board_type = 'very_wet'
-        bet_size_modifier = 1.1  # Bet bigger on very wet boards (protect hand)
+        if draw_type == "flush_heavy":
+            bet_size_modifier = 1.15  # Bigger protection vs flush
+        elif draw_type == "straight_heavy":
+            bet_size_modifier = 1.1   # Protection vs straight
+        else:
+            bet_size_modifier = 1.1   # General very wet
     elif wetness_score >= 1.5:
-        board_type = 'wet' 
-        bet_size_modifier = 1.0  # Standard sizing
+        board_type = 'wet'
+        if draw_type in ["flush_draw", "straight_draw"]:
+            bet_size_modifier = 1.05  # Slight protection
+        else:
+            bet_size_modifier = 1.0   # Standard
     else:
         board_type = 'dry'
-        bet_size_modifier = 0.9  # Bet smaller on dry boards (extract value)
+        if draw_type == "paired":
+            bet_size_modifier = 0.85  # Smaller on paired dry boards
+        else:
+            bet_size_modifier = 0.9   # Standard dry board sizing
     
     return {
         'type': board_type,
@@ -446,7 +491,9 @@ def analyze_board_texture(board_cards_str):
         'straight_potential': straight_potential,
         'pair_potential': pair_potential,
         'bet_size_modifier': bet_size_modifier,
-        'wetness_score': wetness_score
+        'wetness_score': wetness_score,
+        'draw_type': draw_type,  # v25: Specific draw pattern classification
+        'broadway_count': len([r for r in ranks if r >= 10]) if len(board_cards_str) >= 3 else 0
     }
 
 
