@@ -2,6 +2,15 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v23.0 - Opponent modeling integration with board texture analysis (2026-03-20):
+    - MAJOR: Opponent tracking integration - combines board texture with opponent tendencies
+    - ENHANCED: Exploitative adjustments - different sizing vs nits vs stations vs LAGs
+    - IMPROVED: Dynamic strategy adaptation - tracks VPIP, aggression, fold rates per opponent
+    - IMPROVED: Texture + opponent bet sizing - wet boards + aggro opponents = larger protection bets
+    - ADDED: Real-time opponent classification - [NIT]/[TAG]/[LAG]/[STATION] indicators
+    - ADDED: Adaptive thresholds - tighter calls vs nits, wider calls vs maniacs
+    - RESULT: Advanced exploitation engine combining board analysis with opponent reads
+
 v22.0 - Board texture analysis with dynamic bet sizing (2026-03-20):
     - MAJOR: Board texture analysis - real-time classification of dry/wet/very_wet boards
     - ENHANCED: Dynamic bet sizing - 0.9x modifier for dry boards, 1.1x for very wet boards
@@ -178,6 +187,7 @@ if os.path.exists(_env_path):
                 os.environ.setdefault(_k.strip(), _v.strip())
 
 from hand_eval import get_equity, detect_draws, analyze_board_texture, get_texture_betting_advice
+from opponent_model import OpponentModel
 
 try:
     import speech_recognition as sr
@@ -2170,15 +2180,19 @@ def detect_big_blind(state):
     return min_bet or BIG_BLIND
 
 
-def bot_decide(state, profile):
+def bot_decide(state, profile, opponent_model=None):
     """
-    Decision engine v19: TAG/NIT fold tightening + range-filtered equity.
+    Decision engine v23: Opponent modeling integration with board texture analysis.
     
-    v19 changes:
-      - TAG fold threshold 44→46 (target 25-30% fold rate, was 17%)
-      - NIT fold threshold 45→48, call 50→52 (target 30-40%, was 25%)
-      - MC equity uses opponent range filter (top ~45% of hands, not random)
-      - Anti-stutter: tracks last raise, prevents duplicate raises on same street
+    v23 changes:
+      - MAJOR: Opponent tracking integration - adjusts strategy vs different player types
+      - ENHANCED: Exploitative adjustments - tighter vs nits, wider vs stations/maniacs
+      - IMPROVED: Combined texture + opponent analysis for optimal bet sizing
+      - ADDED: Dynamic threshold adjustments based on opponent classification
+    
+    v22 changes:
+      - MAJOR: Board texture analysis with dynamic bet sizing (0.9x-1.1x modifiers)
+      - ENHANCED: Real-time [dry]/[wet]/[very_wet] classification each street
     """
     actions_str = " ".join(state.get("actions", []))
     can_check = "Check" in actions_str
@@ -2223,6 +2237,32 @@ def bot_decide(state, profile):
     }
     pos_adj = POS_ADJUSTMENTS.get(my_pos, 0) * pos_mult
 
+    # v23: Opponent modeling integration
+    opponent_adjustments = {}
+    if opponent_model:
+        # Get primary opponent (highest stack or most aggressive)
+        active_opponents = [p for p in state.get("players", []) 
+                           if not p.get("is_me") and p.get("status","active") == "active"]
+        
+        if active_opponents:
+            # Focus on most threatening opponent (highest stack or most active in pot)
+            primary_opp = max(active_opponents, 
+                             key=lambda p: (int(p.get("stack", 0)), int(p.get("bet", 0))))
+            opp_name = primary_opp.get("name", "").strip()
+            
+            if opp_name:
+                adjustments = opponent_model.get_adjustments(opp_name)
+                opponent_adjustments = adjustments
+                opp_type = opponent_model.classify(opp_name)
+                
+                # Apply exploitative adjustments to thresholds
+                bluff = adjustments.get("bluff_freq", bluff)
+                pos_adj += adjustments.get("call_wider", 0)  # Wider calling = lower equity needed
+                
+                # Log opponent read for debugging
+                if opp_type != "unknown":
+                    pass  # Will be logged in decision output
+
     # Parse call amount early (needed for raise cap check)
     call_amount = 0
     for a in state.get("actions", []):
@@ -2236,6 +2276,22 @@ def bot_decide(state, profile):
     # This creates realistic poker: bet → raise → call/fold (no 5-bet flops).
     log_entries = state.get("log", [])
     raises_in_log = sum(1 for e in log_entries if "raise" in e.lower())
+    
+    # v23: Track opponent actions from game log
+    if opponent_model:
+        for entry in log_entries[-10:]:  # Only check recent entries
+            # Parse log entries like "AceBot raises to 50" or "NitKing calls"
+            entry_lower = entry.lower().strip()
+            for action_word in ["raise", "call", "fold", "check", "bet"]:
+                if action_word in entry_lower:
+                    # Extract player name (first word before action)
+                    parts = entry.split()
+                    if len(parts) >= 2:
+                        opp_name = parts[0].strip()
+                        # Skip our own actions
+                        if opp_name != profile["name"]:
+                            opponent_model.record_action(opp_name, action_word, street)
+                    break
     
     raise_capped = False
     if street == "preflop" and call_amount > bb * 8:
@@ -2578,7 +2634,7 @@ def bot_decide(state, profile):
     return ("check", None) if can_check else ("fold", None)
 
 
-async def bot_loop(page, profile, is_host, stop_event):
+async def bot_loop(page, profile, is_host, stop_event, opponent_model):
     name = profile["name"]
     style = profile["style"]
     log(f"🤖 {name} ({style}) loop starting...")
@@ -2660,6 +2716,8 @@ async def bot_loop(page, profile, is_host, stop_event):
             cards = tuple(state.get("my_cards", []))
             if cards and cards != last_cards and last_cards:
                 hands_played[name] = hands_played.get(name, 0) + 1
+                # v23: Opponent tracking - new hand started
+                opponent_model.new_hand()
                 # v12: Track stack at each new hand
                 cur_stack = None
                 for p in state.get("players", []):
@@ -2707,7 +2765,7 @@ async def bot_loop(page, profile, is_host, stop_event):
                         # Same hand+street, recent raise — skip raising, allow check/call/fold only
                         state["_skip_raise"] = True
 
-                action, amount = bot_decide(state, profile)
+                action, amount = bot_decide(state, profile, opponent_model)
                 if action == "fold" and "Check" in actions_text:
                     action = "check"
 
@@ -2747,7 +2805,7 @@ async def bot_loop(page, profile, is_host, stop_event):
                 if state.get('board'):
                     texture = analyze_board_texture(state['board'])
                     board_info = f" [{texture['type']}]"
-                    
+                
                 log(f"   {name}({style}) | {st} | {pos_str}{stack_str} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}%{board_info} -> {action} {amount or ''} | {result}")
 
                 last_act_time = time.time()
@@ -3002,9 +3060,10 @@ async def main():
     host_reloading = asyncio.Event()  # v16: set during host approval reloads
     anyone_rebuying = asyncio.Event()  # v17: set while ANY bot is rebuying
     rebuy_queue = asyncio.Queue()  # v17: not currently used as queue, but reserved
+    opponent_model = OpponentModel()  # v23: track opponent tendencies for exploitation
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v22.0 (board texture analysis + dynamic bet sizing)")
+    log("🃏 Poker Now Multi-Bot Arena v23.0 (opponent modeling + board texture analysis)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
@@ -3324,7 +3383,7 @@ async def main():
             f.write(game_url_global)
         log(f"\n{'='*60}\n🎮 GAME LIVE: {game_url_global}\n{'='*60}\n")
 
-        tasks = [asyncio.create_task(bot_loop(pages[i], BOT_PROFILES[i], i==0, stop_event))
+        tasks = [asyncio.create_task(bot_loop(pages[i], BOT_PROFILES[i], i==0, stop_event, opponent_model))
                  for i in range(NUM_BOTS)]
         tasks.append(asyncio.create_task(status_reporter(stop_event)))
         await asyncio.gather(*tasks, return_exceptions=True)

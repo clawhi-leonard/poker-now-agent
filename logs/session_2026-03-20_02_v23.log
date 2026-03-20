@@ -1,0 +1,107 @@
+   📊 Loaded stats for 2 opponents
+[02:56:54] ============================================================
+[02:56:54] 🃏 Poker Now Multi-Bot Arena v23.0 (opponent modeling + board texture analysis)
+[02:56:54]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[02:56:54]    Stack: 5000 | BB: 10
+[02:56:54] ============================================================
+[02:56:55] 🌐 Launching host browser with stealth...
+[02:56:56] 🎰 Creating new game...
+[02:56:56]    🌐 Pre-warming with Google...
+[02:57:19]    Clicked: a:has-text("Start a New Game")
+[02:57:27]    ⏳ reCAPTCHA challenge detected (overlay) — attempting solve...
+[02:57:27]    ✅ reCAPTCHA cleared!
+[02:57:28]    Filled host name: Clawhi
+[02:57:32]    Submitted game creation
+[02:57:37]    🔒 reCAPTCHA challenge at 5s — trying audio solve...
+[02:57:37]    🔊 Audio solve attempt 1/2
+[02:57:37]    Clicked audio button
+[02:57:42]    Audio URL: https://www.google.com/recaptcha/api2/payload?p=06AFcWeA7gLWX4SM1VpRmvFiC7tZBh2Z...
+[02:57:43]    Downloaded audio (34492 bytes)
+[02:57:43]    Transcribed: 'very interesting choice'
+[02:57:46]    Typed answer: very interesting choice
+[02:57:46]    Clicked Verify
+[02:57:51]    ✅ reCAPTCHA solved via audio!
+[02:57:51]    ✅ Captcha solved! Checking for redirect or re-submitting...
+[02:57:54]    ✅ Game created: https://www.pokernow.com/games/pglYJMF_Ukm3dmgc1gHklFrc3
+[02:57:57]    🧹 Dismissed waiting overlay (1 elements)
+[02:57:58]    🪑 HOST: Sitting at seat 1...
+[02:57:59]    HOST: Clicked seat-1
+[02:58:02]    HOST: Form: name=True, stack=True, submitted=True, btn=Take the Seat, inputs=['input:your name', 'input:your stack']
+[02:58:05]    ✅ HOST: Seated and verified (you-player)!
+[02:58:07] 🌐 Launching browser for AceBot...
+[02:58:08] 🤖 AceBot joining...
+[02:58:14]    🪑 AceBot: Sitting at seat 2...
+[02:58:14]    AceBot: Clicked seat-2
+[02:58:17]    AceBot: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[02:58:19]    ✅ AceBot: Seat requested via JS (pending host approval)
+[02:58:21]    🔑 Approving AceBot from host page...
+[02:58:21]    ✅ Host approved: 'Accept'
+[02:58:22]    ✅ Approved AceBot seat request (attempt 1)
+[02:58:26]    🔄 Reloading host page after AceBot approval...
+[02:58:29]    📊 After AceBot: 2 seated (Clawhi, AceBot)
+[02:58:29] 🌐 Launching browser for NitKing...
+[02:58:30] 🤖 NitKing joining...
+[02:58:36]    🪑 NitKing: Sitting at seat 3...
+[02:58:37]    NitKing: Clicked seat-3
+[02:58:40]    NitKing: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[02:58:41]    ✅ NitKing: Seat requested via JS (pending host approval)
+[02:58:43]    🔑 Approving NitKing from host page...
+[02:58:43]    ✅ Host approved: 'Accept'
+[02:58:44]    ✅ Approved NitKing seat request (attempt 1)
+[02:58:48]    🔄 Reloading host page after NitKing approval...
+[02:58:52]    📊 After NitKing: 3 seated (Clawhi, AceBot, NitKing)
+[02:58:52] 🌐 Launching browser for CallStn...
+[02:58:53] 🤖 CallStn joining...
+[02:58:59]    🪑 CallStn: Sitting at seat 4...
+[02:58:59]    CallStn: Clicked seat-4
+[02:59:02]    CallStn: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[02:59:04]    ✅ CallStn: Seat requested via JS (pending host approval)
+[02:59:06]    🔑 Approving CallStn from host page...
+[02:59:06]    ✅ Host approved: 'Accept'
+[02:59:07]    ✅ Approved CallStn seat request (attempt 1)
+[02:59:11]    🔄 Reloading host page after CallStn approval...
+[02:59:15]    📊 After CallStn: 4 seated (Clawhi, AceBot, NitKing, CallStn)
+[02:59:15]    🔄 Reloading host for final approval sweep...
+[02:59:18]    🔄 Final approval sweep...
+[02:59:25]    📊 Final: Seated 4/4 (Clawhi, AceBot, NitKing, CallStn) | Empty seats: 0
+[02:59:25]    🔍 Host URL: https://www.pokernow.com/games/pglYJMF_Ukm3dmgc1gHklFrc3
+[02:59:25]    🔍 DOM: {'title': 'Poker Now - Poker with Friends', 'bodyClasses': '', 'tablePlayerCount': 10, 'youPlayer': True, 'iframes': 0, 'bodyText': "OPTIONSLEAVE SEATAWAY\n\nGuest\n\nSign In\nGame Configurations\nPlayers\nPreferencesVideo/Audio\nPlus\nSave Current Hand\n\nOWNER: CLAWHI\n\nNLH\n~ 10 / 20\n\n0\n\ntotal 0\n\nNo Limit Texas Hold'em\n\nSelect\n\nWAITING\n\nClaw"}
+[02:59:25] 
+🎮 Starting game...
+[02:59:25]    ▶️ Game started! (clicked 'start game')
+[02:59:27] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pglYJMF_Ukm3dmgc1gHklFrc3
+============================================================
+
+[02:59:27] 🤖 Clawhi (TAG) loop starting...
+[02:59:27] 🤖 AceBot (LAG) loop starting...
+[02:59:27] 🤖 NitKing (NIT) loop starting...
+[02:59:27] 🤖 CallStn (STATION) loop starting...
+[02:59:27]    ⚠️ AceBot error (1): name 'opponent_model' is not defined
+[02:59:56]    ⚠️ NitKing error (1): name 'opponent_model' is not defined
+[03:00:27]    ⚠️ CallStn error (1): name 'opponent_model' is not defined
+[03:01:07]    ⚠️ Clawhi error (1): name 'opponent_model' is not defined
+[03:01:31]    ⚠️ CallStn error (6): name 'opponent_model' is not defined
+[03:01:31]    ⚠️ AceBot error (6): name 'opponent_model' is not defined
+[03:01:31]    ⚠️ NitKing error (6): name 'opponent_model' is not defined
+[03:02:41]    ⚠️ Clawhi error (6): name 'opponent_model' is not defined
+[03:04:01]    ⚠️ CallStn error (11): name 'opponent_model' is not defined
+[03:04:01]    ⚠️ AceBot error (11): name 'opponent_model' is not defined
+[03:04:01]    ⚠️ NitKing error (11): name 'opponent_model' is not defined
+[03:04:27] 📊 STATUS | 29h | Clawhi:8h AceBot:7h NitKing:7h CallStn:7h
+[03:05:45]    ⚠️ Clawhi error (11): name 'opponent_model' is not defined
+[03:06:31]    ⚠️ CallStn error (16): name 'opponent_model' is not defined
+[03:06:32]    ⚠️ AceBot error (16): name 'opponent_model' is not defined
+[03:06:32]    ⚠️ NitKing error (16): name 'opponent_model' is not defined
+[03:08:50]    ⚠️ Clawhi error (16): name 'opponent_model' is not defined
+[03:09:02]    ⚠️ CallStn error (21): name 'opponent_model' is not defined
+[03:09:02]    ⚠️ AceBot error (21): name 'opponent_model' is not defined
+[03:09:02]    ⚠️ NitKing error (21): name 'opponent_model' is not defined
+[03:09:27] 📊 STATUS | 67h | Clawhi:16h AceBot:17h NitKing:17h CallStn:17h
+[03:09:32]    ⚠️ CallStn error (1): name 'opponent_model' is not defined
+[03:09:32]    ⚠️ AceBot error (1): name 'opponent_model' is not defined
+[03:09:32]    ⚠️ NitKing error (1): name 'opponent_model' is not defined
+[03:10:32]    ⚠️ CallStn error (6): name 'opponent_model' is not defined
+[03:10:32]    ⚠️ AceBot error (6): name 'opponent_model' is not defined
+[03:10:32]    ⚠️ NitKing error (6): name 'opponent_model' is not defined
