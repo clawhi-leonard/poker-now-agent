@@ -2,6 +2,15 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v24.0 - Performance analytics + opponent read visibility (2026-03-20):
+    - MAJOR: Real-time performance tracking - BB won, BB/hour, VPIP/PFR, aggression, ROI, session ranges
+    - MAJOR: Opponent classification visible in real-time logging - shows vs[NIT/TAG/LAG/STATION](hands,vpip%)
+    - ENHANCED: Decision analytics by board texture type and position performance
+    - ENHANCED: Session high/low tracking and big pot win/loss statistics
+    - IMPROVED: Comprehensive bot performance reporting every status update
+    - FIXED: Opponent model integration working properly in decision logging
+    - RESULT: Complete performance visibility for strategy optimization and analysis
+
 v23.0 - Opponent modeling integration with board texture analysis (2026-03-20):
     - MAJOR: Opponent tracking integration - combines board texture with opponent tendencies
     - ENHANCED: Exploitative adjustments - different sizing vs nits vs stations vs LAGs
@@ -188,6 +197,7 @@ if os.path.exists(_env_path):
 
 from hand_eval import get_equity, detect_draws, analyze_board_texture, get_texture_betting_advice
 from opponent_model import OpponentModel
+from performance_tracker import PerformanceTracker
 
 try:
     import speech_recognition as sr
@@ -2634,7 +2644,7 @@ def bot_decide(state, profile, opponent_model=None):
     return ("check", None) if can_check else ("fold", None)
 
 
-async def bot_loop(page, profile, is_host, stop_event, opponent_model):
+async def bot_loop(page, profile, is_host, stop_event, opponent_model, perf_tracker=None):
     name = profile["name"]
     style = profile["style"]
     log(f"🤖 {name} ({style}) loop starting...")
@@ -2718,6 +2728,8 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model):
                 hands_played[name] = hands_played.get(name, 0) + 1
                 # v23: Opponent tracking - new hand started
                 opponent_model.new_hand()
+                # v24: Performance tracking - new hand started
+                perf_tracker.new_hand()
                 # v12: Track stack at each new hand
                 cur_stack = None
                 for p in state.get("players", []):
@@ -2801,12 +2813,35 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model):
                         try: stack_str = f" stk={int(p['stack'])}"
                         except: pass
                 # v22: Add board texture info to logging
+                # v24: Add opponent classification visibility  
                 board_info = ""
                 if state.get('board'):
                     texture = analyze_board_texture(state['board'])
                     board_info = f" [{texture['type']}]"
                 
-                log(f"   {name}({style}) | {st} | {pos_str}{stack_str} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}%{board_info} -> {action} {amount or ''} | {result}")
+                # v24: Add primary opponent read to logging
+                opp_info = ""
+                if opponent_model:
+                    # Find primary opponent for display (most threatening)
+                    active_opponents = [p for p in state.get("players", []) 
+                                       if not p.get("is_me") and p.get("status","active") == "active"]
+                    if active_opponents:
+                        primary_opp = max(active_opponents, 
+                                         key=lambda p: (int(p.get("stack", 0)), int(p.get("bet", 0))))
+                        opp_name = primary_opp.get("name", "").strip()
+                        if opp_name and len(opp_name) > 0:
+                            opp_type = opponent_model.classify(opp_name)
+                            if opp_type != "unknown":
+                                vpip = opponent_model.get_vpip(opp_name) * 100
+                                hands = opponent_model.get_hand_count(opp_name)
+                                opp_info = f" vs{opp_type}({hands}h,{vpip:.0f}%)"
+                
+                log(f"   {name}({style}) | {st} | {pos_str}{stack_str} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}%{board_info}{opp_info} -> {action} {amount or ''} | {result}")
+
+                # v24: Track decision for performance analytics
+                if perf_tracker and my_stack:
+                    texture_type = analyze_board_texture(state.get('board', [])).get('type') if state.get('board') else None
+                    perf_tracker.track_decision(name, action, amount or 0, eq, texture_type, st, my_stack)
 
                 last_act_time = time.time()
                 last_state_key = state_key
@@ -3027,7 +3062,7 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model):
     log(f"   🛑 {name}: {hands_played.get(name,0)} hands, {rebuys_count.get(name,0)} rebuys.")
 
 
-async def status_reporter(stop_event):
+async def status_reporter(stop_event, perf_tracker=None):
     while not stop_event.is_set():
         await asyncio.sleep(300)
         total = sum(hands_played.values())
@@ -3041,6 +3076,10 @@ async def status_reporter(stop_event):
         log(f"📊 STATUS | {total}h | {' '.join(parts)}")
         if fp: log(f"   Folds: {' '.join(fp)}")
         if rp: log(f"   Rebuys: {' '.join(rp)}")
+        
+        # v24: Performance analytics
+        if perf_tracker:
+            perf_tracker.log_performance(log)
         # v13: Log slider stats
         try:
             from act import get_slider_stats
@@ -3061,9 +3100,10 @@ async def main():
     anyone_rebuying = asyncio.Event()  # v17: set while ANY bot is rebuying
     rebuy_queue = asyncio.Queue()  # v17: not currently used as queue, but reserved
     opponent_model = OpponentModel()  # v23: track opponent tendencies for exploitation
+    perf_tracker = PerformanceTracker()  # v24: track bot performance and analytics
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v23.0 (opponent modeling + board texture analysis)")
+    log("🃏 Poker Now Multi-Bot Arena v24.0 (performance analytics + opponent read visibility)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
@@ -3383,9 +3423,9 @@ async def main():
             f.write(game_url_global)
         log(f"\n{'='*60}\n🎮 GAME LIVE: {game_url_global}\n{'='*60}\n")
 
-        tasks = [asyncio.create_task(bot_loop(pages[i], BOT_PROFILES[i], i==0, stop_event, opponent_model))
+        tasks = [asyncio.create_task(bot_loop(pages[i], BOT_PROFILES[i], i==0, stop_event, opponent_model, perf_tracker))
                  for i in range(NUM_BOTS)]
-        tasks.append(asyncio.create_task(status_reporter(stop_event)))
+        tasks.append(asyncio.create_task(status_reporter(stop_event, perf_tracker)))
         await asyncio.gather(*tasks, return_exceptions=True)
 
     except Exception as e:
