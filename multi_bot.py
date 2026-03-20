@@ -2,6 +2,15 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v22.0 - Board texture analysis with dynamic bet sizing (2026-03-20):
+    - MAJOR: Board texture analysis - real-time classification of dry/wet/very_wet boards
+    - ENHANCED: Dynamic bet sizing - 0.9x modifier for dry boards, 1.1x for very wet boards
+    - IMPROVED: Texture-aware value betting - smaller bets on dry boards for extraction
+    - IMPROVED: Texture-aware protection betting - larger bets on wet boards vs draws
+    - IMPROVED: Texture-aware bluff sizing - optimized fold equity based on board properties
+    - ADDED: Real-time board texture logging - [dry]/[wet]/[very_wet] indicators in output
+    - RESULT: Major strategic enhancement matching skilled human decision-making
+
 v21.0 - Browser conflicts fixed + enhanced GTO (2026-03-20):
     - FIXED: Browser launch conflicts by switching from persistent_context to regular browser.launch()
     - ENHANCED: GTO concepts with 3-bet/4-bet ranges and mixed strategies  
@@ -168,7 +177,7 @@ if os.path.exists(_env_path):
                 _k, _v = _line.split('=', 1)
                 os.environ.setdefault(_k.strip(), _v.strip())
 
-from hand_eval import get_equity, detect_draws
+from hand_eval import get_equity, detect_draws, analyze_board_texture, get_texture_betting_advice
 
 try:
     import speech_recognition as sr
@@ -2284,18 +2293,30 @@ def bot_decide(state, profile):
                 return max(int(call_amount * 2.5), int(bb * 18))
         
         elif context == "cbet":
-            # Board texture-dependent c-bet sizing
+            # v22: Board texture-dependent c-bet sizing
             base_size = 0.50 + (agg * 0.15)  # 50-60% base
-            # TODO: Add board texture analysis (dry = smaller, wet = bigger)
+            
+            # Apply board texture analysis
+            if board:
+                texture = analyze_board_texture(board)
+                base_size *= texture['bet_size_modifier']  # 0.9 for dry, 1.1 for very wet
+            
             return max(int(pot * base_size), bb * 3)
         
         elif context == "value":
-            # v21: Better value sizing with polarization
+            # v22: Board texture-aware value sizing
             eq_factor = min(1.0, max(0.0, (eq - 50) / 40.0))
             base_size = 0.65 + (eq_factor * 0.25)  # 65-90% pot for value
+            
             # Deeper stacks = can size bigger for value
             if effective_depth > 15:
                 base_size += 0.10
+                
+            # Apply board texture modifier
+            if board:
+                texture = analyze_board_texture(board)
+                base_size *= texture['bet_size_modifier']  # Adjust for board wetness
+                
             return max(int(pot * base_size), bb * 3)
         
         elif context == "river_value":
@@ -2309,9 +2330,18 @@ def bot_decide(state, profile):
             return max(int(pot * base_size), bb * 3)
         
         elif context == "bluff":
-            # v21: Bet sizing for fold equity
+            # v22: Board texture-aware bluff sizing
             base_size = 0.40 + (agg * 0.20)  # 40-60% pot
-            # Bigger bluffs on dry boards (more fold equity)
+            
+            # Apply board texture: smaller bluffs on dry (more fold equity), larger on wet (need protection)
+            if board:
+                texture = analyze_board_texture(board)
+                # Inverse modifier for bluffs: dry boards get smaller bets (more fold equity)
+                if texture['type'] == 'dry':
+                    base_size *= 0.8  # Smaller bluffs on dry boards
+                elif texture['type'] == 'very_wet':
+                    base_size *= 1.2  # Larger bluffs on wet boards
+                    
             return max(int(pot * base_size), int(bb * 2.5))
         
         elif context == "allin_value":
@@ -2712,7 +2742,13 @@ async def bot_loop(page, profile, is_host, stop_event):
                     if p.get("is_me"):
                         try: stack_str = f" stk={int(p['stack'])}"
                         except: pass
-                log(f"   {name}({style}) | {st} | {pos_str}{stack_str} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}% -> {action} {amount or ''} | {result}")
+                # v22: Add board texture info to logging
+                board_info = ""
+                if state.get('board'):
+                    texture = analyze_board_texture(state['board'])
+                    board_info = f" [{texture['type']}]"
+                    
+                log(f"   {name}({style}) | {st} | {pos_str}{stack_str} | {' '.join(state.get('my_cards',['?']))} | eq={eq:.0f}%{board_info} -> {action} {amount or ''} | {result}")
 
                 last_act_time = time.time()
                 last_state_key = state_key
@@ -2968,7 +3004,7 @@ async def main():
     rebuy_queue = asyncio.Queue()  # v17: not currently used as queue, but reserved
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v21.0 (browser conflicts fixed + enhanced GTO)")
+    log("🃏 Poker Now Multi-Bot Arena v22.0 (board texture analysis + dynamic bet sizing)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)

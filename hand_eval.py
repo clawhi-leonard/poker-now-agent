@@ -371,16 +371,219 @@ def detect_draws(my_cards_str, board_cards_str):
     return list(set(draws))
 
 
+# ---- Board Texture Analysis ----
+
+def analyze_board_texture(board_cards_str):
+    """
+    Analyze board texture and return classification with recommendations.
+    Returns: {
+        'type': 'dry' | 'wet' | 'very_wet',
+        'flush_potential': bool,
+        'straight_potential': bool, 
+        'pair_potential': bool,
+        'bet_size_modifier': float  # 0.8-1.2 multiplier for bet sizing
+    }
+    """
+    if not board_cards_str or len(board_cards_str) == 0:
+        return {'type': 'unknown', 'flush_potential': False, 'straight_potential': False, 
+                'pair_potential': False, 'bet_size_modifier': 1.0}
+    
+    board = [normalize_card(c) for c in board_cards_str]
+    
+    # Analyze suits
+    suits = [c[1] for c in board]
+    from collections import Counter
+    suit_counts = Counter(suits)
+    max_suit = max(suit_counts.values()) if suit_counts else 0
+    flush_potential = max_suit >= 2  # Two or more of same suit
+    
+    # Analyze ranks
+    ranks = [RANK_ORDER.get(c[0], 0) for c in board]
+    rank_counts = Counter(ranks)
+    max_rank = max(rank_counts.values()) if rank_counts else 0
+    pair_potential = max_rank >= 2  # Pair on board
+    
+    # Analyze straight potential
+    sorted_ranks = sorted(set(ranks))
+    straight_potential = False
+    
+    # Check for connected cards (within 4 ranks = straight draw possible)
+    if len(sorted_ranks) >= 2:
+        rank_span = max(sorted_ranks) - min(sorted_ranks)
+        if rank_span <= 4:
+            # Check for gaps
+            gaps = 0
+            for i in range(1, len(sorted_ranks)):
+                gaps += sorted_ranks[i] - sorted_ranks[i-1] - 1
+            if gaps <= 2:  # Allow some gaps for draw potential
+                straight_potential = True
+    
+    # Classify board type
+    wetness_score = 0
+    if flush_potential: wetness_score += 1
+    if straight_potential: wetness_score += 1
+    if pair_potential: wetness_score += 0.5
+    
+    if len(board_cards_str) >= 3:  # Flop or later
+        # Additional wetness factors
+        if max_suit >= 3: wetness_score += 1  # Flush draw or made flush
+        if len([r for r in ranks if r >= 10]) >= 2: wetness_score += 0.5  # High cards (broadway)
+    
+    # Determine type and bet size modifier
+    if wetness_score >= 2.5:
+        board_type = 'very_wet'
+        bet_size_modifier = 1.1  # Bet bigger on very wet boards (protect hand)
+    elif wetness_score >= 1.5:
+        board_type = 'wet' 
+        bet_size_modifier = 1.0  # Standard sizing
+    else:
+        board_type = 'dry'
+        bet_size_modifier = 0.9  # Bet smaller on dry boards (extract value)
+    
+    return {
+        'type': board_type,
+        'flush_potential': flush_potential,
+        'straight_potential': straight_potential,
+        'pair_potential': pair_potential,
+        'bet_size_modifier': bet_size_modifier,
+        'wetness_score': wetness_score
+    }
+
+
+def get_texture_betting_advice(my_cards_str, board_cards_str, equity, position=''):
+    """
+    Get betting advice based on board texture and hand strength.
+    Returns: {
+        'action_recommendation': 'bet' | 'check' | 'fold',
+        'size_category': 'small' | 'medium' | 'large', 
+        'size_modifier': float,  # Multiply base bet size by this
+        'reasoning': str
+    }
+    """
+    if not board_cards_str:
+        return {'action_recommendation': 'check', 'size_category': 'medium', 
+                'size_modifier': 1.0, 'reasoning': 'preflop - standard sizing'}
+    
+    texture = analyze_board_texture(board_cards_str)
+    draws = detect_draws(my_cards_str, board_cards_str)
+    
+    # Base recommendations by equity and texture
+    if equity >= 75:  # Very strong hands
+        if texture['type'] == 'very_wet':
+            return {
+                'action_recommendation': 'bet',
+                'size_category': 'large', 
+                'size_modifier': 1.2,
+                'reasoning': f"Strong hand on {texture['type']} board - bet large for protection"
+            }
+        elif texture['type'] == 'dry':
+            return {
+                'action_recommendation': 'bet',
+                'size_category': 'small',
+                'size_modifier': 0.8,
+                'reasoning': f"Strong hand on {texture['type']} board - bet small for value"
+            }
+        else:  # wet
+            return {
+                'action_recommendation': 'bet',
+                'size_category': 'medium',
+                'size_modifier': 1.0,
+                'reasoning': f"Strong hand on {texture['type']} board - standard value bet"
+            }
+    
+    elif equity >= 60:  # Good hands  
+        if texture['type'] == 'very_wet' and draws:
+            return {
+                'action_recommendation': 'bet',
+                'size_category': 'medium',
+                'size_modifier': 1.1,
+                'reasoning': f"Good hand with draws on {texture['type']} board - bet for value/protection"
+            }
+        elif texture['type'] == 'dry':
+            return {
+                'action_recommendation': 'bet',
+                'size_category': 'small',
+                'size_modifier': 0.8,
+                'reasoning': f"Good hand on {texture['type']} board - small value bet"
+            }
+        else:
+            return {
+                'action_recommendation': 'bet', 
+                'size_category': 'medium',
+                'size_modifier': 0.9,
+                'reasoning': f"Good hand on {texture['type']} board - medium value bet"
+            }
+            
+    elif equity >= 40:  # Marginal hands
+        if draws and texture['type'] != 'dry':
+            return {
+                'action_recommendation': 'bet',
+                'size_category': 'small', 
+                'size_modifier': 0.7,
+                'reasoning': f"Marginal hand with draws - small bet for fold equity"
+            }
+        else:
+            return {
+                'action_recommendation': 'check',
+                'size_category': 'medium',
+                'size_modifier': 1.0,
+                'reasoning': f"Marginal hand on {texture['type']} board - check for pot control"
+            }
+    
+    else:  # Weak hands
+        if draws and len(draws) >= 1:
+            return {
+                'action_recommendation': 'bet',
+                'size_category': 'small',
+                'size_modifier': 0.6, 
+                'reasoning': f"Weak hand with {', '.join(draws)} - small bluff"
+            }
+        else:
+            return {
+                'action_recommendation': 'check',
+                'size_category': 'medium',
+                'size_modifier': 1.0,
+                'reasoning': f"Weak hand, no draws - check and fold to aggression"
+            }
+
+
 if __name__ == "__main__":
-    # Test
+    # Test basic equity
     print(f"AK offsuit preflop: {preflop_equity('Ah', 'Ks')}%")
     print(f"AK suited preflop: {preflop_equity('Ah', 'Kh')}%")
     print(f"72 offsuit preflop: {preflop_equity('7h', '2c')}%")
     print(f"AA preflop: {preflop_equity('Ah', 'As')}%")
     
-    # Postflop test
+    # Postflop equity test
     eq = get_equity(['Ah', 'Kh'], ['Qh', 'Jh', '2c'])
     print(f"AKh on Qh Jh 2c: {eq:.1f}% (flush draw + overcards)")
     
     draws = detect_draws(['Ah', 'Kh'], ['Qh', 'Jh', '2c'])
     print(f"Draws: {draws}")
+    
+    # Board texture tests
+    print("\n--- Board Texture Analysis ---")
+    
+    # Dry board
+    texture = analyze_board_texture(['As', '7h', '2c'])
+    print(f"A♠ 7♥ 2♣ (dry): {texture}")
+    advice = get_texture_betting_advice(['Ah', 'Ac'], ['As', '7h', '2c'], 85)
+    print(f"  AA advice: {advice['reasoning']}")
+    
+    # Wet board  
+    texture = analyze_board_texture(['Qh', 'Jh', 'Tc'])
+    print(f"Q♥ J♥ T♣ (wet): {texture}")
+    advice = get_texture_betting_advice(['Ah', 'Kh'], ['Qh', 'Jh', 'Tc'], 65)
+    print(f"  AK♥ advice: {advice['reasoning']}")
+    
+    # Very wet board
+    texture = analyze_board_texture(['9h', '8h', '7h'])
+    print(f"9♥ 8♥ 7♥ (very wet): {texture}")
+    advice = get_texture_betting_advice(['Th', 'Jh'], ['9h', '8h', '7h'], 95)
+    print(f"  Straight flush advice: {advice['reasoning']}")
+    
+    # Paired board
+    texture = analyze_board_texture(['Ks', 'Kh', '3d'])
+    print(f"K♠ K♥ 3♦ (paired): {texture}")
+    advice = get_texture_betting_advice(['As', 'Ac'], ['Ks', 'Kh', '3d'], 25)
+    print(f"  AA on KK3 advice: {advice['reasoning']}")
