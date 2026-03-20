@@ -32,7 +32,67 @@ from datetime import datetime
 
 # Import existing components
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from multi_bot import *  # Import all existing functionality
+
+# Import specific functions we need
+from multi_bot import (
+    BOT_PROFILES, STARTING_STACK, HEADLESS,
+    make_stealth_page, OpponentModel, PerformanceTracker,
+    log, play_turn, decide_action, DOM_TIMEOUT
+)
+
+# We need to define create_new_game and other missing functions
+async def create_new_game(page, host_name):
+    """Simplified game creation for multi-table"""
+    try:
+        # Navigate to pokernow.club and create game
+        await page.goto('https://www.pokernow.club/', timeout=60000)
+        await page.wait_for_load_state('domcontentloaded')
+        
+        # Click start new game
+        await page.click('a:has-text("Start a New Game")')
+        await page.wait_for_timeout(2000)
+        
+        # Fill host name and submit
+        await page.fill('input[placeholder*="name"]', host_name)
+        await page.click('button:has-text("Start")')
+        
+        # Wait for game URL
+        await page.wait_for_url('**/games/**', timeout=60000)
+        return page.url
+    except Exception as e:
+        log(f"Game creation failed: {e}")
+        return None
+
+async def join_game(page, game_url, bot_name, stack):
+    """Simplified game joining for multi-table"""
+    try:
+        await page.goto(game_url, timeout=60000)
+        await page.wait_for_timeout(3000)
+        
+        # Find available seat and click
+        seat_button = page.locator('.table-player-seat-button').first
+        await seat_button.click()
+        
+        # Fill name and stack
+        await page.fill('input[placeholder*="name"]', bot_name)
+        await page.fill('input[placeholder*="stack"]', str(stack))
+        
+        # Submit
+        await page.click('button:has-text("Request")')
+        return True
+    except Exception as e:
+        log(f"Join failed for {bot_name}: {e}")
+        return False
+
+async def start_game(page):
+    """Start the poker game"""
+    try:
+        await page.click('button:has-text("Start")')
+        await page.wait_for_timeout(2000)
+        return True
+    except Exception as e:
+        log(f"Start game failed: {e}")
+        return False
 
 class MultiTableManager:
     def __init__(self, num_tables=2, bots_per_table=4, time_limit=None, max_hands_per_table=50):
