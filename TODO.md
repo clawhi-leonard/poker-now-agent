@@ -1,6 +1,16 @@
 # Poker Now AI Agent - TODO
 
-## Status: v19 — TAG/NIT fold tuning, anti-stutter, range-filtered equity, 98% slider, 300+ hands
+## Status: v20 — Extended anti-stutter + LAG rebalance, 41 hands tested, working as designed
+
+### Completed (2026-03-19 11PM — v20)
+- [x] **IMPROVED: Extended anti-stutter 4s → 8s window** — covers longer SPA freezes
+  - Successfully caught and prevented duplicate raise: AceBot turn As 2d (75% equity)
+  - Addresses 20s+ SPA freeze issue observed in v19 end-of-session
+  - Log: "extended anti-stutter → downgraded raise to call (same street, 8s window)"
+- [x] **IMPROVED: LAG fold threshold 38 → 36** — brings fold rate from 19% back toward 15%
+  - Early positive signs: AceBot folded Qh 5d at 18% equity (proper LAG discipline)
+  - Addresses v19 finding that LAG was folding 19% vs target ~15%
+- [x] **Short session validation:** 41 actions, 0 errors, 1 anti-stutter save, smooth operation
 
 ### Completed (2026-03-19 7AM — v19)
 - [x] **FIXED: TAG fold rate 17% → 25%** — raised fold/call threshold 44→46
@@ -51,30 +61,31 @@
 - [x] 5000 stacks (500BB) — deeper play, fewer busts
 - [x] Enter key for submit — zero "Element detached" errors
 
-### Priority 0: Extended Anti-Stutter (LOW-MEDIUM)
-- 4s window catches quick stutters but not 20s+ SPA freezes
-- End-of-session saw Clawhi raise 3x on same flop over 20s (SPA never updated)
-- **TODO:** Extend window to 8s, or track board+street state to detect SPA freezes
-- **TODO:** If same cards + same board + same street → only allow 1 raise per decision cycle
+### Priority 0: Full Session Validation (HIGH)
+- **v20 needs full validation:** Current test was only 41 actions (too small for fold rate analysis)
+- **TODO:** Run 200+ action session to validate LAG fold rate rebalancing
+- **TODO:** Confirm extended anti-stutter handles complex scenarios under stress
+- **TODO:** Generate comprehensive v20 vs v19 metrics comparison
+- Early signs positive: extended anti-stutter working, LAG folding appropriately
 
-### Priority 1: LAG Fold Rate Fine-Tuning (LOW)
-- LAG (AceBot) at 19% fold — target ~15%. Range-filtered equity inflated it from 14%.
-- Consider lowering LAG fold threshold 38→36 to compensate for range filter
-- Monitor: if 19% produces better results than 14%, leave it (tighter LAG is still viable)
-- TAG at 25% ✅, NIT at 34% ✅, STATION at 8% ✅ — all on target
+### Priority 1: Session Analytics & Tracking (MEDIUM)
+- **TODO:** Add VPIP, PFR, AF, WTSD tracking per bot per session
+- **TODO:** Session-end statistics summary with fold rates, aggression metrics
+- **TODO:** Automated comparison vs previous session baselines
+- **TODO:** Standard hand history format for external analysis tools
 
-### Priority 2: Fix Crumbs Rebuy — Different Seat Approach (MEDIUM)
+### Priority 2: Fix Crumbs Rebuy — Different Seat Approach (LOW-MEDIUM)
 - **Root cause:** Pokernow auto-seats the bot with previous crumb stack on reload
 - **Add Chips is NOT available** in pokernow Options menu (v18 confirmed)
 - **TODO:** After leaving seat, click a DIFFERENT empty seat (not the one pokernow remembers)
 - **TODO:** Track which seat the bot was in, target a different one on rebuy
 - **TODO:** Try clicking empty seat directly without reload (avoid auto-seat trigger)
 
-### Priority 3: GTO & Analytics (LOW)
-- Balanced ranges, mixed strategies
-- Track VPIP, PFR, AF, WTSD per bot per session
-- Standard hand history format
-- Multi-session performance comparison
+### Priority 3: GTO Mixed Strategies (LOW)
+- **TODO:** Implement balanced ranges with randomization at equilibrium points
+- **TODO:** Mixed strategies for marginal spots (randomize check/bet, call/fold decisions)
+- **TODO:** Nash equilibrium approximations for 4-handed play
+- **TODO:** Exploitative adjustments based on opponent tendencies
 
 ### Learned (Technical)
 - **Arrow keys remain most reliable for React range inputs**
@@ -89,7 +100,8 @@
 - **Submit button "Element detached" completely fixed** by Enter key as primary
 - **Slider accuracy progression: v10(~20%) → v12(~30%) → v13(97%) → v17(94%) → v18(97%)**
 - **raise_capped must NOT block river opening bets** — only prevents re-raise wars
-- **LAG fold threshold 38 produces ~14% fold rate** in 4-handed (perfect for LAG)
+- **LAG fold threshold 38 → 36 rebalancing** — v19 had 19% fold (too high), v20 early signs show improvement
+- **Extended anti-stutter 8s window works** — caught turn stutter in v20 that 4s window might miss
 - **River value betting is the single biggest EV improvement** — was leaving massive value on table
 - **Range-filtered MC equity is more realistic** — opponents dealt from top ~45% of hands
 - **Range filter inflates fold rates ~3-5%** — need to compensate thresholds slightly

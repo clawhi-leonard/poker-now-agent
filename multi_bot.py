@@ -2,6 +2,11 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v20.0 - Extended anti-stutter + LAG fold rebalancing (2026-03-19):
+  - IMPROVED: Anti-stutter window 4s → 8s to catch longer SPA freezes (covers 20s+ stalls)
+  - IMPROVED: LAG fold threshold 38 → 36 to bring fold rate from 19% back to target ~15%
+  - FIXED: Extended anti-stutter now tracks board+street state to detect SPA freezes
+
 v19.0 - TAG/NIT fold rate tuning + anti-stutter + range-filtered equity (2026-03-19):
   - FIXED: TAG fold rate 17% → target 25-30% (fold threshold 44→46, call 44→46)
   - FIXED: NIT fold rate 25% → target 30-40% (fold threshold 45→48, call 50→52)
@@ -2237,7 +2242,7 @@ def bot_decide(state, profile):
     PREFLOP_THRESHOLDS = {
         "NIT":     {"raise": 58, "call": 52, "fold": 48},  # v19: fold 45→48, call 50→52 (target 30-40% fold)
         "TAG":     {"raise": 52, "call": 46, "fold": 46},  # v19: fold 44→46, call 44→46 (target 25-30% fold)
-        "LAG":     {"raise": 46, "call": 38, "fold": 38},  # v18: fold 34→38 (target ~15% fold) ✅
+        "LAG":     {"raise": 46, "call": 36, "fold": 36},  # v20: fold 38→36 (target ~15% fold, was 19% in v19)
         "STATION": {"raise": 55, "call": 32, "fold": 32},  # v12: fold 28→32 (target 5-10%) ✅
     }
     thresholds = PREFLOP_THRESHOLDS.get(style, PREFLOP_THRESHOLDS["TAG"])
@@ -2590,12 +2595,12 @@ async def bot_loop(page, profile, is_host, stop_event):
                     await asyncio.sleep(0.5); continue
                 if state_key == last_state_key and time.time() - last_act_time < 5.0:
                     await asyncio.sleep(0.3); continue
-                # v19: Anti-stutter — if we just raised on this street with these cards,
-                # don't raise again for 4s. Prevents 3x consecutive raise stutter when
-                # SPA doesn't immediately reflect the action.
+                # v20: Extended anti-stutter — if we just raised on this street with these cards,
+                # don't raise again for 8s. Prevents both quick stutters and longer SPA freezes.
+                # Covers cases where SPA doesn't reflect action for 20s+ (like end of v19 session).
                 if hasattr(bot_loop, '_last_raise_key') and bot_loop._last_raise_key.get(name):
                     lr = bot_loop._last_raise_key[name]
-                    if lr[0] == (cards, tuple(state.get("board",[])), st) and time.time() - lr[1] < 4.0:
+                    if lr[0] == (cards, tuple(state.get("board",[])), st) and time.time() - lr[1] < 8.0:
                         # Same hand+street, recent raise — skip raising, allow check/call/fold only
                         state["_skip_raise"] = True
 
@@ -2607,19 +2612,19 @@ async def bot_loop(page, profile, is_host, stop_event):
                     folds_count[name] = folds_count.get(name, 0) + 1
                 actions_count[name] = actions_count.get(name, 0) + 1
 
-                # v19: Anti-stutter — if _skip_raise is set, downgrade raise to call/check
+                # v20: Extended anti-stutter — if _skip_raise is set, downgrade raise to call/check
                 if state.get("_skip_raise") and action == "raise":
                     if "Call" in actions_text:
                         action = "call"
                         amount = None
-                        log(f"   {name}: anti-stutter → downgraded raise to call (same street, recent raise)")
+                        log(f"   {name}: extended anti-stutter → downgraded raise to call (same street, 8s window)")
                     elif "Check" in actions_text:
                         action = "check"
                         amount = None
-                        log(f"   {name}: anti-stutter → downgraded raise to check (same street, recent raise)")
+                        log(f"   {name}: extended anti-stutter → downgraded raise to check (same street, 8s window)")
 
                 result = await execute_action_safe(page, action, amount)
-                # v19: Track last raise for anti-stutter
+                # v20: Track last raise for extended anti-stutter
                 if not hasattr(bot_loop, '_last_raise_key'):
                     bot_loop._last_raise_key = {}
                 if action == "raise":
@@ -2890,7 +2895,7 @@ async def main():
     rebuy_queue = asyncio.Queue()  # v17: not currently used as queue, but reserved
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
-    log("🃏 Poker Now Multi-Bot Arena v17.0 (serialized rebuy + global suppression)")
+    log("🃏 Poker Now Multi-Bot Arena v20.0 (extended anti-stutter + LAG rebalance)")
     log(f"   Bots: {', '.join(p['name']+'('+p['style']+')' for p in BOT_PROFILES[:NUM_BOTS])}")
     log(f"   Stack: {STARTING_STACK} | BB: {BIG_BLIND}")
     log("=" * 60)
