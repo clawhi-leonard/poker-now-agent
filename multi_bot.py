@@ -278,11 +278,16 @@ def log(msg):
 async def make_stealth_page(pw, headless=False, profile_id=0):
     """Create a stealth browser page with fresh instances to avoid conflicts.
     v21: Use regular browser launch instead of persistent context to avoid
-    OpenClaw browser conflicts and Chrome single-instance issues."""
+    OpenClaw browser conflicts and Chrome single-instance issues.
+    v26: Support profile offset for multi-table isolation."""
+    
+    # Apply profile offset for multi-table support
+    profile_offset = int(os.environ.get('POKER_PROFILE_OFFSET', '0'))
+    effective_profile_id = profile_id + profile_offset
     
     # Randomize viewport slightly per bot to avoid fingerprint correlation
-    vw = 1280 + random.randint(-20, 20) * profile_id
-    vh = 800 + random.randint(-10, 10) * profile_id
+    vw = 1280 + random.randint(-20, 20) * effective_profile_id
+    vh = 800 + random.randint(-10, 10) * effective_profile_id
     
     # v21: Use regular browser.launch() to avoid conflicts with system Chrome
     browser = await pw.chromium.launch(
@@ -3526,9 +3531,20 @@ async def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', help='Pre-existing game URL (skip game creation)')
+    parser.add_argument('--profile-offset', type=int, default=0, help='Browser profile offset for multi-table support')
     args = parser.parse_args()
     if args.url:
         os.environ['POKER_GAME_URL'] = args.url
+    
+    # Apply profile offset for multi-table support
+    if args.profile_offset > 0:
+        # Modify bot names to be table-specific
+        table_id = args.profile_offset // 10
+        for i, profile in enumerate(BOT_PROFILES):
+            profile['name'] = f"{profile['name']}{table_id}"
+        
+        # Set environment variable for profile offset
+        os.environ['POKER_PROFILE_OFFSET'] = str(args.profile_offset)
     os.makedirs(LOG_DIR, exist_ok=True)
     with open(LOG_FILE, "w") as f:
         f.write("")

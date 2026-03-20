@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-03-20T11:02:35.211271+00:00",
+  "config": {
+    "num_tables": 2,
+    "time_limit": 5,
+    "max_hands": 50
+  },
+  "results": {
+    "total_hands": 15,
+    "total_duration_minutes": 6.334036803245544,
+    "overall_rate_per_hour": 142.08948068297335,
+    "successful_tables": 2,
+    "success_rate_percent": 100.0
+  },
+  "tables": {
+    "0": {
+      "hands": 12,
+      "duration_minutes": 6.334028697013855,
+      "status": "COMPLETED",
+      "game_url": "https://www.pokernow.com/games/pglLsQhjOpCdvm2Wixvs8dZmo",
+      "bots": [
+        "Clawhi0",
+        "AceBot0",
+        "NitKing0",
+        "CallStn0"
+      ]
+    },
+    "1": {
+      "hands": 3,
+      "duration_minutes": 5.833964705467224,
+      "status": "COMPLETED",
+      "game_url": "https://www.pokernow.com/games/pgl40318GDplsjhueSTVk0JVM",
+      "bots": [
+        "Clawhi1",
+        "AceBot1",
+        "NitKing1",
+        "CallStn1"
+      ]
+    }
+  }
+}
