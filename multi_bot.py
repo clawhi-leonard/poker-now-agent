@@ -2813,8 +2813,17 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model, perf_trac
                 hand_num = hands_played[name]
                 position = state.get("position", "unknown")
                 current_stack = state.get("my_stack", 0)
-                bb_change = 0  # Will be calculated later when hand completes
-                actions_this_hand = []  # Reset actions for new hand
+                
+                # Update analytics with previous hand's results before starting new hand
+                if len(stack_history[name]) >= 2:
+                    prev_stack = stack_history[name][-2][1]  # Previous hand's stack
+                    if cur_stack is not None:
+                        bb_change = (cur_stack - prev_stack) / BIG_BLIND  # Convert to BB units
+                        # Update analytics with completed hand data
+                        update_hand_analytics(name, hand_num-1, position, cur_stack, bb_change, actions_this_hand)
+                
+                # Reset actions for new hand
+                actions_this_hand = []
                 # v12: Track stack at each new hand
                 cur_stack = None
                 for p in state.get("players", []):
