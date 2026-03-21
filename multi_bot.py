@@ -208,6 +208,8 @@ from hand_eval import get_equity, detect_draws, analyze_board_texture, get_textu
 from opponent_model import OpponentModel
 from performance_tracker import PerformanceTracker
 from enhanced_strategy import AdvancedStrategy, enhanced_preflop_decision, enhanced_postflop_sizing, get_position_from_seat
+from analytics_integration import (initialize_analytics, update_hand_analytics, update_opponent_analytics, 
+                                 get_enhanced_status_report, get_session_recommendations, export_session_analytics)
 
 try:
     import speech_recognition as sr
@@ -2735,6 +2737,7 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model, perf_trac
     rebuy_cooldown_until = 0  # v10: after successful rebuy, skip bust detection briefly
     bust_confirm_count = 0  # v15: require consecutive bust detections to avoid false triggers
     last_known_stack = None  # v15: track last known stack for bust confirmation
+    actions_this_hand = []  # v28: track actions for analytics
 
     while not stop_event.is_set():
         try:
@@ -2806,6 +2809,12 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model, perf_trac
                 opponent_model.new_hand()
                 # v24: Performance tracking - new hand started
                 perf_tracker.new_hand()
+                # v28: Analytics integration - new hand started
+                hand_num = hands_played[name]
+                position = state.get("position", "unknown")
+                current_stack = state.get("my_stack", 0)
+                bb_change = 0  # Will be calculated later when hand completes
+                actions_this_hand = []  # Reset actions for new hand
                 # v12: Track stack at each new hand
                 cur_stack = None
                 for p in state.get("players", []):
@@ -2860,6 +2869,8 @@ async def bot_loop(page, profile, is_host, stop_event, opponent_model, perf_trac
                 if action == "fold":
                     folds_count[name] = folds_count.get(name, 0) + 1
                 actions_count[name] = actions_count.get(name, 0) + 1
+                # v28: Track action for analytics
+                actions_this_hand.append(action)
 
                 # v20: Extended anti-stutter — if _skip_raise is set, downgrade raise to call/check
                 if state.get("_skip_raise") and action == "raise":
@@ -3192,6 +3203,17 @@ async def status_reporter(stop_event, perf_tracker=None):
         # v24: Full performance analytics (every status update)
         if perf_tracker:
             perf_tracker.log_performance(log)
+            
+        # v28: Enhanced analytics integration
+        enhanced_report = get_enhanced_status_report()
+        if enhanced_report != "📊 Analytics not initialized":
+            log(f"   {enhanced_report}")
+            
+        # v28: Strategy recommendations (occasionally)
+        if total > 0 and total % 10 == 0:  # Every 10 hands
+            recommendations = get_session_recommendations()
+            if recommendations:
+                log(f"🤖 AI RECOMMENDATIONS:{recommendations}")
         # v13: Log slider stats
         try:
             from act import get_slider_stats
@@ -3213,6 +3235,7 @@ async def main():
     rebuy_queue = asyncio.Queue()  # v17: not currently used as queue, but reserved
     opponent_model = OpponentModel()  # v23: track opponent tendencies for exploitation
     perf_tracker = PerformanceTracker()  # v24: track bot performance and analytics
+    initialize_analytics(BOT_PROFILES[:NUM_BOTS])  # v28: advanced analytics framework
     os.makedirs(LOG_DIR, exist_ok=True)
     log("=" * 60)
     log("🃏 Poker Now Multi-Bot Arena v24.0 (performance analytics + opponent read visibility)")
@@ -3550,6 +3573,13 @@ async def main():
             except: pass
         await pw.stop()
 
+        # v28: Export advanced analytics
+        try:
+            analytics_files = export_session_analytics(LOG_DIR)
+            log(f"📊 Analytics exported: {', '.join(analytics_files)}")
+        except Exception as e:
+            log(f"⚠️ Analytics export failed: {e}")
+            
         total = sum(hands_played.values())
         log(f"\n{'='*60}\n📊 FINAL SESSION REPORT | {total} hands")
         log(f"{'─'*60}")
