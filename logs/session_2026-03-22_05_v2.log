@@ -1,0 +1,157 @@
+   📊 Loaded stats for 2 opponents
+   📊 Analytics initialized for Clawhi (TAG)
+   📊 Analytics initialized for AceBot (LAG)
+   📊 Analytics initialized for NitKing (NIT)
+   📊 Analytics initialized for CallStn (STATION)
+[05:24:16] ============================================================
+[05:24:16] 🃏 Poker Now Multi-Bot Arena v24.0 (performance analytics + opponent read visibility)
+[05:24:16]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[05:24:16]    Stack: 5000 | BB: 10
+[05:24:16] ============================================================
+[05:24:21] 🌐 Launching host browser with stealth...
+[05:24:35] 🎰 Creating new game...
+[05:24:35]    🌐 Pre-warming with Google...
+[05:25:14] ❌ Fatal: Page.goto: Navigation to "https://www.pokernow.club/" is interrupted by another navigation to "https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3Dpoker%2Bwith%2Bfriends%2Bonline%26sca_esv%3D7f1d20af605b697f%26source%3Dhp%26ei%3DU7W_acrhO7umptQPt_7OiQg%26iflsig%3DAFdpzrgAAAAAab_DYy6A55I1CGpHxaGiI9yl9Lgt7w8n%26ved%3D0ahUKEwiK1-Lkl7OTAxU7k4kEHTe_M4EQ4dUDCBY%26uact%3D5%26oq%3Dpoker%2Bwith%2Bfriends%2Bonline%26gs_lp%3DEgdnd3Mtd2l6Ihlwb2tlciB3aXRoIGZyaWVuZHMgb25saW5lMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHkiFd1DpDliWa3ABeACQAQCYAdYCoAHAIKoBCDcuMTIuMy4zuAEDyAEA-AEBmAIaoALmKqgCCsICChAAGAMY6gIYjwHCAgoQLhgDGOoCGI8BwgILEC4YgAQYsQMYgwHCAg4QABiABBixAxiDARiKBcICCxAAGIAEGLEDGIMBwgIOEC4YgAQYsQMY0QMYxwHCAg4QLhiABBixAxiDARiKBcICCBAAGIAEGLEDwgILEC4YgAQY0QMYxwHCAgUQLhiABMICCBAuGIAEGLEDmANS8QW2Y256rTtea5IHCTYuNy41LjUuM6AHva4BsgcJNS43LjUuNS4zuAeTKsIHDTAuNS42LjEuNC45LjHIB-kGgAgA%26sclient%3Dgws-wiz%26sei%3Dc7W_aadaof-m1A-Sg6aQBA&q=EhAmA3AAOAGf7l1GN3WlQNMmGPfq_s0GIjBURPfpR01a3J4cSuGWwq5av7TJO3zt2uPSlDr0PgfB1dDSrFloCtDxlkIoMmARoMsyAVJaAUM"
+Call log:
+  - navigating to "https://www.pokernow.club/", waiting until "domcontentloaded"
+
+Traceback (most recent call last):
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 3313, in main
+    game_url_global = await create_game(host_page, host_name)
+  File "/Users/clawileonard/Projects/poker-now-agent/multi_bot.py", line 706, in create_game
+    await page.goto("https://www.pokernow.club", wait_until="domcontentloaded", timeout=30000)
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/async_api/_generated.py", line 9045, in goto
+    await self._impl_obj.goto(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_page.py", line 552, in goto
+    return await self._main_frame.goto(**locals_to_params(locals()))
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_frame.py", line 153, in goto
+    await self._channel.send(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+  File "/Users/clawileonard/Library/Python/3.9/lib/python/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: Navigation to "https://www.pokernow.club/" is interrupted by another navigation to "https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3Dpoker%2Bwith%2Bfriends%2Bonline%26sca_esv%3D7f1d20af605b697f%26source%3Dhp%26ei%3DU7W_acrhO7umptQPt_7OiQg%26iflsig%3DAFdpzrgAAAAAab_DYy6A55I1CGpHxaGiI9yl9Lgt7w8n%26ved%3D0ahUKEwiK1-Lkl7OTAxU7k4kEHTe_M4EQ4dUDCBY%26uact%3D5%26oq%3Dpoker%2Bwith%2Bfriends%2Bonline%26gs_lp%3DEgdnd3Mtd2l6Ihlwb2tlciB3aXRoIGZyaWVuZHMgb25saW5lMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHkiFd1DpDliWa3ABeACQAQCYAdYCoAHAIKoBCDcuMTIuMy4zuAEDyAEA-AEBmAIaoALmKqgCCsICChAAGAMY6gIYjwHCAgoQLhgDGOoCGI8BwgILEC4YgAQYsQMYgwHCAg4QABiABBixAxiDARiKBcICCxAAGIAEGLEDGIMBwgIOEC4YgAQYsQMY0QMYxwHCAg4QLhiABBixAxiDARiKBcICCBAAGIAEGLEDwgILEC4YgAQY0QMYxwHCAgUQLhiABMICCBAuGIAEGLEDmANS8QW2Y256rTtea5IHCTYuNy41LjUuM6AHva4BsgcJNS43LjUuNS4zuAeTKsIHDTAuNS42LjEuNC45LjHIB-kGgAgA%26sclient%3Dgws-wiz%26sei%3Dc7W_aadaof-m1A-Sg6aQBA&q=EhAmA3AAOAGf7l1GN3WlQNMmGPfq_s0GIjBURPfpR01a3J4cSuGWwq5av7TJO3zt2uPSlDr0PgfB1dDSrFloCtDxlkIoMmARoMsyAVJaAUM"
+Call log:
+  - navigating to "https://www.pokernow.club/", waiting until "domcontentloaded"
+
+[05:25:14] 🧹 Cleaning up...
+[05:25:16] 📊 Analytics exported: /Users/clawileonard/Projects/poker-now-agent/logs/analytics_Clawhi_session.json, /Users/clawileonard/Projects/poker-now-agent/logs/analytics_AceBot_session.json, /Users/clawileonard/Projects/poker-now-agent/logs/analytics_NitKing_session.json, /Users/clawileonard/Projects/poker-now-agent/logs/analytics_CallStn_session.json, /Users/clawileonard/Projects/poker-now-agent/logs/session_summary_analytics.json
+[05:25:16] 
+============================================================
+📊 FINAL SESSION REPORT | 0 hands
+[05:25:16] ────────────────────────────────────────────────────────────
+[05:25:16]    Bot          Style     Hands  Rebuys  Fold%  Net Chips
+[05:25:16]    ──────────── ──────── ────── ─────── ────── ──────────
+[05:25:16]    Clawhi       TAG           0       0    N/A      -5000
+[05:25:16]    AceBot       LAG           0       0    N/A      -5000
+[05:25:16]    NitKing      NIT           0       0    N/A      -5000
+[05:25:16]    CallStn      STATION       0       0    N/A      -5000
+[05:25:16] 
+   🏆 Winner: Clawhi (TAG) with -5000 chips
+[05:25:16]    💀 Loser:  CallStn (STATION) with -5000 chips
+[05:25:16] ============================================================
+[05:25:16] 👋 Done.
+   📊 Loaded stats for 2 opponents
+   📊 Analytics initialized for Clawhi (TAG)
+   📊 Analytics initialized for AceBot (LAG)
+   📊 Analytics initialized for NitKing (NIT)
+   📊 Analytics initialized for CallStn (STATION)
+[05:25:16] ============================================================
+[05:25:16] 🃏 Poker Now Multi-Bot Arena v24.0 (performance analytics + opponent read visibility)
+[05:25:16]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[05:25:16]    Stack: 5000 | BB: 10
+[05:25:16] ============================================================
+[05:25:22] 🌐 Launching host browser with stealth...
+[05:25:33] 🎰 Creating new game...
+[05:25:33]    🌐 Pre-warming with Google...
+[05:26:46]    Clicked: a:has-text("Start a New Game")
+[05:27:06]    ⏳ reCAPTCHA challenge detected (overlay) — attempting solve...
+[05:27:07]    ✅ reCAPTCHA cleared!
+[05:27:15]    Filled host name: Clawhi
+[05:27:27]    Submitted game creation
+[05:27:33]    🔒 reCAPTCHA challenge at 5s — trying audio solve...
+[05:27:33]    🔊 Audio solve attempt 1/2
+[05:27:37]    Clicked audio button
+[05:27:42]    Audio URL: https://www.google.com/recaptcha/api2/payload?p=06AFcWeA6pbCh32RjqFGNJvsL2kE1wVQ...
+[05:27:43]    Downloaded audio (34283 bytes)
+[05:27:45]    Transcribed: 'the option or creation'
+[05:28:03]    Typed answer: the option or creation
+[05:28:06]    Clicked Verify
+[05:28:11]    ✅ reCAPTCHA solved via audio!
+[05:28:11]    ✅ Captcha solved! Checking for redirect or re-submitting...
+[05:28:15]    ✅ Game created: https://www.pokernow.com/games/pglMGdO_E_Rszsd2che105da9
+[05:28:19]    🧹 Dismissed waiting overlay (1 elements)
+[05:28:21]    🪑 HOST: Sitting at seat 1...
+[05:28:25]    HOST: Clicked seat-1
+[05:28:29]    HOST: Form: name=True, stack=True, submitted=True, btn=Take the Seat, inputs=['input:your name', 'input:your stack']
+[05:28:33]    ✅ HOST: Seated and verified (you-player)!
+[05:28:36] 🌐 Launching browser for AceBot...
+[05:28:47] 🤖 AceBot joining...
+[05:28:56]    🪑 AceBot: Sitting at seat 2...
+[05:28:59]    ❌ AceBot: No seat buttons visible (attempt 1)
+[05:28:59]    🔄 AceBot: Seat attempt 2/3...
+[05:29:05]    ❌ AceBot: No seat buttons visible (attempt 2)
+[05:29:05]    🔄 AceBot: Seat attempt 3/3...
+[05:29:10]    ❌ AceBot: No seat buttons visible (attempt 3)
+[05:29:10]    ❌ AceBot: Failed to seat after 3 attempts
+[05:29:12]    🔑 Approving AceBot from host page...
+[05:29:22]    ⏳ Approval attempt 1 timed out for AceBot
+[05:29:49]    ⚠️ Could not find approval button for AceBot within 25s
+[05:29:53]    🔄 Reloading host page after AceBot approval...
+[05:30:05]    🧹 Dismissed waiting overlay (1 elements)
+[05:30:08]    📊 After AceBot: 1 seated (Clawhi)
+[05:30:08] 🌐 Launching browser for NitKing...
+[05:30:19] 🤖 NitKing joining...
+[05:30:38]    🪑 NitKing: Sitting at seat 3...
+[05:30:41]    NitKing: Clicked seat-3
+[05:30:46]    NitKing: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[05:30:49]    ✅ NitKing: Seat requested via JS (pending host approval)
+[05:30:51]    🔑 Approving NitKing from host page...
+[05:30:53]    ✅ Host approved: 'Accept'
+[05:30:54]    ✅ Approved NitKing seat request (attempt 1)
+[05:30:58]    🔄 Reloading host page after NitKing approval...
+[05:31:09]    📊 After NitKing: 2 seated (Clawhi, NitKing)
+[05:31:09] 🌐 Launching browser for CallStn...
+[05:31:20] 🤖 CallStn joining...
+[05:31:34]    🪑 CallStn: Sitting at seat 4...
+[05:31:37]    CallStn: Clicked seat-4
+[05:31:41]    CallStn: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[05:31:45]    ✅ CallStn: Seat requested via JS (pending host approval)
+[05:31:47]    🔑 Approving CallStn from host page...
+[05:31:49]    ✅ Host approved: 'Accept'
+[05:31:50]    ✅ Approved CallStn seat request (attempt 1)
+[05:31:54]    🔄 Reloading host page after CallStn approval...
+[05:32:05]    📊 After CallStn: 3 seated (Clawhi, NitKing, CallStn)
+[05:32:05]    🔄 Reloading host for final approval sweep...
+[05:32:13]    🔄 Final approval sweep...
+[05:32:26]    📊 Final: Seated 3/4 (Clawhi, NitKing, CallStn) | Empty seats: 0
+[05:32:26]    🔍 Host URL: https://www.pokernow.com/games/pglMGdO_E_Rszsd2che105da9
+[05:32:30]    🔍 DOM: {'title': 'Poker Now - Poker with Friends', 'bodyClasses': '', 'tablePlayerCount': 10, 'youPlayer': True, 'iframes': 0, 'bodyText': "OPTIONSLEAVE SEATAWAY\n\nGuest\n\nSign In\nGame Configurations\nPlayers\nPreferencesVideo/Audio\nPlus\nSave Current Hand\n\nOWNER: CLAWHI\n\nNLH\n~ 10 / 20\n\n0\n\ntotal 0\n\nNo Limit Texas Hold'em\n\nSelect\n\nWAITING\n\nClaw"}
+[05:32:30] 
+🎮 Starting game...
+[05:32:31]    ▶️ Game started! (clicked 'start game')
+[05:32:33] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pglMGdO_E_Rszsd2che105da9
+============================================================
+
+[05:32:33] 🤖 Clawhi (TAG) loop starting...
+[05:32:33] 🤖 AceBot (LAG) loop starting...
+[05:32:33] 🤖 NitKing (NIT) loop starting...
+[05:32:33] 🤖 CallStn (STATION) loop starting...
+[05:32:39]    CallStn(STATION) | preflop | BTN stk=5000 | 3c 2d | eq=27% -> fold  | Folded
+[05:33:03]    Clawhi(TAG) | preflop | ? stk=4990 | Qh 8d | eq=52% -> call  | Called
+[05:33:29]    NitKing(NIT) | preflop | ? stk=4980 | 3d 10d | eq=43% -> raise 60 | Error: 
+[05:34:10]    Clawhi(TAG) | flop | ? stk=4980 | Qh 8d | eq=64% [dry] -> raise 30 | Error: 
+[05:34:13]    NitKing(NIT) | flop | ? stk=4980 | 3d 10d | eq=22% [dry] -> check  | Checked
+[05:34:38]    NitKing(NIT) | turn | ? stk=4980 | 3d 10d | eq=20% [wet] -> check  | Checked
+[05:34:58]    Clawhi(TAG) | turn | ? stk=4980 | Qh 8d | eq=54% [wet] -> raise 30 | Error: 
+[05:35:07]    NitKing(NIT) | river | ? stk=4980 | 3d 10d | eq=2% [dry] -> check  | Checked
+[05:35:32]    Clawhi(TAG) | preflop | BTN stk=5020 | 3h Qd | eq=42% -> fold  | Folded
+[05:35:38]    NitKing(NIT) | preflop | ? stk=4970 | 10d Qh | eq=56% -> call  | Called
+[05:35:44]    CallStn(STATION) | preflop | ? stk=4980 | 7s As | eq=59% -> check  | Checked
+[05:35:52]    NitKing(NIT) | flop | ? stk=4960 | 10d Qh | eq=36% [dry] -> check  | Checked
+[05:36:20]    CallStn(STATION) | flop | ? stk=4980 | 7s As | eq=82% [dry] -> raise 30 | Error: 
+[05:36:34]    NitKing(NIT) | turn | ? stk=4960 | 10d Qh | eq=39% [wet] -> check  | Checked
+[05:37:01]    CallStn(STATION) | turn | ? stk=4980 | 7s As | eq=84% [wet] -> raise 30 | Error: 
+[05:37:09]    NitKing(NIT) | river | ? stk=4960 | 10d Qh | eq=40% [wet] -> check  | Checked

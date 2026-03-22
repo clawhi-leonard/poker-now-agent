@@ -289,7 +289,7 @@ async def _tier1_mouse_drag(page: Page, target: int, info: dict) -> bool:
     try:
         # Click directly at the target position on the slider track
         await page.mouse.click(target_x, target_y)
-        await asyncio.sleep(0.3)
+        await asyncio.sleep(0.5)  # Increased wait time
         
         # Verify
         actual = await _read_current_bet_value(page)
@@ -307,7 +307,7 @@ async def _tier1_mouse_drag(page: Page, target: int, info: dict) -> bool:
             await page.mouse.move(interp_x, target_y)
             await asyncio.sleep(0.01)
         await page.mouse.up()
-        await asyncio.sleep(0.3)
+        await asyncio.sleep(0.5)  # Increased wait time
         
         actual = await _read_current_bet_value(page)
         if actual > 0 and abs(actual - target) <= max(target * 0.15, 10):
@@ -521,24 +521,32 @@ async def _set_bet_amount_v13(page: Page, target: int) -> Tuple[int, str]:
     if target >= smax:
         return (smax, "max")
     
-    # Tier 1: Mouse drag/click on slider
-    ok = await _tier1_mouse_drag(page, target, info)
-    if ok:
-        actual = await _read_current_bet_value(page)
-        _slider_stats["tier1_ok"] += 1
-        _slider_stats["successes"] += 1
-        return (actual, "tier1_mouse")
+    # Tier 1: Mouse drag/click on slider (with retry)
+    for attempt in range(2):  # Try tier 1 twice
+        await asyncio.sleep(0.2 * attempt)  # Small delay on retry
+        ok = await _tier1_mouse_drag(page, target, info)
+        if ok:
+            actual = await _read_current_bet_value(page)
+            _slider_stats["tier1_ok"] += 1
+            _slider_stats["successes"] += 1
+            return (actual, "tier1_mouse")
+        if attempt == 0:  # Refresh info on first failure
+            info = await _get_slider_info(page)
     
     # Refresh info after tier 1 attempt
     info = await _get_slider_info(page)
     
-    # Tier 2: Arrow keys
-    ok = await _tier2_arrow_keys(page, target, info)
-    if ok:
-        actual = await _read_current_bet_value(page)
-        _slider_stats["tier2_ok"] += 1
-        _slider_stats["successes"] += 1
-        return (actual, "tier2_arrows")
+    # Tier 2: Arrow keys (with retry)
+    for attempt in range(2):  # Try tier 2 twice
+        await asyncio.sleep(0.2 * attempt)
+        ok = await _tier2_arrow_keys(page, target, info)
+        if ok:
+            actual = await _read_current_bet_value(page)
+            _slider_stats["tier2_ok"] += 1
+            _slider_stats["successes"] += 1
+            return (actual, "tier2_arrows")
+        if attempt == 0:
+            info = await _get_slider_info(page)
     
     # Refresh info
     info = await _get_slider_info(page)
@@ -576,6 +584,23 @@ async def execute_action(page: Page, action: str, amount: Optional[int] = None) 
         return "Called"
 
     elif action in ("bet", "raise"):
+        # v29.2: First try preset buttons for exact amounts (more reliable)
+        if amount:
+            try:
+                buttons = await page.query_selector_all('.game-decisions-ctn button, button')
+                for btn in buttons:
+                    if not await btn.is_visible():
+                        continue
+                    text = (await btn.text_content() or '').strip().lower()
+                    # Look for preset buttons like "BET 30", "RAISE TO 50"
+                    import re
+                    m = re.search(r'(\d+)', text)
+                    if m and int(m.group(1)) == amount and ('bet' in text or 'raise' in text):
+                        await btn.click()
+                        return f"Raised to {amount} (preset)"
+            except:
+                pass
+        
         # CRITICAL: Open the raise SLIDER panel, not the preset bet button
         panel_opened = await _click_raise_opener(page)
         

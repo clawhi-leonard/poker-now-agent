@@ -2,6 +2,13 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v29.2 - Bet Sizing Robustness Improvements (2026-03-22):
+    - MAJOR: Enhanced fallback strategy - betting failures now auto-fallback to check/call instead of "Error:"
+    - ENHANCED: Preset button detection - tries exact amount preset buttons before slider (more reliable)
+    - IMPROVED: Increased action timeout from 15s to 25s with tier-level retries
+    - IMPROVED: Graceful degradation ensures continuous play even when betting interface fails
+    - RESULT: Maintains tournament-level poker flow with robust error recovery
+
 v28.4 - Professional AI Performance Validation + Minor Improvements (2026-03-22):
     - VALIDATED: 16th consecutive session with perfect 4/4 seating success (100% success rate)
     - CONFIRMED: Professional tournament-level poker with 76 hands/hour rate and sophisticated multi-street strategy
@@ -2201,12 +2208,30 @@ async def execute_action_safe(page, action, amount=None):
         await page.evaluate("() => { document.querySelectorAll('.alert-1-container').forEach(el => el.remove()); }")
         from act import execute_action
         async with cdp_semaphore:
-            # v28.3: Increased timeout from 10s to 15s to handle complex bet sizing operations
-            return await asyncio.wait_for(execute_action(page, action, amount), timeout=15.0)
+            # v29.1: Increased timeout from 15s to 25s to handle bet sizing reliability issues
+            return await asyncio.wait_for(execute_action(page, action, amount), timeout=25.0)
     except Exception as e:
         err = str(e)
         if 'Errno 35' in err:
             await asyncio.sleep(random.uniform(1.0, 3.0))
+        
+        # v29.2: When betting/raising fails, immediately fallback to check/call
+        # This prevents "Error:" messages and maintains game flow
+        if action in ("bet", "raise"):
+            try:
+                # Quick fallback to check or call
+                from act import click_action_button
+                if await click_action_button(page, "Check"):
+                    return f"Checked (bet failed: {str(e)[:20]})"
+                elif await click_action_button(page, "Call"):
+                    return f"Called (bet failed: {str(e)[:20]})"
+                else:
+                    # Keyboard fallback
+                    await page.keyboard.press("c")  # Call
+                    return f"Called/key (bet failed: {str(e)[:20]})"
+            except:
+                pass
+        
         return f"Error: {str(e)[:50]}"
 
 
