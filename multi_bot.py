@@ -2344,7 +2344,7 @@ def bot_decide(state, profile, opponent_model=None):
     # Observations: All styles need more balanced ranges to avoid exploitability
     PREFLOP_THRESHOLDS = {
         "NIT":     {"raise": 58, "call": 52, "fold": 48, "3bet": 68, "4bet": 78},  # Conservative but balanced
-        "TAG":     {"raise": 52, "call": 46, "fold": 46, "3bet": 62, "4bet": 72},  # Solid balanced ranges
+        "TAG":     {"raise": 52, "call": 50, "fold": 50, "3bet": 62, "4bet": 72},  # Tighter fold rate (11%→25-30%)
         "LAG":     {"raise": 46, "call": 36, "fold": 36, "3bet": 56, "4bet": 68},  # Wide but not crazy
         "STATION": {"raise": 55, "call": 32, "fold": 32, "3bet": 75, "4bet": 85}, # Calling station = rarely 3-bet
     }
