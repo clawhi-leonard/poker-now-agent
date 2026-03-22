@@ -232,7 +232,7 @@ from performance_tracker import PerformanceTracker
 from enhanced_strategy import AdvancedStrategy, enhanced_preflop_decision, enhanced_postflop_sizing, get_position_from_seat
 from analytics_integration import (initialize_analytics, update_hand_analytics, update_opponent_analytics, 
                                  get_enhanced_status_report, get_session_recommendations, export_session_analytics)
-from plo_config import configure_plo
+from perfect_plo_config import configure_plo_complete
 
 try:
     import speech_recognition as sr
@@ -801,6 +801,16 @@ async def create_game(page, host_name):
     for i in range(180):
         if "/games/" in page.url:
             log(f"   ✅ Game created: {page.url}")
+            
+            # IMMEDIATELY configure PLO with complete workflow including Save Changes
+            log("🔧 CRITICAL: Complete PLO configuration before any seating...")
+            plo_success = await configure_plo_complete(page, "host")
+            
+            if plo_success:
+                log("   ✅ COMPLETE PLO configuration successful with Save Changes!")
+            else:
+                log("   ⚠️ PLO configuration failed - checking if controls are disabled")
+            
             return page.url
 
         # Check for reCAPTCHA challenge at key intervals
@@ -824,6 +834,16 @@ async def create_game(page, host_name):
                     await asyncio.sleep(3)
                     if "/games/" in page.url:
                         log(f"   ✅ Game created: {page.url}")
+                        
+                        # IMMEDIATELY configure PLO with complete workflow
+                        log("🔧 CRITICAL: Complete PLO configuration on retry...")
+                        plo_success = await configure_plo_complete(page, "host") 
+                        
+                        if plo_success:
+                            log("   ✅ COMPLETE PLO configuration successful with Save Changes!")
+                        else:
+                            log("   ⚠️ PLO configuration failed on retry")
+                        
                         return page.url
                     # Re-submit if still on start-game page
                     if "/start-game" in page.url:
@@ -3378,13 +3398,8 @@ async def main():
             log("   ⚠️ Host seating form incomplete — host is game creator, will be auto-seated on start")
         await asyncio.sleep(2)
         
-        # Configure PLO while host is seated and authenticated
-        log("🔧 Configuring PLO game settings...")
-        plo_success = await configure_plo(host_page, host_name)
-        if plo_success:
-            log("   ✅ PLO configuration successful!")
-        else:
-            log("   ⚠️ PLO configuration failed - game will be Hold'em")
+        # PLO was already configured at game creation
+        log("   ℹ️ PLO should already be configured from game creation")
         await asyncio.sleep(1)
 
         # Step 2: Launch remaining bots SEQUENTIALLY with immediate approval
