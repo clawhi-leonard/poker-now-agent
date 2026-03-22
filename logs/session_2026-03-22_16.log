@@ -1,0 +1,112 @@
+[16:46:36] ============================================================
+[16:46:36] 🃏 Poker Now Multi-Bot Arena v24.0 (performance analytics + opponent read visibility)
+[16:46:36]    Bots: Clawhi(TAG), AceBot(LAG), NitKing(NIT), CallStn(STATION)
+[16:46:36]    Stack: 5000 | BB: 10
+[16:46:36] ============================================================
+[16:46:37] 🌐 Launching host browser with stealth...
+[16:46:38] 🎰 Creating new game...
+[16:46:38]    🌐 Pre-warming with Google...
+[16:47:08]    Clicked: a:has-text("Start a New Game")
+[16:47:15]    ⏳ reCAPTCHA challenge detected (overlay) — attempting solve...
+[16:47:15]    ✅ reCAPTCHA cleared!
+[16:47:17]    Filled host name: Clawhi
+[16:47:21]    Submitted game creation
+[16:47:26]    🔒 reCAPTCHA challenge at 5s — trying audio solve...
+[16:47:26]    🔊 Audio solve attempt 1/2
+[16:47:26]    Clicked audio button
+[16:47:31]    Audio URL: https://www.google.com/recaptcha/api2/payload?p=06AFcWeA7VIgKM6w0-8B4KmXj2PJ-mHR...
+[16:47:31]    Downloaded audio (33238 bytes)
+[16:47:32]    Transcribed: 'Blair bags and stability'
+[16:47:35]    Typed answer: Blair bags and stability
+[16:47:35]    Clicked Verify
+[16:47:41]    ✅ reCAPTCHA solved via audio!
+[16:47:41]    ✅ Captcha solved! Checking for redirect or re-submitting...
+[16:47:44]    ✅ Game created: https://www.pokernow.com/games/pglIM1pxCjtmPlUwrxrSZYUE9
+[16:47:46]    🧹 Dismissed waiting overlay (1 elements)
+[16:47:47]    🪑 HOST: Sitting at seat 1...
+[16:47:48]    HOST: Clicked seat-1
+[16:47:51]    HOST: Form: name=True, stack=True, submitted=True, btn=Take the Seat, inputs=['input:your name', 'input:your stack']
+[16:47:54]    ✅ HOST: Seated and verified (you-player)!
+[16:47:56] 🌐 Launching browser for AceBot...
+[16:47:57] 🤖 AceBot joining...
+[16:48:02]    🪑 AceBot: Sitting at seat 2...
+[16:48:03]    AceBot: Clicked seat-2
+[16:48:06]    AceBot: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[16:48:07]    ✅ AceBot: Seat requested via JS (pending host approval)
+[16:48:09]    🔑 Approving AceBot from host page...
+[16:48:10]    ✅ Host approved: 'Accept'
+[16:48:11]    ✅ Approved AceBot seat request (attempt 1)
+[16:48:15]    🔄 Reloading host page after AceBot approval...
+[16:48:18]    📊 After AceBot: 2 seated (Clawhi, AceBot)
+[16:48:18] 🌐 Launching browser for NitKing...
+[16:48:19] 🤖 NitKing joining...
+[16:48:24]    🪑 NitKing: Sitting at seat 3...
+[16:48:25]    NitKing: Clicked seat-3
+[16:48:28]    NitKing: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[16:48:29]    ✅ NitKing: Seat requested via JS (pending host approval)
+[16:48:31]    🔑 Approving NitKing from host page...
+[16:48:31]    ✅ Host approved: 'Accept'
+[16:48:32]    ✅ Approved NitKing seat request (attempt 1)
+[16:48:36]    🔄 Reloading host page after NitKing approval...
+[16:48:40]    📊 After NitKing: 3 seated (Clawhi, AceBot, NitKing)
+[16:48:40] 🌐 Launching browser for CallStn...
+[16:48:40] 🤖 CallStn joining...
+[16:48:46]    🪑 CallStn: Sitting at seat 4...
+[16:48:47]    CallStn: Clicked seat-4
+[16:48:50]    CallStn: Form: name=True, stack=True, submitted=True, btn=Request the Seat, inputs=['input:your name', 'input:intended stack']
+[16:48:51]    ✅ CallStn: Seat requested via JS (pending host approval)
+[16:48:53]    🔑 Approving CallStn from host page...
+[16:48:53]    ✅ Host approved: 'Accept'
+[16:48:54]    ✅ Approved CallStn seat request (attempt 1)
+[16:48:58]    🔄 Reloading host page after CallStn approval...
+[16:49:02]    📊 After CallStn: 4 seated (Clawhi, AceBot, NitKing, CallStn)
+[16:49:02]    🔄 Reloading host for final approval sweep...
+[16:49:05]    🔄 Final approval sweep...
+[16:49:12]    📊 Final: Seated 4/4 (Clawhi, AceBot, NitKing, CallStn) | Empty seats: 0
+[16:49:12]    🔍 Host URL: https://www.pokernow.com/games/pglIM1pxCjtmPlUwrxrSZYUE9
+[16:49:12]    🔍 DOM: {'title': 'Poker Now - Poker with Friends', 'bodyClasses': '', 'tablePlayerCount': 10, 'youPlayer': True, 'iframes': 0, 'bodyText': "OPTIONSLEAVE SEATAWAY\n\nGuest\n\nSign In\nGame Configurations\nPlayers\nPreferencesVideo/Audio\nPlus\nSave Current Hand\n\nOWNER: CLAWHI\n\nNLH\n~ 10 / 20\n\n0\n\ntotal 0\n\nNo Limit Texas Hold'em\n\nSelect\n\nWAITING\n\nClaw"}
+[16:49:12] 
+🎮 Starting game...
+[16:49:12]    ▶️ Game started! (clicked 'start game')
+[16:49:14] 
+============================================================
+🎮 GAME LIVE: https://www.pokernow.com/games/pglIM1pxCjtmPlUwrxrSZYUE9
+============================================================
+
+[16:49:14] 🤖 Clawhi (TAG) loop starting...
+[16:49:14] 🤖 AceBot (LAG) loop starting...
+[16:49:14] 🤖 NitKing (NIT) loop starting...
+[16:49:14] 🤖 CallStn (STATION) loop starting...
+[16:49:14]    CallStn(STATION) | preflop | UTG stk=5000 | 9d 8d | eq=41% -> call  | Called
+[16:49:21]    Clawhi(TAG) | preflop | BTN stk=5000 | 2c 6d | eq=26% -> fold  | Folded
+[16:49:22]    AceBot(LAG) | preflop | ? stk=4990 | 3d Ac | eq=50% -> call  | Called
+[16:49:23]    NitKing(NIT) | preflop | ? stk=4980 | Ks Qd | eq=56% -> check  | Checked
+[16:49:25]    AceBot(LAG) | flop | ? stk=4980 | 3d Ac | eq=19% [dry] -> check  | Checked
+[16:49:26]    NitKing(NIT) | flop | ? stk=4980 | Ks Qd | eq=46% [dry] -> check  | Checked
+[16:49:31]    CallStn(STATION) | flop | ? stk=4980 | 9d 8d | eq=83% [dry] -> raise 43 | Raised to 43 (target 43, range 0-4980, tier2_arrows)
+[16:49:36]    AceBot(LAG) | flop | ? stk=4980 | 3d Ac | eq=44% [dry] -> raise 129 | Raised to 129 (target 129, range 0-4980, tier2_arrows)
+[16:49:37]    NitKing(NIT) | flop | ? stk=4980 | Ks Qd | eq=24% [dry] -> fold  | Folded
+[16:49:38]    CallStn: extended anti-stutter → downgraded raise to call (same street, 8s window)
+[16:49:38]    CallStn(STATION) | flop | ? stk=4937 | 9d 8d | eq=86% [dry] -> call  | Called
+[16:49:40]    AceBot(LAG) | turn | ? stk=4851 | 3d Ac | eq=32% [dry] -> check  | Checked
+[16:49:44]    CallStn(STATION) | turn | ? stk=4851 | 9d 8d | eq=83% [dry] -> raise 274 | Raised to 274 (target 274, range 0-4851, tier2_arrows)
+[16:49:45]    AceBot(LAG) | turn | ? stk=4851 | 3d Ac | eq=33% [dry] -> call  | Called
+[16:49:48]    AceBot(LAG) | river | ? stk=4577 | 3d Ac | eq=15% [wet] -> check  | Checked
+[16:49:50]    CallStn(STATION) | river | ? stk=4577 | 9d 8d | eq=62% [wet] -> raise 519 | Raised to 485 (target 519, range 0-4577, tier1_mouse)
+[16:49:51]    AceBot(LAG) | river | ? stk=4577 | 3d Ac | eq=17% [wet] -> fold  | Folded
+[16:49:58]    Clawhi(TAG) | preflop | UTG stk=5000 | 5c 4h | eq=30% -> fold  | Folded
+[16:49:59]    AceBot(LAG) | preflop | BTN stk=4577 | 6d 4c | eq=32% -> fold  | Folded
+[16:50:01]    NitKing(NIT) | preflop | ? stk=4970 | Kd 3c | eq=49% -> fold  | Folded
+[16:50:05]    AceBot(LAG) | preflop | UTG stk=4577 | 3c Ad | eq=46% -> call  | Called
+[16:50:06]    NitKing(NIT) | preflop | BTN stk=4970 | 10s 6c | eq=37% -> fold  | Folded
+[16:50:08]    CallStn(STATION) | preflop | ? stk=5443 | 9h 7d | eq=41% -> fold  | Folded
+[16:50:17]    Clawhi(TAG) | preflop | ? stk=4980 | 10d 6d | eq=47% -> raise 30 | Raised to 30 (target 30, range 0-5000, tier2_arrows)
+[16:50:26]    Clawhi(TAG) | preflop | ? stk=4980 | 10d 6d | eq=47% -> check  | Checked
+[16:50:38]    Clawhi(TAG) | flop | ? stk=4980 | 10d 6d | eq=62% [dry] -> raise 30 | Raised to 30 (target 30, range 0-4980, tier2_arrows)
+[16:50:39]    AceBot(LAG) | flop | ? stk=4557 | 3c Ad | eq=42% [dry] -> call  | Called
+[16:50:46] 🛑 Shutting down...
+[16:50:46]    Clawhi(TAG) | turn | ? stk=4950 | 10d 6d | eq=50% [dry] -> raise 57 | Error: Page.evaluate: Target page, context or browser has
+[16:50:46]    🛑 AceBot: 2 hands, 0 rebuys.
+[16:50:46]    🛑 NitKing: 2 hands, 0 rebuys.
+[16:50:46]    🛑 CallStn: 2 hands, 0 rebuys.
+[16:50:47]    🛑 Clawhi: 2 hands, 0 rebuys.
