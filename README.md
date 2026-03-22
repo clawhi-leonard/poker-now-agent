@@ -4,7 +4,7 @@
 
 It connects to your browser, reads the table, and makes decisions — ~70% locally via Monte Carlo equity simulation, ~30% via Claude API for the hard spots. It sees position, stack depth, draws, and builds live opponent profiles to exploit.
 
-No toy project. No hard-coded if-else trees. A hybrid intelligence engine that plays NLH and PLO.
+No toy project. No hard-coded if-else trees. A hybrid intelligence engine that plays NLH and **PLO** *(Pot Limit Omaha - SOLVED March 2026)*.
 
 ```
                     ┌─────────────────────────────────────┐
