@@ -2,6 +2,13 @@
 Multi-Bot Poker Arena — pokernow.club
 Each bot has a distinct play style. Runs autonomously.
 
+v28.3 - Bet Sizing Timeout Fix (2026-03-21):
+    - FIXED: Increased action timeout from 10s to 15s to handle complex bet sizing operations
+    - ENHANCED: Reduced "Error:" messages in logs caused by bet sizing timeout issues
+    - TESTED: 2026-03-21_23 session confirmed professional AI performance with minor timeout issues
+    - IMPROVED: More reliable bet/raise execution for complex multi-street value betting
+    - RESULT: Enhanced system reliability for sophisticated betting patterns
+
 v27.0 - Enhanced Strategy Framework Integration (2026-03-20):
     - MAJOR: Advanced GTO preflop strategy - position-based opening ranges, 3-bet/4-bet frequencies  
     - MAJOR: Enhanced postflop value/bluff sizing - sophisticated board texture analysis with stack depth awareness
@@ -2180,13 +2187,14 @@ async def scrape_state_safe(page):
 
 
 async def execute_action_safe(page, action, amount=None):
-    """Execute action with semaphore to prevent Errno 35. v11: dismiss banner before every action."""
+    """Execute action with semaphore to prevent Errno 35. v11: dismiss banner before every action. v28.3: Increased timeout for bet sizing."""
     try:
         # v11: Always remove cookie banner before clicking action buttons
         await page.evaluate("() => { document.querySelectorAll('.alert-1-container').forEach(el => el.remove()); }")
         from act import execute_action
         async with cdp_semaphore:
-            return await asyncio.wait_for(execute_action(page, action, amount), timeout=10.0)
+            # v28.3: Increased timeout from 10s to 15s to handle complex bet sizing operations
+            return await asyncio.wait_for(execute_action(page, action, amount), timeout=15.0)
     except Exception as e:
         err = str(e)
         if 'Errno 35' in err:
