@@ -36724,3 +36724,1899 @@
 [00:34:05]    CallStn(STATION) | preflop | BTN stk=11647 | 6d Jd | eq=45% -> call  | Called
 [00:34:08]    AceBot(LAG) | preflop | SB stk=18381 | 7d 2d | eq=33% -> fold  | Folded
 [00:34:20]    Clawhi(TAG) | preflop | BB stk=21879 | 9d 10c | eq=50% -> raise 30 | Raised to 30 (target 30, range 0-21899, tier2_arrows)
+[00:34:43]    Clawhi(TAG) | flop | BB stk=21879 | 9d 10c | eq=80% [dry] -> raise 30 | Raised to 30 (target 30, range 0-21879, tier2_arrows)
+[00:34:49]    CallStn(STATION) | flop | BTN/SB stk=11627 | 6d Jd | eq=30% [dry] -> call  | Called
+[00:35:09] 📊 LIVE DASHBOARD | 13671h (1821.3m)
+[00:35:09]    🎯 Hands: Clawhi:3053h AceBot:3500h NitKing:3613h CallStn:3522h
+[00:35:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:35:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:35:09] 📊 PERFORMANCE (13688h, 1821.3m)
+[00:35:09]    🎚️ Slider: 6195/6423 (96%) | T1:952 T2:5242 T3:1 | Fallback calls:0
+[00:35:13]    Clawhi(TAG) | turn | BB stk=21849 | 9d 10c | eq=84% [dry] -> raise 62 | Error: 
+[00:35:16]    CallStn(STATION) | turn | BTN/SB stk=11597 | 6d Jd | eq=23% [dry] -> check  | Checked
+[00:35:41]    CallStn(STATION) | river | BTN/SB stk=11597 | 6d Jd | eq=14% [wet] -> check  | Checked
+[00:35:42]    Clawhi(TAG) | river | BB stk=21849 | 9d 10c | eq=80% [wet] -> raise 70 | Error: 
+[00:35:50]    CallStn(STATION) | preflop | UTG stk=11597 | 3h 6c | eq=28% -> fold  | Folded
+[00:35:54]    AceBot(LAG) | preflop | BTN stk=18381 | 9c 2s | eq=34% -> fold  | Folded
+[00:36:08]    Clawhi(TAG) | preflop | ? stk=21949 | 6h 2d | eq=31% -> fold  | Folded
+[00:36:09] 📊 LIVE DASHBOARD | 13688h (1822.3m)
+[00:36:09]    🎯 Hands: Clawhi:3054h AceBot:3502h NitKing:3615h CallStn:3524h
+[00:36:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:36:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:36:09] 📊 PERFORMANCE (13695h, 1822.3m)
+[00:36:09]    🎚️ Slider: 6195/6423 (96%) | T1:952 T2:5242 T3:1 | Fallback calls:0
+[00:36:13]    AceBot(LAG) | preflop | UTG stk=18381 | Qh 4h | eq=42% -> call  | Called
+[00:36:13]    📊 CallStn (STATION): 3525 hands
+[00:36:26]    Clawhi(TAG) | preflop | BTN stk=21949 | 7h 9h | eq=40% -> fold  | Folded
+[00:36:28]    NitKing(NIT) | preflop | ? stk=45000 | 4s 5d | eq=32% -> fold  | Folded
+[00:36:30]    CallStn(STATION) | preflop | ? stk=11577 | Qs 8h | eq=52% -> check  | Checked
+[00:36:40]    CallStn(STATION) | flop | ? stk=11577 | Qs 8h | eq=93% [dry] -> raise 32 | Raised to 32 (target 32, range 0-11577, tier2_arrows)
+[00:36:48]    AceBot(LAG) | flop | ? stk=18361 | Qh 4h | eq=84% [dry] -> raise 96 | Raised to 96 (target 96, range 0-18361, tier2_arrows)
+[00:37:01]    CallStn(STATION) | flop | ? stk=11545 | Qs 8h | eq=91% [dry] -> raise 128 | Error: 
+[00:37:09] 📊 LIVE DASHBOARD | 13695h (1823.3m)
+[00:37:09]    🎯 Hands: Clawhi:3055h AceBot:3503h NitKing:3616h CallStn:3525h
+[00:37:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:37:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:37:09] 📊 PERFORMANCE (13699h, 1823.3m)
+[00:37:09]    🎚️ Slider: 6197/6426 (96%) | T1:952 T2:5244 T3:1 | Fallback calls:0
+[00:37:35]    Clawhi(TAG) | preflop | UTG stk=21949 | 3d Qd | eq=41% -> fold  | Folded
+[00:37:38]    NitKing(NIT) | preflop | BTN stk=45000 | 8h 7h | eq=42% -> fold  | Folded
+[00:37:40]    CallStn(STATION) | preflop | ? stk=11535 | 4h Ks | eq=50% -> call  | Called
+[00:37:49]    AceBot(LAG) | preflop | ? stk=18423 | Jd Qh | eq=57% -> raise 60 | Raised to 60 (target 60, range 0-18443, tier2_arrows)
+[00:37:52]    CallStn(STATION) | preflop | ? stk=11525 | 4h Ks | eq=50% -> call  | Called
+[00:38:05]    CallStn(STATION) | flop | ? stk=11485 | 4h Ks | eq=38% [dry] -> raise 61 | Raised to 61 (target 61, range 0-11485, tier2_arrows)
+[00:38:09] 📊 LIVE DASHBOARD | 13699h (1824.3m)
+[00:38:09]    🎯 Hands: Clawhi:3056h AceBot:3504h NitKing:3617h CallStn:3526h
+[00:38:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:38:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:38:09] 📊 PERFORMANCE (13703h, 1824.3m)
+[00:38:09]    🎚️ Slider: 6199/6429 (96%) | T1:952 T2:5246 T3:1 | Fallback calls:0
+[00:38:17]    AceBot(LAG) | flop | ? stk=18383 | Jd Qh | eq=86% [dry] -> raise 183 | Error: 
+[00:38:38]    NitKing(NIT) | preflop | UTG stk=45000 | 3d Qd | eq=41% -> fold  | Folded
+[00:38:40]    CallStn(STATION) | preflop | BTN stk=11605 | 6s 9s | eq=42% -> fold  | Folded
+[00:38:43]    AceBot(LAG) | preflop | ? stk=18373 | Jc 7d | eq=48% -> fold  | Folded
+[00:38:49]    CallStn(STATION) | preflop | UTG stk=11605 | Qc Ks | eq=51% -> call  | Called
+[00:38:53]    AceBot(LAG) | preflop | BTN stk=18373 | 2d 6s | eq=26% -> fold  | Folded
+[00:39:03]    Clawhi(TAG) | preflop | ? stk=21949 | Qh Qd | eq=73% -> call  | Called
+[00:39:05]    NitKing(NIT) | preflop | ? stk=44980 | 6d 4d | eq=35% -> check  | Checked
+[00:39:09] 📊 LIVE DASHBOARD | 13703h (1825.3m)
+[00:39:09]    🎯 Hands: Clawhi:3058h AceBot:3506h NitKing:3619h CallStn:3528h
+[00:39:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:39:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:39:09] 📊 PERFORMANCE (13711h, 1825.3m)
+[00:39:09]    🎚️ Slider: 6199/6429 (96%) | T1:952 T2:5246 T3:1 | Fallback calls:0
+[00:39:30]    Clawhi(TAG) | flop | ? stk=21939 | Qh Qd | eq=64% [dry] -> raise 30 | Error: 
+[00:39:38]    NitKing(NIT) | flop | ? stk=44980 | 6d 4d | eq=58% [dry] -> raise 30 | Raised to 30 (target 30, range 0-44980, tier2_arrows)
+[00:39:40]    CallStn(STATION) | flop | ? stk=11585 | Qc Ks | eq=43% [dry] -> call  | Called
+[00:39:56]    Clawhi(TAG) | flop | ? stk=21939 | Qh Qd | eq=60% [dry] -> raise 90 | Error: 
+[00:40:03]    NitKing(NIT) | turn | ? stk=44950 | 6d 4d | eq=43% [wet] -> check  | Checked
+[00:40:06]    CallStn(STATION) | turn | ? stk=11555 | Qc Ks | eq=48% [wet] -> check  | Checked
+[00:40:09] 📊 LIVE DASHBOARD | 13711h (1826.3m)
+[00:40:09]    🎯 Hands: Clawhi:3058h AceBot:3506h NitKing:3619h CallStn:3528h
+[00:40:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:40:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:40:09] 📊 PERFORMANCE (13711h, 1826.3m)
+[00:40:09]    🎚️ Slider: 6200/6432 (96%) | T1:952 T2:5247 T3:1 | Fallback calls:0
+[00:40:11]    NitKing(NIT) | river | ? stk=44950 | 6d 4d | eq=31% [very_wet] -> check  | Checked
+[00:40:20]    CallStn(STATION) | river | ? stk=11555 | Qc Ks | eq=90% [very_wet] -> raise 64 | Raised to 64 (target 64, range 0-11555, tier2_arrows)
+[00:40:23]    NitKing(NIT) | river | ? stk=44950 | 6d 4d | eq=30% [very_wet] -> call  | Called
+[00:40:31]    AceBot(LAG) | preflop | UTG stk=18373 | Ah 3c | eq=46% -> call  | Called
+[00:40:48]    Clawhi(TAG) | preflop | BTN stk=21939 | Qh 5c | eq=41% -> fold  | Folded
+[00:40:50]    NitKing(NIT) | preflop | ? stk=44876 | 9d Kh | eq=52% -> call  | Called
+[00:40:52]    CallStn(STATION) | preflop | ? stk=11719 | 10s 6d | eq=40% -> check  | Checked
+[00:41:05]    NitKing(NIT) | flop | ? stk=44866 | 9d Kh | eq=68% [very_wet] -> raise 37 | Raised to 37 (target 37, range 0-44866, tier2_arrows)
+[00:41:07]    CallStn(STATION) | flop | ? stk=11719 | 10s 6d | eq=24% [very_wet] -> call  | Called
+[00:41:10]    AceBot(LAG) | flop | ? stk=18353 | Ah 3c | eq=29% [very_wet] -> call  | Called
+[00:41:22]    NitKing(NIT) | turn | ? stk=44829 | 9d Kh | eq=59% [very_wet] -> raise 88 | Raised to 88 (target 88, range 0-44829, tier2_arrows)
+[00:41:25]    CallStn(STATION) | turn | ? stk=11682 | 10s 6d | eq=33% [very_wet] -> call  | Called
+[00:41:29]    AceBot(LAG) | turn | ? stk=18316 | Ah 3c | eq=24% [very_wet] -> fold  | Folded
+[00:41:41]    NitKing(NIT) | river | ? stk=44741 | 9d Kh | eq=90% [very_wet] -> raise 199 | Error: 
+[00:42:05]    NitKing(NIT) | river | ? stk=44741 | 9d Kh | eq=89% [very_wet] -> check  | Checked
+[00:42:13]    CallStn(STATION) | river | ? stk=11594 | 10s 6d | eq=78% [very_wet] -> raise 186 | Error: 
+[00:42:33]    Clawhi(TAG) | preflop | UTG stk=21939 | 9c Kd | eq=48% -> call  | Called
+[00:42:34]    NitKing(NIT) | preflop | BTN stk=45088 | 8s 4s | eq=34% -> fold  | Folded
+[00:42:37]    CallStn(STATION) | preflop | ? stk=11584 | Ah 4h | eq=53% -> call  | Called
+[00:42:43]    AceBot(LAG) | preflop | ? stk=18296 | Qd Qc | eq=73% -> raise 60 | Raised to 60 (target 60, range 0-18316, tier2_arrows)
+[00:42:56]    Clawhi(TAG) | preflop | ? stk=21919 | 9c Kd | eq=52% -> call  | Called
+[00:43:00]    CallStn(STATION) | preflop | ? stk=11574 | Ah 4h | eq=53% -> call  | Called
+[00:43:12]    CallStn(STATION) | flop | ? stk=11534 | Ah 4h | eq=23% [dry] -> raise 91 | Raised to 91 (target 91, range 0-11534, tier2_arrows)
+[00:43:25]    AceBot(LAG) | flop | ? stk=18256 | Qd Qc | eq=89% [dry] -> raise 273 | Error: 
+[00:43:59]    Clawhi(TAG) | flop | ? stk=21879 | 9c Kd | eq=50% [dry] -> raise 273 | Error: 
+[00:44:05]    NitKing(NIT) | preflop | UTG stk=45088 | Kd 10c | eq=50% -> call  | Called
+[00:44:06]    CallStn(STATION) | preflop | BTN stk=11714 | 4d 5d | eq=33% -> fold  | Folded
+[00:44:09]    AceBot(LAG) | preflop | ? stk=18246 | Js Ah | eq=58% -> call  | Called
+[00:44:26]    Clawhi(TAG) | preflop | ? stk=21859 | 9c 9d | eq=66% -> raise 60 | Raised to 60 (target 60, range 0-21879, tier2_arrows)
+[00:44:28]    NitKing(NIT) | preflop | ? stk=45068 | Kd 10c | eq=54% -> call  | Called
+[00:44:31]    AceBot(LAG) | preflop | ? stk=18236 | Js Ah | eq=58% -> call  | Called
+[00:44:40]    AceBot(LAG) | flop | ? stk=18196 | Js Ah | eq=62% [wet] -> raise 90 | Raised to 90 (target 90, range 0-18196, tier2_arrows)
+[00:44:44]    Clawhi(TAG) | flop | ? stk=21819 | 9c 9d | eq=39% [wet] -> call  | Called
+[00:44:49]    NitKing(NIT) | flop | ? stk=45028 | Kd 10c | eq=56% [wet] -> call  | Called
+[00:45:03]    AceBot(LAG) | turn | ? stk=18106 | Js Ah | eq=58% [wet] -> raise 225 | Error: 
+[00:45:09] 📊 LIVE DASHBOARD | 13711h (1831.3m)
+[00:45:09]    🎯 Hands: Clawhi:3061h AceBot:3511h NitKing:3623h CallStn:3532h
+[00:45:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:45:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:45:09] 📊 PERFORMANCE (13727h, 1831.3m)
+[00:45:09]    🎚️ Slider: 6207/6444 (96%) | T1:952 T2:5254 T3:1 | Fallback calls:0
+[00:45:14]    AceBot(LAG) | turn | ? stk=18106 | Js Ah | eq=60% [wet] -> check  | Checked
+[00:45:34]    Clawhi(TAG) | turn | ? stk=21729 | 9c 9d | eq=65% [wet] -> raise 225 | Error: 
+[00:45:46]    NitKing(NIT) | turn | ? stk=44938 | Kd 10c | eq=69% [wet] -> raise 270 | Error: 
+[00:45:59]    AceBot(LAG) | river | ? stk=18106 | Js Ah | eq=55% [wet] -> check  | Checked
+[00:46:06]    Clawhi(TAG) | river | ? stk=21729 | 9c 9d | eq=52% [wet] -> check  | Checked
+[00:46:09] 📊 LIVE DASHBOARD | 13727h (1832.3m)
+[00:46:09]    🎯 Hands: Clawhi:3061h AceBot:3511h NitKing:3623h CallStn:3532h
+[00:46:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:46:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:46:09] 📊 PERFORMANCE (13727h, 1832.3m)
+[00:46:09]    🎚️ Slider: 6207/6447 (96%) | T1:952 T2:5254 T3:1 | Fallback calls:0
+[00:46:18]    NitKing(NIT) | river | ? stk=44938 | Kd 10c | eq=92% [wet] -> raise 258 | Error: 
+[00:46:34]    📊 NitKing (NIT): 3625 hands
+[00:46:35]    CallStn(STATION) | preflop | UTG stk=11714 | 2s Qd | eq=38% -> fold  | Folded
+[00:46:37]    AceBot(LAG) | preflop | BTN stk=18106 | 5s Ad | eq=51% -> call  | Called
+[00:46:45]    Clawhi(TAG) | preflop | SB stk=21719 | 9h 7h | eq=43% -> fold  | Folded
+[00:46:47]    NitKing(NIT) | preflop | BB stk=45368 | 8d 4c | eq=37% -> check  | Checked
+[00:46:56]    NitKing(NIT) | flop | BB stk=45368 | 8d 4c | eq=16% [dry] -> check  | Checked
+[00:47:01]    AceBot(LAG) | flop | BTN/SB stk=18086 | 5s Ad | eq=43% [dry] -> check  | Checked
+[00:47:05]    NitKing(NIT) | turn | BB stk=45368 | 8d 4c | eq=14% [wet] -> check  | Checked
+[00:47:08]    AceBot(LAG) | turn | BTN/SB stk=18086 | 5s Ad | eq=35% [wet] -> check  | Checked
+[00:47:13]    NitKing(NIT) | river | BB stk=45368 | 8d 4c | eq=5% [wet] -> check  | Checked
+[00:47:18]    AceBot(LAG) | river | BTN/SB stk=18086 | 5s Ad | eq=28% [wet] -> check  | Checked
+[00:47:29]    AceBot(LAG) | preflop | UTG stk=18136 | 5d 10c | eq=35% -> fold  | Folded
+[00:47:38]    Clawhi(TAG) | preflop | BTN stk=21719 | 3d Kd | eq=48% -> call  | Called
+[00:47:40]    NitKing(NIT) | preflop | SB stk=45358 | Kh 9c | eq=52% -> call  | Called
+[00:47:43]    CallStn(STATION) | preflop | BB stk=11694 | Js Qd | eq=52% -> check  | Checked
+[00:47:52]    NitKing(NIT) | flop | SB stk=45348 | Kh 9c | eq=66% [dry] -> raise 30 | Raised to 30 (target 30, range 0-45348, tier2_arrows)
+[00:47:55]    CallStn(STATION) | flop | BB stk=11694 | Js Qd | eq=57% [dry] -> call  | Called
+[00:48:09]    Clawhi(TAG) | flop | BTN stk=21699 | 3d Kd | eq=82% [dry] -> raise 90 | Error: 
+[00:48:29]    NitKing(NIT) | turn | ? stk=45318 | Kh 9c | eq=85% [dry] -> raise 68 | Raised to 68 (target 68, range 0-45318, tier2_arrows)
+[00:48:40]    CallStn(STATION) | turn | ? stk=11664 | Js Qd | eq=72% [dry] -> raise 204 | Error: 
+[00:49:09]    Clawhi(TAG) | preflop | UTG stk=21699 | 3d Qc | eq=39% -> fold  | Folded
+[00:49:12]    NitKing(NIT) | preflop | BTN stk=45438 | 2h 5c | eq=29% -> fold  | Folded
+[00:49:15]    CallStn(STATION) | preflop | ? stk=11654 | 6h 7c | eq=40% -> fold  | Folded
+[00:49:21]    NitKing(NIT) | preflop | UTG stk=45438 | Kh 2s | eq=41% -> fold  | Folded
+[00:49:25]    CallStn(STATION) | preflop | BTN stk=11654 | 3d 7s | eq=31% -> fold  | Folded
+[00:49:29]    AceBot(LAG) | preflop | ? stk=18136 | 7h Js | eq=48% -> fold  | Folded
+[00:49:36]    CallStn(STATION) | preflop | UTG stk=11654 | 10c 5s | eq=35% -> fold  | Folded
+[00:49:38]    AceBot(LAG) | preflop | BTN stk=18136 | 4c 8h | eq=34% -> fold  | Folded
+[00:49:50]    Clawhi(TAG) | preflop | ? stk=21699 | 8c Qc | eq=54% -> call  | Called
+[00:49:58]    NitKing(NIT) | preflop | ? stk=45418 | 9h 9d | eq=72% -> raise 60 | Raised to 60 (target 60, range 0-45438, tier2_arrows)
+[00:50:15]    Clawhi(TAG) | preflop | ? stk=21689 | 8c Qc | eq=54% -> call  | Called
+[00:50:47]    Clawhi(TAG) | flop | ? stk=21649 | 8c Qc | eq=46% [dry] -> check  | Checked
+[00:50:51]    NitKing(NIT) | flop | ? stk=45378 | 9h 9d | eq=62% [dry] -> raise 58 | Raised to 58 (target 58, range 0-45378, tier2_arrows)
+[00:50:59]    AceBot(LAG) | preflop | UTG stk=18136 | 4h Jc | eq=37% -> fold  | Folded
+[00:51:08]    Clawhi(TAG) | preflop | BTN stk=21649 | Qs 3c | eq=42% -> fold  | Folded
+[00:51:09] 📊 LIVE DASHBOARD | 13727h (1837.3m)
+[00:51:09]    🎯 Hands: Clawhi:3068h AceBot:3519h NitKing:3631h CallStn:3540h
+[00:51:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:51:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:51:09] 📊 PERFORMANCE (13758h, 1837.3m)
+[00:51:09]    🎚️ Slider: 6211/6453 (96%) | T1:952 T2:5258 T3:1 | Fallback calls:0
+[00:51:10]    NitKing(NIT) | preflop | ? stk=45488 | 3s 2c | eq=29% -> fold  | Folded
+[00:51:26]    Clawhi(TAG) | preflop | UTG stk=21649 | 5c Qd | eq=41% -> fold  | Folded
+[00:51:29]    NitKing(NIT) | preflop | BTN stk=45488 | 5d 4h | eq=32% -> fold  | Folded
+[00:51:31]    CallStn(STATION) | preflop | ? stk=11654 | Jh Kh | eq=61% -> call  | Called
+[00:51:32]    AceBot(LAG) | preflop | ? stk=18116 | 7c 2d | eq=32% -> check  | Checked
+[00:51:35]    CallStn(STATION) | flop | ? stk=11644 | Jh Kh | eq=56% [dry] -> check  | Checked
+[00:51:43]    AceBot(LAG) | flop | ? stk=18116 | 7c 2d | eq=52% [dry] -> raise 30 | Raised to 30 (target 30, range 0-18116, tier2_arrows)
+[00:51:44]    CallStn(STATION) | flop | ? stk=11644 | Jh Kh | eq=61% [dry] -> call  | Called
+[00:51:54]    CallStn(STATION) | turn | ? stk=11614 | Jh Kh | eq=79% [wet] -> raise 70 | Raised to 70 (target 70, range 0-11614, tier2_arrows)
+[00:52:06]    AceBot(LAG) | turn | ? stk=18086 | 7c 2d | eq=44% [wet] -> raise 210 | Error: 
+[00:52:09] 📊 LIVE DASHBOARD | 13758h (1838.3m)
+[00:52:09]    🎯 Hands: Clawhi:3069h AceBot:3520h NitKing:3632h CallStn:3541h
+[00:52:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:52:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:52:09] 📊 PERFORMANCE (13762h, 1838.3m)
+[00:52:09]    🎚️ Slider: 6213/6456 (96%) | T1:952 T2:5260 T3:1 | Fallback calls:0
+[00:52:26]    NitKing(NIT) | preflop | UTG stk=45488 | 4c Qc | eq=42% -> fold  | Folded
+[00:52:28]    CallStn(STATION) | preflop | BTN stk=11714 | 8h 4h | eq=37% -> fold  | Folded
+[00:52:31]    AceBot(LAG) | preflop | ? stk=18076 | Ks Ah | eq=64% -> call  | Called
+[00:52:45]    Clawhi(TAG) | preflop | ? stk=21629 | Ac 3d | eq=54% -> raise 60 | Error: 
+[00:53:06]    AceBot(LAG) | flop | ? stk=18066 | Ks Ah | eq=54% [dry] -> raise 30 | Raised to 30 (target 30, range 0-18066, tier2_arrows)
+[00:53:09] 📊 LIVE DASHBOARD | 13762h (1839.3m)
+[00:53:09]    🎯 Hands: Clawhi:3070h AceBot:3521h NitKing:3633h CallStn:3542h
+[00:53:09]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:53:09]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:53:09] 📊 PERFORMANCE (13766h, 1839.3m)
+[00:53:09]    🎚️ Slider: 6214/6458 (96%) | T1:952 T2:5261 T3:1 | Fallback calls:0
+[00:53:32]    CallStn(STATION) | preflop | UTG stk=11714 | 9c As | eq=50% -> call  | Called
+[00:53:35]    AceBot(LAG) | preflop | BTN stk=18106 | 5c Kd | eq=43% -> call  | Called
+[00:53:59]    Clawhi(TAG) | flop | ? stk=21629 | Ac 3d | eq=54% [dry] -> raise 90 | Error: 
+[00:53:59]    NitKing(NIT) | preflop | SB stk=45468 | 5h 8d | eq=36% -> check  | Checked
+[00:54:06]    NitKing(NIT) | flop | SB stk=45468 | 5h 8d | eq=16% [dry] -> check  | Checked
+[00:54:10] 📊 LIVE DASHBOARD | 13766h (1840.3m)
+[00:54:10]    🎯 Hands: Clawhi:3070h AceBot:3522h NitKing:3634h CallStn:3543h
+[00:54:10]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:54:10]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:54:10] 📊 PERFORMANCE (13769h, 1840.3m)
+[00:54:10]    🎚️ Slider: 6215/6459 (96%) | T1:952 T2:5262 T3:1 | Fallback calls:0
+[00:54:22]    CallStn(STATION) | flop | BB stk=11694 | 9c As | eq=78% [dry] -> raise 39 | Error: 
+[00:54:41]    AceBot(LAG) | flop | BTN stk=18086 | 5c Kd | eq=42% [dry] -> raise 37 | Raised to 37 (target 37, range 0-18086, tier2_arrows)
+[00:54:44]    NitKing(NIT) | flop | SB stk=45468 | 5h 8d | eq=25% [dry] -> fold  | Folded
+[00:54:54]    CallStn(STATION) | flop | BB stk=11694 | 9c As | eq=80% [dry] -> raise 111 | Raised to 111 (target 111, range 0-11694, tier2_arrows)
+[00:54:55]    AceBot(LAG) | flop | BTN/SB stk=18049 | 5c Kd | eq=45% [dry] -> call  | Called
+[00:55:07]    CallStn(STATION) | turn | BB stk=11583 | 9c As | eq=73% [dry] -> raise 157 | Error: 
+[00:55:10] 📊 LIVE DASHBOARD | 13769h (1841.3m)
+[00:55:10]    🎯 Hands: Clawhi:3071h AceBot:3522h NitKing:3634h CallStn:3543h
+[00:55:10]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[00:55:10]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[00:55:10] 📊 PERFORMANCE (13770h, 1841.3m)
+[00:55:10]    🎚️ Slider: 6217/6463 (96%) | T1:952 T2:5264 T3:1 | Fallback calls:0
+[00:55:22]    AceBot(LAG) | turn | BTN/SB stk=17975 | 5c Kd | eq=33% [dry] -> check  | Checked
+[00:55:33]    CallStn(STATION) | river | BB stk=11583 | 9c As | eq=79% [dry] -> raise 156 | Error: 
+[00:55:49]    AceBot(LAG) | river | BTN/SB stk=17975 | 5c Kd | eq=25% [dry] -> check  | Checked
+[00:55:58]    AceBot(LAG) | preflop | UTG stk=17975 | Ks 8d | eq=46% -> call  | Called
+[00:56:16]    Clawhi(TAG) | preflop | BTN stk=21619 | 5d Js | eq=38% -> fold  | Folded
+[00:56:19]    NitKing(NIT) | preflop | ? stk=45458 | Jd 4s | eq=40% -> fold  | Folded
+[00:56:27]    CallStn(STATION) | preflop | ? stk=11855 | Ac 10s | eq=62% -> raise 30 | Raised to 30 (target 30, range 0-11875, tier2_arrows)
+[00:56:42]    CallStn(STATION) | preflop | ? stk=11855 | Ac 10s | eq=62% -> fold  | Folded
+[00:56:48]    📊 AceBot (LAG): 3525 hands
+[00:57:00]    Clawhi(TAG) | preflop | UTG stk=21619 | 4c 2h | eq=25% -> fold  | Folded
+[00:57:04]    NitKing(NIT) | preflop | BTN stk=45458 | Ad 2d | eq=52% -> call  | Called
+[00:57:07]    CallStn(STATION) | preflop | SB stk=11845 | Jd Kc | eq=55% -> call  | Called
+[00:57:12]    AceBot(LAG) | preflop | BB stk=17985 | 8s 5s | eq=39% -> check  | Checked
+[00:57:17]    CallStn(STATION) | flop | SB stk=11835 | Jd Kc | eq=24% [dry] -> raise 30 | Raised to 30 (target 30, range 0-11835, tier2_arrows)
+[00:57:19]    AceBot(LAG) | flop | BB stk=17985 | 8s 5s | eq=35% [dry] -> call  | Called
+[00:57:21]    NitKing(NIT) | flop | BTN stk=45438 | Ad 2d | eq=24% [dry] -> fold  | Folded
+[00:57:24]    CallStn(STATION) | turn | ? stk=11805 | Jd Kc | eq=48% [wet] -> check  | Checked
+[00:57:26]    AceBot(LAG) | turn | ? stk=17955 | 8s 5s | eq=53% [wet] -> check  | Checked
+[00:57:31]    CallStn(STATION) | river | ? stk=11805 | Jd Kc | eq=47% [wet] -> check  | Checked
+[00:57:33]    AceBot(LAG) | river | ? stk=17955 | 8s 5s | eq=60% [wet] -> check  | Checked
+[00:57:36]    📊 Clawhi (TAG): 3075 hands
+[00:57:43]    NitKing(NIT) | preflop | UTG stk=45438 | 8c Qc | eq=46% -> call  | Called
+[00:57:45]    CallStn(STATION) | preflop | BTN stk=11805 | 7h 4c | eq=30% -> fold  | Folded
+[00:57:46]    AceBot(LAG) | preflop | ? stk=18065 | 5d Qs | eq=44% -> fold  | Folded
+[00:58:01]    Clawhi(TAG) | preflop | ? stk=21599 | 6d 8h | eq=41% -> raise 30 | Raised to 30 (target 30, range 0-21619, tier2_arrows)
+[00:58:15]    Clawhi(TAG) | flop | ? stk=21599 | 6d 8h | eq=35% [dry] -> check  | Checked
+[00:58:20]    NitKing(NIT) | flop | ? stk=45418 | 8c Qc | eq=62% [dry] -> raise 25 | Raised to 20 (target 25, range 0-45418, tier1_mouse)
+[00:58:40]    Clawhi(TAG) | flop | ? stk=21599 | 6d 8h | eq=42% [dry] -> call  | Called
+[00:59:06]    Clawhi(TAG) | turn | ? stk=21579 | 6d 8h | eq=29% [wet] -> raise 54 | Error: 
+[00:59:08]    NitKing(NIT) | turn | ? stk=45398 | 8c Qc | eq=44% [wet] -> check  | Checked
+[00:59:32]    Clawhi(TAG) | river | ? stk=21579 | 6d 8h | eq=3% [wet] -> check  | Checked
+[00:59:34]    NitKing(NIT) | river | ? stk=45398 | 8c Qc | eq=16% [wet] -> check  | Checked
+[00:59:42]    CallStn(STATION) | preflop | UTG stk=11805 | 9h Jc | eq=44% -> call  | Called
+[00:59:44]    AceBot(LAG) | preflop | BTN stk=18065 | Qs Ah | eq=54% -> call  | Called
+[00:59:52]    Clawhi(TAG) | preflop | SB stk=21569 | Ad 3h | eq=46% -> call  | Called
+[00:59:54]    NitKing(NIT) | preflop | BB stk=45468 | 10s Ks | eq=51% -> check  | Checked
+[01:00:10] 📊 LIVE DASHBOARD | 13770h (1846.3m)
+[01:00:10]    🎯 Hands: Clawhi:3077h AceBot:3529h NitKing:3641h CallStn:3549h
+[01:00:10]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:00:10]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:00:10] 📊 PERFORMANCE (13796h, 1846.3m)
+[01:00:10]    🎚️ Slider: 6221/6469 (96%) | T1:953 T2:5267 T3:1 | Fallback calls:0
+[01:00:15]    Clawhi(TAG) | flop | SB stk=21559 | Ad 3h | eq=17% [dry] -> check  | Checked
+[01:00:20]    NitKing(NIT) | flop | BB stk=45468 | 10s Ks | eq=28% [dry] -> check  | Checked
+[01:00:23]    CallStn(STATION) | flop | UTG stk=11785 | 9h Jc | eq=39% [dry] -> check  | Checked
+[01:00:31]    AceBot(LAG) | flop | BTN stk=18045 | Qs Ah | eq=86% [dry] -> raise 51 | Raised to 51 (target 51, range 0-18045, tier2_arrows)
+[01:00:43]    Clawhi(TAG) | flop | SB stk=21559 | Ad 3h | eq=55% [dry] -> raise 153 | Error: 
+[01:00:58]    NitKing(NIT) | flop | SB stk=45468 | 10s Ks | eq=48% [dry] -> raise 102 | Raised to 102 (target 102, range 0-45468, tier1_mouse)
+[01:01:00]    CallStn(STATION) | flop | BB stk=11785 | 9h Jc | eq=19% [dry] -> call  | Called
+[01:01:11]    AceBot(LAG) | flop | BTN stk=17994 | Qs Ah | eq=75% [dry] -> raise 180 | Raised to 180 (target 180, range 0-18045, tier2_arrows)
+[01:01:11] 📊 LIVE DASHBOARD | 13796h (1847.3m)
+[01:01:11]    🎯 Hands: Clawhi:3077h AceBot:3529h NitKing:3641h CallStn:3549h
+[01:01:11]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:01:11]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:01:11] 📊 PERFORMANCE (13796h, 1847.3m)
+[01:01:11]    🎚️ Slider: 6224/6473 (96%) | T1:954 T2:5269 T3:1 | Fallback calls:0
+[01:01:13]    NitKing(NIT) | flop | SB stk=45366 | 10s Ks | eq=26% [dry] -> fold  | Folded
+[01:01:16]    CallStn(STATION) | flop | BB stk=11683 | 9h Jc | eq=38% [dry] -> call  | Called
+[01:01:20]    CallStn(STATION) | turn | BB stk=11605 | 9h Jc | eq=35% [dry] -> check  | Checked
+[01:01:33]    AceBot(LAG) | turn | BTN/SB stk=17865 | Qs Ah | eq=90% [dry] -> raise 390 | Error: 
+[01:01:50]    CallStn(STATION) | river | BB stk=11605 | 9h Jc | eq=29% [wet] -> check  | Checked
+[01:02:03]    AceBot(LAG) | river | BTN/SB stk=17865 | Qs Ah | eq=90% [wet] -> raise 359 | Error: 
+[01:02:13]    📊 CallStn (STATION): 3550 hands | stack=35 | net=-149945 (29 rebuys)
+[01:02:21]    AceBot(LAG) | preflop | UTG stk=18407 | 8d Js | eq=42% -> call  | Called
+[01:02:39]    Clawhi(TAG) | preflop | BTN stk=21559 | 6s As | eq=49% -> call  | Called
+[01:02:42]    NitKing(NIT) | preflop | SB stk=45356 | 8c 8h | eq=58% -> call  | Called
+[01:02:45]    CallStn(STATION) | preflop | BB stk=11585 | Qc 3d | eq=39% -> check  | Checked
+[01:02:48]    NitKing(NIT) | flop | SB stk=45346 | 8c 8h | eq=8% [very_wet] -> check  | Checked
+[01:02:50]    CallStn(STATION) | flop | BB stk=11585 | Qc 3d | eq=18% [very_wet] -> check  | Checked
+[01:03:01]    AceBot(LAG) | flop | UTG stk=18387 | 8d Js | eq=55% [very_wet] -> raise 41 | Raised to 41 (target 41, range 0-18387, tier2_arrows)
+[01:03:24]    Clawhi(TAG) | flop | BTN stk=21539 | 6s As | eq=98% [very_wet] -> raise 123 | Error: 
+[01:03:26]    NitKing(NIT) | flop | ? stk=45346 | 8c 8h | eq=39% [very_wet] -> call  | Called
+[01:03:30]    CallStn(STATION) | flop | ? stk=11585 | Qc 3d | eq=14% [very_wet] -> fold  | Folded
+[01:03:39]    NitKing(NIT) | turn | ? stk=45305 | 8c 8h | eq=26% [very_wet] -> raise 116 | Raised to 116 (target 116, range 0-45305, tier2_arrows)
+[01:03:53]    AceBot(LAG) | turn | ? stk=18346 | 8d Js | eq=55% [very_wet] -> raise 348 | Error: 
+[01:04:16]    Clawhi(TAG) | preflop | UTG stk=21539 | 3h 6h | eq=31% -> fold  | Folded
+[01:04:19]    NitKing(NIT) | preflop | BTN stk=45467 | Qh 4c | eq=43% -> fold  | Folded
+[01:04:22]    CallStn(STATION) | preflop | ? stk=11575 | Qc Qd | eq=80% -> call  | Called
+[01:04:26]    AceBot(LAG) | preflop | ? stk=18326 | 6c Jh | eq=46% -> check  | Checked
+[01:04:38]    CallStn(STATION) | flop | ? stk=11565 | Qc Qd | eq=77% [very_wet] -> raise 30 | Raised to 30 (target 30, range 0-11565, tier2_arrows)
+[01:04:49]    AceBot(LAG) | flop | ? stk=18326 | 6c Jh | eq=60% [very_wet] -> raise 90 | Raised to 90 (target 90, range 0-18326, tier2_arrows)
+[01:05:03]    CallStn(STATION) | flop | ? stk=11535 | Qc Qd | eq=79% [very_wet] -> raise 128 | Error: 
+[01:05:23]    NitKing(NIT) | preflop | UTG stk=45467 | 8c Ah | eq=49% -> call  | Called
+[01:05:26]    CallStn(STATION) | preflop | BTN stk=11535 | Qd Ac | eq=54% -> call  | Called
+[01:05:28]    AceBot(LAG) | preflop | SB stk=18386 | 7d 6s | eq=34% -> fold  | Folded
+[01:05:43]    Clawhi(TAG) | preflop | SB stk=21519 | 7s 3d | eq=31% -> check  | Checked
+[01:06:08]    Clawhi(TAG) | flop | SB stk=21519 | 7s 3d | eq=90% [dry] -> raise 45 | Raised to 0 (target 45, range 0-21519, FAILED)
+[01:06:11] 📊 LIVE DASHBOARD | 13796h (1852.3m)
+[01:06:11]    🎯 Hands: Clawhi:3081h AceBot:3533h NitKing:3645h CallStn:3553h
+[01:06:11]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:06:11]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:06:11] 📊 PERFORMANCE (13812h, 1852.3m)
+[01:06:11]    🎚️ Slider: 6228/6483 (96%) | T1:954 T2:5273 T3:1 | Fallback calls:0
+[01:06:16]    NitKing(NIT) | flop | BB stk=45447 | 8c Ah | eq=54% [dry] -> raise 32 | Raised to 32 (target 32, range 0-45447, tier2_arrows)
+[01:06:20]    CallStn(STATION) | flop | BTN stk=11515 | Qd Ac | eq=61% [dry] -> call  | Called
+[01:06:42]    Clawhi(TAG) | flop | SB stk=21519 | 7s 3d | eq=91% [dry] -> raise 96 | Error: 
+[01:06:48]    NitKing(NIT) | turn | BB stk=45415 | 8c Ah | eq=56% [wet] -> check  | Checked
+[01:07:00]    CallStn(STATION) | turn | BTN/SB stk=11483 | Qd Ac | eq=88% [wet] -> raise 93 | Raised to 93 (target 93, range 0-11483, tier2_arrows)
+[01:07:01]    NitKing(NIT) | turn | BB stk=45415 | 8c Ah | eq=51% [wet] -> call  | Called
+[01:07:11]    NitKing(NIT) | river | BB stk=45322 | 8c Ah | eq=46% [wet] -> check  | Checked
+[01:07:12] 📊 LIVE DASHBOARD | 13812h (1853.3m)
+[01:07:12]    🎯 Hands: Clawhi:3081h AceBot:3533h NitKing:3645h CallStn:3553h
+[01:07:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:07:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:07:12] 📊 PERFORMANCE (13812h, 1853.3m)
+[01:07:12]    🎚️ Slider: 6230/6486 (96%) | T1:954 T2:5275 T3:1 | Fallback calls:0
+[01:07:23]    CallStn(STATION) | river | BTN/SB stk=11390 | Qd Ac | eq=80% [wet] -> raise 172 | Error: 
+[01:07:40]    CallStn(STATION) | river | BTN/SB stk=11390 | Qd Ac | eq=78% [wet] -> check  | Checked
+[01:07:47]    CallStn(STATION) | preflop | UTG stk=11710 | 7s 7c | eq=56% -> call  | Called
+[01:07:52]    AceBot(LAG) | preflop | BTN stk=18386 | 4h 5d | eq=30% -> fold  | Folded
+[01:08:01]    Clawhi(TAG) | preflop | ? stk=21509 | Ac 9c | eq=57% -> call  | Called
+[01:08:02]    NitKing(NIT) | preflop | ? stk=45302 | Kd Ah | eq=59% -> check  | Checked
+[01:08:25]    Clawhi(TAG) | flop | ? stk=21499 | Ac 9c | eq=35% [dry] -> check  | Checked
+[01:08:29]    NitKing(NIT) | flop | ? stk=45302 | Kd Ah | eq=63% [dry] -> raise 30 | Raised to 30 (target 30, range 0-45302, tier2_arrows)
+[01:08:31]    CallStn(STATION) | flop | ? stk=11690 | 7s 7c | eq=53% [dry] -> call  | Called
+[01:08:38]    Clawhi(TAG) | flop | ? stk=21499 | Ac 9c | eq=31% [dry] -> call  | Called
+[01:08:53]    Clawhi(TAG) | turn | ? stk=21469 | Ac 9c | eq=26% [wet] -> check  | Checked
+[01:08:55]    NitKing(NIT) | turn | ? stk=45272 | Kd Ah | eq=58% [wet] -> check  | Checked
+[01:08:59]    CallStn(STATION) | turn | ? stk=11660 | 7s 7c | eq=56% [wet] -> check  | Checked
+[01:09:13]    Clawhi(TAG) | river | ? stk=21469 | Ac 9c | eq=14% [wet] -> check  | Checked
+[01:09:18]    NitKing(NIT) | river | ? stk=45272 | Kd Ah | eq=43% [wet] -> check  | Checked
+[01:09:23]    CallStn(STATION) | river | ? stk=11660 | 7s 7c | eq=58% [wet] -> check  | Checked
+[01:09:32]    AceBot(LAG) | preflop | UTG stk=18386 | 7d Kc | eq=45% -> call  | Called
+[01:09:48]    Clawhi(TAG) | preflop | BTN stk=21469 | 6h 10s | eq=37% -> fold  | Folded
+[01:09:50]    NitKing(NIT) | preflop | ? stk=45262 | Qs 8c | eq=48% -> fold  | Folded
+[01:09:53]    CallStn(STATION) | preflop | ? stk=11790 | 5h 3h | eq=37% -> check  | Checked
+[01:09:57]    CallStn(STATION) | flop | ? stk=11790 | 5h 3h | eq=42% [wet] -> check  | Checked
+[01:10:08]    AceBot(LAG) | flop | ? stk=18366 | 7d Kc | eq=86% [wet] -> raise 36 | Raised to 36 (target 36, range 0-18366, tier2_arrows)
+[01:10:12]    CallStn(STATION) | flop | ? stk=11790 | 5h 3h | eq=46% [wet] -> call  | Called
+[01:10:18]    CallStn(STATION) | turn | ? stk=11754 | 5h 3h | eq=31% [wet] -> check  | Checked
+[01:10:30]    AceBot(LAG) | turn | ? stk=18330 | 7d Kc | eq=92% [wet] -> raise 87 | Raised to 87 (target 87, range 0-18330, tier2_arrows)
+[01:10:37]    CallStn(STATION) | turn | ? stk=11754 | 5h 3h | eq=31% [wet] -> call  | Called
+[01:10:43]    CallStn(STATION) | river | ? stk=11667 | 5h 3h | eq=43% [wet] -> check  | Checked
+[01:10:55]    AceBot(LAG) | river | ? stk=18243 | 7d Kc | eq=96% [wet] -> raise 196 | Error: 
+[01:11:11]    📊 NitKing (NIT): 3650 hands | stack=35 | net=-65017 (12 rebuys)
+[01:11:13]    AceBot(LAG) | river | ? stk=18243 | 7d Kc | eq=96% [wet] -> check  | Checked
+[01:11:18]    Clawhi(TAG) | preflop | UTG stk=21469 | Kd 3d | eq=44% -> call  | Called
+[01:11:20]    NitKing(NIT) | preflop | BTN stk=45262 | 6d 5h | eq=31% -> fold  | Folded
+[01:11:22]    CallStn(STATION) | preflop | ? stk=11657 | 7d 6s | eq=37% -> fold  | Folded
+[01:11:23]    AceBot(LAG) | preflop | ? stk=18519 | 2s 10c | eq=39% -> check  | Checked
+[01:11:29]    AceBot(LAG) | flop | ? stk=18519 | 2s 10c | eq=26% [wet] -> check  | Checked
+[01:11:38]    Clawhi(TAG) | flop | ? stk=21449 | Kd 3d | eq=44% [wet] -> check  | Checked
+[01:11:42]    AceBot(LAG) | turn | ? stk=18519 | 2s 10c | eq=26% [wet] -> check  | Checked
+[01:11:57]    Clawhi(TAG) | turn | ? stk=21449 | Kd 3d | eq=51% [wet] -> check  | Checked
+[01:12:00]    AceBot(LAG) | river | ? stk=18519 | 2s 10c | eq=12% [very_wet] -> check  | Checked
+[01:12:12] 📊 LIVE DASHBOARD | 13812h (1858.3m)
+[01:12:12]    🎯 Hands: Clawhi:3084h AceBot:3538h NitKing:3651h CallStn:3558h
+[01:12:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:12:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:12:12] 📊 PERFORMANCE (13831h, 1858.3m)
+[01:12:12]    🎚️ Slider: 6233/6491 (96%) | T1:954 T2:5278 T3:1 | Fallback calls:0
+[01:12:14]    Clawhi(TAG) | river | ? stk=21449 | Kd 3d | eq=33% [very_wet] -> check  | Checked
+[01:12:23]    NitKing(NIT) | preflop | UTG stk=45262 | 5h Js | eq=38% -> fold  | Folded
+[01:12:31]    CallStn(STATION) | preflop | BTN stk=11657 | 6d 10h | eq=40% -> fold  | Folded
+[01:12:35]    AceBot(LAG) | preflop | ? stk=18509 | 2c 9h | eq=37% -> fold  | Folded
+[01:12:40]    CallStn(STATION) | preflop | UTG stk=11657 | 4c 4h | eq=48% -> call  | Called
+[01:12:43]    AceBot(LAG) | preflop | BTN stk=18509 | Qh 6s | eq=41% -> fold  | Folded
+[01:12:58]    Clawhi(TAG) | preflop | ? stk=21499 | 9s 3s | eq=38% -> fold  | Folded
+[01:13:03]    NitKing(NIT) | preflop | ? stk=45242 | Js 8s | eq=52% -> check  | Checked
+[01:13:08]    NitKing(NIT) | flop | ? stk=45242 | Js 8s | eq=41% [dry] -> check  | Checked
+[01:13:12] 📊 LIVE DASHBOARD | 13831h (1859.3m)
+[01:13:12]    🎯 Hands: Clawhi:3085h AceBot:3541h NitKing:3654h CallStn:3561h
+[01:13:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:13:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:13:12] 📊 PERFORMANCE (13841h, 1859.3m)
+[01:13:12]    🎚️ Slider: 6233/6492 (96%) | T1:954 T2:5278 T3:1 | Fallback calls:0
+[01:13:20]    CallStn(STATION) | flop | ? stk=11637 | 4c 4h | eq=62% [dry] -> raise 30 | Raised to 30 (target 30, range 0-11637, tier2_arrows)
+[01:13:24]    NitKing(NIT) | flop | ? stk=45242 | Js 8s | eq=41% [dry] -> call  | Called
+[01:13:29]    NitKing(NIT) | turn | ? stk=45212 | Js 8s | eq=30% [dry] -> check  | Checked
+[01:13:42]    CallStn(STATION) | turn | ? stk=11607 | 4c 4h | eq=64% [dry] -> raise 59 | Error: 
+[01:14:05]    NitKing(NIT) | river | ? stk=45212 | Js 8s | eq=24% [wet] -> check  | Checked
+[01:14:12] 📊 LIVE DASHBOARD | 13841h (1860.3m)
+[01:14:12]    🎯 Hands: Clawhi:3085h AceBot:3541h NitKing:3654h CallStn:3561h
+[01:14:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:14:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:14:12] 📊 PERFORMANCE (13841h, 1860.3m)
+[01:14:12]    🎚️ Slider: 6234/6494 (96%) | T1:954 T2:5279 T3:1 | Fallback calls:0
+[01:14:13]    CallStn(STATION) | river | ? stk=11607 | 4c 4h | eq=64% [wet] -> raise 55 | Raised to 55 (target 55, range 0-11607, tier2_arrows)
+[01:14:17]    NitKing(NIT) | river | ? stk=45212 | Js 8s | eq=28% [wet] -> call  | Called
+[01:14:25]    AceBot(LAG) | preflop | UTG stk=18509 | 5c 2c | eq=30% -> fold  | Folded
+[01:14:44]    Clawhi(TAG) | preflop | BTN stk=21499 | Jh Jc | eq=71% -> call  | Called
+[01:14:47]    NitKing(NIT) | preflop | SB stk=45147 | 7c 6h | eq=37% -> fold  | Folded
+[01:14:50]    CallStn(STATION) | preflop | BB stk=11752 | Kd 8h | eq=54% -> check  | Checked
+[01:14:54]    CallStn(STATION) | flop | BB stk=11752 | Kd 8h | eq=46% [dry] -> check  | Checked
+[01:15:19]    CallStn(STATION) | flop | BB stk=11752 | Kd 8h | eq=46% [dry] -> call  | Called
+[01:15:23]    CallStn(STATION) | turn | BB stk=11722 | Kd 8h | eq=48% [wet] -> check  | Checked
+[01:15:26]    Clawhi(TAG) | flop | BTN/SB stk=21479 | Jh Jc | eq=73% [dry] -> raise 30 | Error: 
+[01:15:50]    Clawhi(TAG) | turn | BTN/SB stk=21449 | Jh Jc | eq=66% [wet] -> raise 59 | Raised to 0 (target 59, range 0-21449, FAILED)
+[01:15:54]    CallStn(STATION) | river | BB stk=11722 | Kd 8h | eq=34% [very_wet] -> check  | Checked
+[01:16:22]    Clawhi(TAG) | river | BTN/SB stk=21449 | Jh Jc | eq=62% [very_wet] -> raise 68 | Error: 
+[01:16:37]    Clawhi(TAG) | preflop | UTG stk=21559 | 10h Js | eq=46% -> call  | Called
+[01:16:39]    NitKing(NIT) | preflop | BTN stk=45147 | 2s 2d | eq=41% -> fold  | Folded
+[01:16:42]    CallStn(STATION) | preflop | ? stk=11712 | 3h 7d | eq=31% -> fold  | Folded
+[01:16:43]    AceBot(LAG) | preflop | ? stk=18489 | 8d 10d | eq=50% -> check  | Checked
+[01:16:54]    AceBot(LAG) | flop | ? stk=18489 | 8d 10d | eq=87% [dry] -> raise 30 | Raised to 30 (target 30, range 0-18489, tier2_arrows)
+[01:17:10]    Clawhi(TAG) | flop | ? stk=21539 | 10h Js | eq=80% [dry] -> raise 90 | Error: 
+[01:17:25]    NitKing(NIT) | preflop | UTG stk=45147 | 10c 4s | eq=35% -> fold  | Folded
+[01:17:28]    CallStn(STATION) | preflop | BTN stk=11712 | 6d 9d | eq=42% -> fold  | Folded
+[01:17:31]    AceBot(LAG) | preflop | ? stk=18529 | 5d 9h | eq=40% -> fold  | Folded
+[01:17:40]    CallStn(STATION) | preflop | UTG stk=11712 | 6d Qs | eq=41% -> call  | Called
+[01:17:42]    AceBot(LAG) | preflop | BTN stk=18529 | Qd 6c | eq=41% -> fold  | Folded
+[01:17:51]    Clawhi(TAG) | preflop | ? stk=21539 | 10h 2c | eq=36% -> fold  | Folded
+[01:17:54]    NitKing(NIT) | preflop | ? stk=45127 | 4c 2h | eq=30% -> check  | Checked
+[01:17:59]    NitKing(NIT) | flop | ? stk=45127 | 4c 2h | eq=31% [wet] -> check  | Checked
+[01:18:02]    CallStn(STATION) | flop | ? stk=11692 | 6d Qs | eq=32% [wet] -> check  | Checked
+[01:18:04]    NitKing(NIT) | turn | ? stk=45127 | 4c 2h | eq=16% [wet] -> check  | Checked
+[01:18:08]    CallStn(STATION) | turn | ? stk=11692 | 6d Qs | eq=28% [wet] -> check  | Checked
+[01:18:10]    NitKing(NIT) | river | ? stk=45127 | 4c 2h | eq=0% [very_wet] -> check  | Checked
+[01:18:13]    CallStn(STATION) | river | ? stk=11692 | 6d Qs | eq=16% [very_wet] -> check  | Checked
+[01:18:20]    AceBot(LAG) | preflop | UTG stk=18529 | Qd 7h | eq=42% -> call  | Called
+[01:18:31]    Clawhi(TAG) | preflop | BTN stk=21539 | 6d 5d | eq=34% -> fold  | Folded
+[01:18:32]    NitKing(NIT) | preflop | ? stk=45117 | 8h 10c | eq=44% -> fold  | Folded
+[01:18:35]    CallStn(STATION) | preflop | ? stk=11722 | Jh 9s | eq=52% -> check  | Checked
+[01:18:40]    CallStn(STATION) | flop | ? stk=11722 | Jh 9s | eq=35% [dry] -> check  | Checked
+[01:18:46]    AceBot(LAG) | flop | ? stk=18509 | Qd 7h | eq=35% [dry] -> check  | Checked
+[01:18:50]    CallStn(STATION) | turn | ? stk=11722 | Jh 9s | eq=37% [dry] -> check  | Checked
+[01:18:57]    AceBot(LAG) | turn | ? stk=18509 | Qd 7h | eq=47% [dry] -> check  | Checked
+[01:19:03]    CallStn(STATION) | river | ? stk=11722 | Jh 9s | eq=25% [wet] -> check  | Checked
+[01:19:06]    AceBot(LAG) | river | ? stk=18509 | Qd 7h | eq=31% [wet] -> check  | Checked
+[01:19:08]    📊 AceBot (LAG): 3550 hands | stack=11722 | net=-313268 (64 rebuys)
+[01:19:12] 📊 LIVE DASHBOARD | 13841h (1865.3m)
+[01:19:12]    🎯 Hands: Clawhi:3091h AceBot:3550h NitKing:3663h CallStn:3569h
+[01:19:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:19:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:19:12] 📊 PERFORMANCE (13873h, 1865.3m)
+[01:19:12]    🎚️ Slider: 6237/6498 (96%) | T1:954 T2:5282 T3:1 | Fallback calls:0
+[01:19:23]    Clawhi(TAG) | preflop | UTG stk=21539 | 10c 3d | eq=34% -> fold  | Folded
+[01:19:26]    NitKing(NIT) | preflop | BTN stk=45117 | Kh 3s | eq=45% -> fold  | Folded
+[01:19:34]    CallStn(STATION) | preflop | ? stk=11712 | 7c 8c | eq=46% -> fold  | Folded
+[01:19:41]    NitKing(NIT) | preflop | UTG stk=45117 | 7c 9c | eq=40% -> fold  | Folded
+[01:19:43]    CallStn(STATION) | preflop | BTN stk=11712 | 6d As | eq=51% -> call  | Called
+[01:19:47]    AceBot(LAG) | preflop | SB stk=18559 | Ac 3d | eq=50% -> call  | Called
+[01:20:02]    Clawhi(TAG) | preflop | BB stk=21519 | 10h 7d | eq=42% -> raise 60 | Error: 
+[01:20:12] 📊 LIVE DASHBOARD | 13873h (1866.3m)
+[01:20:12]    🎯 Hands: Clawhi:3093h AceBot:3552h NitKing:3665h CallStn:3571h
+[01:20:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:20:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:20:12] 📊 PERFORMANCE (13881h, 1866.3m)
+[01:20:12]    🎚️ Slider: 6237/6499 (96%) | T1:954 T2:5282 T3:1 | Fallback calls:0
+[01:20:18]    AceBot(LAG) | flop | SB stk=18549 | Ac 3d | eq=29% [dry] -> check  | Checked
+[01:20:28]    Clawhi(TAG) | flop | BB stk=21519 | 10h 7d | eq=31% [dry] -> check  | Checked
+[01:20:31]    CallStn(STATION) | flop | BTN stk=11692 | 6d As | eq=55% [dry] -> check  | Checked
+[01:20:36]    AceBot(LAG) | turn | SB stk=18549 | Ac 3d | eq=30% [wet] -> check  | Checked
+[01:20:49]    Clawhi(TAG) | turn | BB stk=21519 | 10h 7d | eq=27% [wet] -> check  | Checked
+[01:20:58]    CallStn(STATION) | turn | BTN stk=11692 | 6d As | eq=52% [wet] -> raise 32 | Raised to 32 (target 32, range 0-11692, tier2_arrows)
+[01:21:08]    AceBot(LAG) | turn | SB stk=18549 | Ac 3d | eq=52% [wet] -> raise 96 | Raised to 96 (target 96, range 0-18549, tier2_arrows)
+[01:21:12] 📊 LIVE DASHBOARD | 13881h (1867.3m)
+[01:21:12]    🎯 Hands: Clawhi:3093h AceBot:3552h NitKing:3665h CallStn:3571h
+[01:21:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:21:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:21:12] 📊 PERFORMANCE (13881h, 1867.3m)
+[01:21:12]    🎚️ Slider: 6239/6501 (96%) | T1:954 T2:5284 T3:1 | Fallback calls:0
+[01:21:23]    Clawhi(TAG) | turn | BB stk=21519 | 10h 7d | eq=9% [wet] -> fold  | Folded
+[01:21:26]    CallStn(STATION) | turn | BTN/SB stk=11660 | 6d As | eq=56% [wet] -> call  | Called
+[01:21:29]    AceBot(LAG) | river | BB stk=18453 | Ac 3d | eq=44% [wet] -> check  | Checked
+[01:21:35]    CallStn(STATION) | river | BTN/SB stk=11596 | 6d As | eq=41% [wet] -> check  | Checked
+[01:21:44]    CallStn(STATION) | preflop | UTG stk=11722 | Ad 10h | eq=52% -> call  | Called
+[01:21:45]    AceBot(LAG) | preflop | BTN stk=18579 | 3h Qc | eq=39% -> fold  | Folded
+[01:21:56]    Clawhi(TAG) | preflop | ? stk=21509 | 8h 5c | eq=36% -> fold  | Folded
+[01:22:03]    NitKing(NIT) | preflop | ? stk=45097 | Jd Jc | eq=77% -> raise 30 | Raised to 30 (target 30, range 0-45117, tier2_arrows)
+[01:22:27]    NitKing(NIT) | preflop | ? stk=45097 | Jd Jc | eq=77% -> fold  | Folded
+[01:22:41]    NitKing(NIT) | flop | ? stk=45097 | Jd Jc | eq=79% [dry] -> raise 30 | Error: 
+[01:23:01]    CallStn(STATION) | flop | ? stk=11702 | Ad 10h | eq=77% [dry] -> raise 30 | Error: 
+[01:23:20]    CallStn(STATION) | flop | ? stk=11702 | Ad 10h | eq=78% [dry] -> check  | Checked
+[01:23:24]    NitKing(NIT) | turn | ? stk=45097 | Jd Jc | eq=84% [wet] -> raise 31 | Raised to 31 (target 31, range 0-45097, tier2_arrows)
+[01:23:30]    AceBot(LAG) | preflop | UTG stk=18579 | Js 6s | eq=41% -> fold  | Folded
+[01:23:48]    Clawhi(TAG) | preflop | BTN stk=21509 | 10c 3c | eq=40% -> fold  | Folded
+[01:23:50]    NitKing(NIT) | preflop | ? stk=45137 | 5h 6h | eq=40% -> fold  | Folded
+[01:23:55]    📊 CallStn (STATION): 3575 hands
+[01:24:04]    Clawhi(TAG) | preflop | UTG stk=21509 | 10c 5s | eq=35% -> fold  | Folded
+[01:24:07]    NitKing(NIT) | preflop | BTN stk=45137 | Ks 7h | eq=49% -> call  | Called
+[01:24:09]    CallStn(STATION) | preflop | SB stk=11702 | 9h 4c | eq=35% -> fold  | Folded
+[01:24:11]    AceBot(LAG) | preflop | BB stk=18559 | Jh 2h | eq=45% -> check  | Checked
+[01:24:25]    AceBot(LAG) | flop | BB stk=18559 | Jh 2h | eq=64% [wet] -> raise 30 | Raised to 30 (target 30, range 0-18559, tier2_arrows)
+[01:24:27]    NitKing(NIT) | flop | BTN/SB stk=45117 | Ks 7h | eq=42% [wet] -> call  | Called
+[01:24:37]    AceBot(LAG) | turn | BB stk=18529 | Jh 2h | eq=62% [very_wet] -> raise 56 | Raised to 56 (target 56, range 0-18529, tier2_arrows)
+[01:24:41]    NitKing(NIT) | turn | BTN/SB stk=45087 | Ks 7h | eq=42% [very_wet] -> call  | Called
+[01:24:51]    AceBot(LAG) | river | BB stk=18473 | Jh 2h | eq=90% [very_wet] -> raise 147 | Raised to 147 (target 147, range 0-18473, tier2_arrows)
+[01:24:54]    NitKing(NIT) | river | BTN/SB stk=45031 | Ks 7h | eq=28% [very_wet] -> call  | Called
+[01:25:04]    NitKing(NIT) | preflop | UTG stk=44884 | 2c Kh | eq=41% -> fold  | Folded
+[01:25:06]    CallStn(STATION) | preflop | BTN stk=11702 | Jc Qd | eq=52% -> call  | Called
+[01:25:10]    AceBot(LAG) | preflop | SB stk=18832 | 6d 7h | eq=37% -> fold  | Folded
+[01:25:16]    Clawhi(TAG) | preflop | BB stk=21489 | 4h 7s | eq=36% -> check  | Checked
+[01:25:47]    CallStn(STATION) | flop | BTN/SB stk=11682 | Jc Qd | eq=43% [dry] -> check  | Checked
+[01:26:12]    CallStn(STATION) | turn | BTN/SB stk=11682 | Jc Qd | eq=40% [dry] -> check  | Checked
+[01:26:12] 📊 LIVE DASHBOARD | 13881h (1872.3m)
+[01:26:12]    🎯 Hands: Clawhi:3097h AceBot:3557h NitKing:3671h CallStn:3577h
+[01:26:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:26:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:26:12] 📊 PERFORMANCE (13902h, 1872.3m)
+[01:26:12]    🎚️ Slider: 6244/6508 (96%) | T1:954 T2:5289 T3:1 | Fallback calls:0
+[01:26:15]    Clawhi(TAG) | turn | BB stk=21489 | 4h 7s | eq=16% [dry] -> check  | Checked
+[01:26:36]    CallStn(STATION) | river | BTN/SB stk=11682 | Jc Qd | eq=31% [wet] -> check  | Checked
+[01:26:44]    CallStn(STATION) | preflop | UTG stk=11732 | 2h 6s | eq=26% -> fold  | Folded
+[01:26:46]    AceBot(LAG) | preflop | BTN stk=18832 | Ad Kh | eq=59% -> call  | Called
+[01:26:51]    Clawhi(TAG) | preflop | SB stk=21479 | 3c 2c | eq=30% -> fold  | Folded
+[01:26:53]    NitKing(NIT) | preflop | BB stk=44864 | 4c 2s | eq=30% -> check  | Checked
+[01:26:57]    NitKing(NIT) | flop | BB stk=44864 | 4c 2s | eq=15% [dry] -> check  | Checked
+[01:27:07]    AceBot(LAG) | flop | BTN/SB stk=18812 | Ad Kh | eq=58% [dry] -> raise 30 | Raised to 30 (target 30, range 0-18812, tier2_arrows)
+[01:27:10]    NitKing(NIT) | flop | BB stk=44864 | 4c 2s | eq=14% [dry] -> fold  | Folded
+[01:27:12] 📊 LIVE DASHBOARD | 13902h (1873.3m)
+[01:27:12]    🎯 Hands: Clawhi:3098h AceBot:3559h NitKing:3673h CallStn:3579h
+[01:27:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:27:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:27:12] 📊 PERFORMANCE (13909h, 1873.3m)
+[01:27:12]    🎚️ Slider: 6245/6509 (96%) | T1:954 T2:5290 T3:1 | Fallback calls:0
+[01:27:16]    AceBot(LAG) | preflop | UTG stk=18862 | 3s 10h | eq=34% -> fold  | Folded
+[01:27:30]    Clawhi(TAG) | preflop | BTN stk=21479 | 5h 10d | eq=39% -> fold  | Folded
+[01:27:32]    NitKing(NIT) | preflop | ? stk=44854 | Ah 6h | eq=58% -> call  | Called
+[01:27:39]    CallStn(STATION) | preflop | ? stk=11712 | Js As | eq=64% -> raise 60 | Raised to 60 (target 60, range 0-11732, tier2_arrows)
+[01:27:41]    NitKing(NIT) | preflop | ? stk=44844 | Ah 6h | eq=58% -> call  | Called
+[01:27:52]    NitKing(NIT) | flop | ? stk=44804 | Ah 6h | eq=66% [dry] -> raise 48 | Raised to 48 (target 48, range 0-44804, tier2_arrows)
+[01:27:56]    CallStn(STATION) | flop | ? stk=11672 | Js As | eq=55% [dry] -> call  | Called
+[01:28:08]    NitKing(NIT) | turn | ? stk=44756 | Ah 6h | eq=68% [wet] -> raise 116 | Error: 
+[01:28:12] 📊 LIVE DASHBOARD | 13909h (1874.3m)
+[01:28:12]    🎯 Hands: Clawhi:3099h AceBot:3560h NitKing:3674h CallStn:3580h
+[01:28:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:28:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:28:12] 📊 PERFORMANCE (13913h, 1874.3m)
+[01:28:12]    🎚️ Slider: 6247/6512 (96%) | T1:954 T2:5292 T3:1 | Fallback calls:0
+[01:28:24]    NitKing(NIT) | turn | ? stk=44756 | Ah 6h | eq=70% [wet] -> check  | Checked
+[01:28:32]    CallStn(STATION) | turn | ? stk=11624 | Js As | eq=55% [wet] -> raise 108 | Raised to 108 (target 108, range 0-11624, tier2_arrows)
+[01:28:38]    📊 NitKing (NIT): 3675 hands
+[01:28:46]    📊 Clawhi (TAG): 3100 hands | stack=21479 | net=-18469 (7 rebuys)
+[01:28:49]    Clawhi(TAG) | preflop | UTG stk=21479 | 10c 6d | eq=37% -> fold  | Folded
+[01:28:52]    NitKing(NIT) | preflop | BTN stk=44756 | 9d 4d | eq=38% -> fold  | Folded
+[01:28:54]    CallStn(STATION) | preflop | ? stk=11830 | 5c 9h | eq=40% -> fold  | Folded
+[01:29:04]    NitKing(NIT) | preflop | UTG stk=44756 | 2s Jh | eq=36% -> fold  | Folded
+[01:29:04]    CallStn(STATION) | preflop | BTN stk=11830 | 4d 2d | eq=31% -> fold  | Folded
+[01:29:07]    AceBot(LAG) | preflop | ? stk=18862 | 10c 3d | eq=40% -> fold  | Folded
+[01:29:12] 📊 LIVE DASHBOARD | 13913h (1875.3m)
+[01:29:12]    🎯 Hands: Clawhi:3101h AceBot:3562h NitKing:3676h CallStn:3582h
+[01:29:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:29:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:29:12] 📊 PERFORMANCE (13921h, 1875.3m)
+[01:29:12]    🎚️ Slider: 6248/6513 (96%) | T1:954 T2:5293 T3:1 | Fallback calls:0
+[01:29:13]    CallStn(STATION) | preflop | UTG stk=11830 | 7d 3s | eq=29% -> fold  | Folded
+[01:29:16]    AceBot(LAG) | preflop | BTN stk=18862 | 3c 6d | eq=30% -> fold  | Folded
+[01:29:33]    Clawhi(TAG) | preflop | ? stk=21479 | Ac 5d | eq=56% -> call  | Called
+[01:29:35]    NitKing(NIT) | preflop | ? stk=44736 | 7h 4c | eq=36% -> check  | Checked
+[01:29:58]    Clawhi(TAG) | flop | ? stk=21469 | Ac 5d | eq=33% [very_wet] -> check  | Checked
+[01:29:59]    NitKing(NIT) | flop | ? stk=44736 | 7h 4c | eq=21% [very_wet] -> check  | Checked
+[01:30:12] 📊 LIVE DASHBOARD | 13921h (1876.3m)
+[01:30:12]    🎯 Hands: Clawhi:3102h AceBot:3563h NitKing:3677h CallStn:3583h
+[01:30:12]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:30:12]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:30:12] 📊 PERFORMANCE (13925h, 1876.3m)
+[01:30:12]    🎚️ Slider: 6248/6513 (96%) | T1:954 T2:5293 T3:1 | Fallback calls:0
+[01:30:23]    Clawhi(TAG) | turn | ? stk=21469 | Ac 5d | eq=33% [very_wet] -> check  | Checked
+[01:30:25]    NitKing(NIT) | turn | ? stk=44736 | 7h 4c | eq=17% [very_wet] -> check  | Checked
+[01:30:38]    Clawhi(TAG) | river | ? stk=21469 | Ac 5d | eq=38% [wet] -> check  | Checked
+[01:30:43]    NitKing(NIT) | river | ? stk=44736 | 7h 4c | eq=6% [wet] -> check  | Checked
+[01:30:50]    AceBot(LAG) | preflop | UTG stk=18862 | 2d 6s | eq=26% -> fold  | Folded
+[01:30:54]    Clawhi(TAG) | preflop | BTN stk=21509 | Ks 6c | eq=48% -> call  | Called
+[01:30:57]    NitKing(NIT) | preflop | SB stk=44726 | 4c 5d | eq=32% -> fold  | Folded
+[01:31:00]    CallStn(STATION) | preflop | BB stk=11810 | Kh 9h | eq=59% -> check  | Checked
+[01:32:26] 📊 LIVE DASHBOARD | 13925h (1878.6m)
+[01:32:26]    🎯 Hands: Clawhi:3103h AceBot:3565h NitKing:3679h CallStn:3585h
+[01:32:26]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:32:26]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:32:26] 📊 PERFORMANCE (13932h, 1878.6m)
+[01:32:26]    🎚️ Slider: 6248/6514 (96%) | T1:954 T2:5293 T3:1 | Fallback calls:0
+[01:32:28]    CallStn(STATION) | flop | BB stk=11810 | Kh 9h | eq=97% [wet] -> raise 36 | Error: 
+[01:32:44]    Clawhi(TAG) | turn | BTN/SB stk=21489 | Ks 6c | eq=34% [very_wet] -> check  | Checked
+[01:32:48]    CallStn(STATION) | river | BB stk=11810 | Kh 9h | eq=96% [very_wet] -> raise 30 | Raised to 30 (target 30, range 0-11810, tier2_arrows)
+[01:33:11]    Clawhi(TAG) | river | BTN/SB stk=21489 | Ks 6c | eq=41% [very_wet] -> raise 90 | Error: 
+[01:33:24]    Clawhi(TAG) | preflop | UTG stk=21489 | 3d 3s | eq=45% -> call  | Called
+[01:33:26] 📊 LIVE DASHBOARD | 13932h (1879.6m)
+[01:33:26]    🎯 Hands: Clawhi:3104h AceBot:3566h NitKing:3680h CallStn:3586h
+[01:33:26]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:33:26]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:33:26] 📊 PERFORMANCE (13936h, 1879.6m)
+[01:33:26]    🎚️ Slider: 6250/6516 (96%) | T1:954 T2:5295 T3:1 | Fallback calls:0
+[01:33:27]    NitKing(NIT) | preflop | BTN stk=44726 | 7c 4d | eq=30% -> fold  | Folded
+[01:33:28]    CallStn(STATION) | preflop | ? stk=11850 | 6h Ah | eq=54% -> call  | Called
+[01:33:30]    AceBot(LAG) | preflop | ? stk=18842 | Qh 4s | eq=43% -> check  | Checked
+[01:33:34]    CallStn(STATION) | flop | ? stk=11840 | 6h Ah | eq=25% [wet] -> check  | Checked
+[01:33:39]    AceBot(LAG) | flop | ? stk=18842 | Qh 4s | eq=42% [wet] -> check  | Checked
+[01:33:51]    Clawhi(TAG) | flop | ? stk=21469 | 3d 3s | eq=44% [wet] -> check  | Checked
+[01:33:56]    CallStn(STATION) | turn | ? stk=11840 | 6h Ah | eq=18% [very_wet] -> check  | Checked
+[01:34:06]    AceBot(LAG) | turn | ? stk=18842 | Qh 4s | eq=54% [very_wet] -> raise 41 | Raised to 41 (target 41, range 0-18842, tier2_arrows)
+[01:34:20]    Clawhi(TAG) | turn | ? stk=21469 | 3d 3s | eq=44% [very_wet] -> call  | Called
+[01:34:26]    CallStn(STATION) | turn | ? stk=11840 | 6h Ah | eq=16% [very_wet] -> fold  | Folded
+[01:34:26] 📊 LIVE DASHBOARD | 13936h (1880.6m)
+[01:34:26]    🎯 Hands: Clawhi:3104h AceBot:3566h NitKing:3680h CallStn:3586h
+[01:34:26]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:34:26]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:34:26] 📊 PERFORMANCE (13936h, 1880.6m)
+[01:34:26]    🎚️ Slider: 6251/6517 (96%) | T1:954 T2:5296 T3:1 | Fallback calls:0
+[01:34:29]    AceBot(LAG) | river | ? stk=18801 | Qh 4s | eq=36% [very_wet] -> check  | Checked
+[01:34:51]    Clawhi(TAG) | river | ? stk=21428 | 3d 3s | eq=28% [very_wet] -> check  | Checked
+[01:35:01]    NitKing(NIT) | preflop | UTG stk=44726 | 9h 5c | eq=34% -> fold  | Folded
+[01:35:05]    CallStn(STATION) | preflop | BTN stk=11840 | 7h 4s | eq=33% -> fold  | Folded
+[01:35:08]    AceBot(LAG) | preflop | ? stk=18933 | 3c 5h | eq=33% -> fold  | Folded
+[01:35:13]    CallStn(STATION) | preflop | UTG stk=11840 | 3c 7h | eq=29% -> fold  | Folded
+[01:35:15]    AceBot(LAG) | preflop | BTN stk=18933 | 3s Ad | eq=50% -> call  | Called
+[01:35:36]    Clawhi(TAG) | preflop | SB stk=21428 | 10h 4d | eq=38% -> fold  | Folded
+[01:35:38]    NitKing(NIT) | preflop | BB stk=44706 | 2s 9s | eq=40% -> check  | Checked
+[01:35:42]    NitKing(NIT) | flop | BB stk=44706 | 2s 9s | eq=45% [wet] -> check  | Checked
+[01:35:49]    AceBot(LAG) | flop | BTN/SB stk=18913 | 3s Ad | eq=74% [wet] -> raise 30 | Raised to 30 (target 30, range 0-18913, tier2_arrows)
+[01:35:54]    NitKing(NIT) | flop | BB stk=44706 | 2s 9s | eq=40% [wet] -> call  | Called
+[01:36:06]    NitKing(NIT) | turn | BB stk=44676 | 2s 9s | eq=40% [very_wet] -> raise 68 | Raised to 68 (target 68, range 0-44676, tier2_arrows)
+[01:36:18]    AceBot(LAG) | turn | BTN/SB stk=18883 | 3s Ad | eq=75% [very_wet] -> raise 204 | Error: 
+[01:36:43]    AceBot(LAG) | preflop | UTG stk=18883 | 4d Qd | eq=42% -> call  | Called
+[01:37:02]    Clawhi(TAG) | preflop | BTN stk=21428 | Ah 9h | eq=52% -> call  | Called
+[01:37:04]    NitKing(NIT) | preflop | SB stk=44776 | 7d 3d | eq=32% -> fold  | Folded
+[01:37:07]    CallStn(STATION) | preflop | SB stk=11820 | Js 7c | eq=44% -> check  | Checked
+[01:37:11]    CallStn(STATION) | flop | SB stk=11820 | Js 7c | eq=35% [very_wet] -> check  | Checked
+[01:37:13]    AceBot(LAG) | flop | BB stk=18863 | 4d Qd | eq=37% [very_wet] -> check  | Checked
+[01:37:21]    Clawhi(TAG) | flop | BTN stk=21408 | Ah 9h | eq=56% [very_wet] -> check  | Checked
+[01:37:32]    CallStn(STATION) | turn | SB stk=11820 | Js 7c | eq=89% [wet] -> raise 50 | Raised to 50 (target 50, range 0-11820, tier2_arrows)
+[01:37:36]    AceBot(LAG) | turn | BB stk=18863 | 4d Qd | eq=11% [wet] -> fold  | Folded
+[01:37:57]    Clawhi(TAG) | turn | BTN/SB stk=21408 | Ah 9h | eq=49% [wet] -> raise 150 | Error: 
+[01:38:22]    Clawhi(TAG) | preflop | UTG stk=21408 | Qd 3s | eq=39% -> fold  | Folded
+[01:38:24]    NitKing(NIT) | preflop | BTN stk=44776 | 9c 3d | eq=34% -> fold  | Folded
+[01:38:26]    CallStn(STATION) | preflop | ? stk=11880 | Js 2s | eq=45% -> fold  | Folded
+[01:38:33]    NitKing(NIT) | preflop | UTG stk=44776 | Kd 9d | eq=50% -> call  | Called
+[01:38:35]    CallStn(STATION) | preflop | BTN stk=11880 | 2s Qh | eq=38% -> fold  | Folded
+[01:38:37]    AceBot(LAG) | preflop | ? stk=18863 | 7d Kc | eq=49% -> call  | Called
+[01:38:56]    NitKing(NIT) | preflop | ? stk=44756 | Kd 9d | eq=54% -> call  | Called
+[01:38:57]    AceBot(LAG) | preflop | ? stk=18853 | 7d Kc | eq=49% -> call  | Called
+[01:39:04]    AceBot(LAG) | flop | ? stk=18813 | 7d Kc | eq=21% [dry] -> check  | Checked
+[01:39:06]    Clawhi(TAG) | preflop | ? stk=21388 | Ac 7s | eq=53% -> raise 60 | Error: 
+[01:39:27] 📊 LIVE DASHBOARD | 13936h (1885.6m)
+[01:39:27]    🎯 Hands: Clawhi:3108h AceBot:3571h NitKing:3686h CallStn:3592h
+[01:39:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:39:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:39:27] 📊 PERFORMANCE (13957h, 1885.6m)
+[01:39:27]    🎚️ Slider: 6255/6524 (96%) | T1:954 T2:5300 T3:1 | Fallback calls:0
+[01:39:30]    NitKing(NIT) | flop | ? stk=44716 | Kd 9d | eq=53% [dry] -> check  | Checked
+[01:39:31]    Clawhi(TAG) | flop | ? stk=21348 | Ac 7s | eq=54% [dry] -> raise 91 | Error: 
+[01:39:38]    AceBot(LAG) | turn | ? stk=18813 | 7d Kc | eq=20% [wet] -> check  | Checked
+[01:40:12]    NitKing(NIT) | turn | ? stk=44716 | Kd 9d | eq=44% [wet] -> raise 103 | Error: 
+[01:40:27] 📊 LIVE DASHBOARD | 13957h (1886.6m)
+[01:40:27]    🎯 Hands: Clawhi:3108h AceBot:3571h NitKing:3686h CallStn:3592h
+[01:40:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:40:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:40:27] 📊 PERFORMANCE (13957h, 1886.6m)
+[01:40:27]    🎚️ Slider: 6255/6525 (96%) | T1:954 T2:5300 T3:1 | Fallback calls:0
+[01:40:34]    NitKing(NIT) | turn | ? stk=44716 | Kd 9d | eq=48% [wet] -> check  | Checked
+[01:40:43]    AceBot(LAG) | river | ? stk=18813 | 7d Kc | eq=16% [wet] -> raise 103 | Error: 
+[01:40:56]    AceBot(LAG) | river | ? stk=18813 | 7d Kc | eq=14% [wet] -> check  | Checked
+[01:41:07]    Clawhi(TAG) | river | ? stk=21348 | Ac 7s | eq=52% [wet] -> check  | Checked
+[01:41:09]    NitKing(NIT) | river | ? stk=44716 | Kd 9d | eq=35% [wet] -> check  | Checked
+[01:41:19]    CallStn(STATION) | preflop | UTG stk=11880 | 8h 3c | eq=29% -> fold  | Folded
+[01:41:23]    AceBot(LAG) | preflop | BTN stk=18813 | 9h 7c | eq=41% -> fold  | Folded
+[01:41:31]    Clawhi(TAG) | preflop | ? stk=21518 | 2s 5c | eq=31% -> fold  | Folded
+[01:41:36]    AceBot(LAG) | preflop | UTG stk=18813 | 9s 8c | eq=39% -> fold  | Folded
+[01:41:50]    Clawhi(TAG) | preflop | BTN stk=21518 | 10h Qd | eq=51% -> call  | Called
+[01:41:53]    NitKing(NIT) | preflop | SB stk=44716 | 4s 7h | eq=33% -> fold  | Folded
+[01:41:54]    CallStn(STATION) | preflop | BB stk=11860 | Jh 4d | eq=44% -> check  | Checked
+[01:41:59]    CallStn(STATION) | flop | BB stk=11860 | Jh 4d | eq=27% [dry] -> check  | Checked
+[01:42:08]    Clawhi(TAG) | flop | BTN/SB stk=21498 | 10h Qd | eq=37% [dry] -> check  | Checked
+[01:42:12]    CallStn(STATION) | turn | BB stk=11860 | Jh 4d | eq=22% [dry] -> check  | Checked
+[01:42:23]    Clawhi(TAG) | turn | BTN/SB stk=21498 | 10h Qd | eq=28% [dry] -> check  | Checked
+[01:42:30]    CallStn(STATION) | river | BB stk=11860 | Jh 4d | eq=11% [wet] -> check  | Checked
+[01:42:50]    Clawhi(TAG) | river | BTN/SB stk=21498 | 10h Qd | eq=26% [wet] -> check  | Checked
+[01:42:50]    📊 AceBot (LAG): 3575 hands
+[01:43:12]    Clawhi(TAG) | preflop | UTG stk=21548 | 10d 7h | eq=39% -> fold  | Folded
+[01:43:14]    NitKing(NIT) | preflop | BTN stk=44716 | 3h Qh | eq=45% -> fold  | Folded
+[01:43:16]    CallStn(STATION) | preflop | ? stk=11850 | Qs 3s | eq=49% -> call  | Called
+[01:43:17]    AceBot(LAG) | preflop | ? stk=18793 | 4s 6h | eq=35% -> check  | Checked
+[01:43:20]    CallStn(STATION) | flop | ? stk=11840 | Qs 3s | eq=32% [wet] -> check  | Checked
+[01:43:23]    AceBot(LAG) | flop | ? stk=18793 | 4s 6h | eq=44% [wet] -> raise 25 | Raised to 20 (target 25, range 0-18793, tier1_mouse)
+[01:43:26]    CallStn(STATION) | flop | ? stk=11840 | Qs 3s | eq=30% [wet] -> call  | Called
+[01:43:33]    CallStn(STATION) | turn | ? stk=11820 | Qs 3s | eq=26% [very_wet] -> check  | Checked
+[01:43:39]    AceBot(LAG) | turn | ? stk=18773 | 4s 6h | eq=23% [very_wet] -> check  | Checked
+[01:43:42]    CallStn(STATION) | river | ? stk=11820 | Qs 3s | eq=27% [very_wet] -> check  | Checked
+[01:43:43]    AceBot(LAG) | river | ? stk=18773 | 4s 6h | eq=0% [very_wet] -> check  | Checked
+[01:43:54]    NitKing(NIT) | preflop | UTG stk=44716 | 5h Qd | eq=41% -> fold  | Folded
+[01:43:56]    CallStn(STATION) | preflop | BTN stk=11900 | 8s 10s | eq=46% -> call  | Called
+[01:44:02]    AceBot(LAG) | preflop | SB stk=18763 | Kh 3d | eq=45% -> fold  | Folded
+[01:44:15]    Clawhi(TAG) | preflop | BB stk=21528 | Jd 9s | eq=52% -> check  | Checked
+[01:44:44]    Clawhi(TAG) | flop | BB stk=21528 | Jd 9s | eq=78% [dry] -> raise 30 | Error: 
+[01:44:45]    CallStn(STATION) | flop | BTN/SB stk=11880 | 8s 10s | eq=40% [dry] -> check  | Checked
+[01:45:10]    Clawhi(TAG) | turn | BB stk=21528 | Jd 9s | eq=74% [dry] -> raise 30 | Error: 
+[01:45:12]    CallStn(STATION) | turn | BTN/SB stk=11880 | 8s 10s | eq=28% [dry] -> check  | Checked
+[01:45:27] 📊 LIVE DASHBOARD | 13957h (1891.6m)
+[01:45:27]    🎯 Hands: Clawhi:3112h AceBot:3578h NitKing:3693h CallStn:3598h
+[01:45:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:45:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:45:27] 📊 PERFORMANCE (13981h, 1891.6m)
+[01:45:27]    🎚️ Slider: 6256/6528 (96%) | T1:955 T2:5300 T3:1 | Fallback calls:0
+[01:45:37]    CallStn(STATION) | river | BTN/SB stk=11880 | 8s 10s | eq=9% [wet] -> check  | Checked
+[01:45:45]    📊 CallStn (STATION): 3600 hands | stack=11880 | net=-138100 (29 rebuys)
+[01:45:46]    CallStn(STATION) | preflop | UTG stk=11880 | 10h 10c | eq=63% -> call  | Called
+[01:45:51]    AceBot(LAG) | preflop | BTN stk=18763 | Qs 2h | eq=38% -> fold  | Folded
+[01:46:00]    Clawhi(TAG) | river | BB stk=21528 | Jd 9s | eq=79% [wet] -> raise 31 | Error: 
+[01:46:02]    NitKing(NIT) | preflop | ? stk=44696 | 4s 4h | eq=52% -> check  | Checked
+[01:46:20]    Clawhi(TAG) | flop | ? stk=21558 | 3d 2s | eq=4% [dry] -> check  | Checked
+[01:46:24]    NitKing(NIT) | flop | ? stk=44696 | 4s 4h | eq=44% [dry] -> check  | Checked
+[01:46:27] 📊 LIVE DASHBOARD | 13981h (1892.6m)
+[01:46:27]    🎯 Hands: Clawhi:3113h AceBot:3580h NitKing:3695h CallStn:3600h
+[01:46:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:46:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:46:27] 📊 PERFORMANCE (13988h, 1892.6m)
+[01:46:27]    🎚️ Slider: 6256/6528 (96%) | T1:955 T2:5300 T3:1 | Fallback calls:0
+[01:46:36]    CallStn(STATION) | flop | ? stk=11860 | 10h 10c | eq=92% [dry] -> raise 38 | Raised to 38 (target 38, range 0-11860, tier2_arrows)
+[01:46:42]    Clawhi(TAG) | flop | ? stk=21558 | 3d 2s | eq=12% [dry] -> fold  | Folded
+[01:46:48]    NitKing(NIT) | flop | ? stk=44696 | 4s 4h | eq=43% [dry] -> call  | Called
+[01:46:51]    NitKing(NIT) | turn | ? stk=44658 | 4s 4h | eq=53% [dry] -> check  | Checked
+[01:47:05]    CallStn(STATION) | turn | ? stk=11822 | 10h 10c | eq=96% [dry] -> raise 97 | Error: 
+[01:47:24]    CallStn(STATION) | turn | ? stk=11822 | 10h 10c | eq=97% [dry] -> check  | Checked
+[01:47:27]    NitKing(NIT) | river | ? stk=44658 | 4s 4h | eq=37% [wet] -> check  | Checked
+[01:47:27] 📊 LIVE DASHBOARD | 13988h (1893.6m)
+[01:47:27]    🎯 Hands: Clawhi:3113h AceBot:3580h NitKing:3695h CallStn:3600h
+[01:47:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:47:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:47:27] 📊 PERFORMANCE (13988h, 1893.6m)
+[01:47:27]    🎚️ Slider: 6257/6530 (96%) | T1:955 T2:5301 T3:1 | Fallback calls:0
+[01:47:31]    CallStn(STATION) | river | ? stk=11822 | 10h 10c | eq=93% [wet] -> check  | Checked
+[01:47:38]    AceBot(LAG) | preflop | UTG stk=18763 | 8h 7d | eq=36% -> fold  | Folded
+[01:47:51]    Clawhi(TAG) | preflop | BTN stk=21558 | 9c Ad | eq=55% -> call  | Called
+[01:47:54]    NitKing(NIT) | preflop | SB stk=44648 | 7s 6c | eq=37% -> fold  | Folded
+[01:47:57]    CallStn(STATION) | preflop | BB stk=11938 | 4c 4s | eq=56% -> check  | Checked
+[01:48:02]    CallStn(STATION) | flop | BB stk=11938 | 4c 4s | eq=55% [dry] -> check  | Checked
+[01:48:28]    Clawhi(TAG) | flop | BTN/SB stk=21538 | 9c Ad | eq=49% [dry] -> raise 30 | Error: 
+[01:48:29]    CallStn(STATION) | turn | BB stk=11938 | 4c 4s | eq=57% [dry] -> check  | Checked
+[01:48:45]    Clawhi(TAG) | turn | BTN/SB stk=21538 | 9c Ad | eq=41% [dry] -> check  | Checked
+[01:48:50]    CallStn(STATION) | river | BB stk=11938 | 4c 4s | eq=48% [very_wet] -> check  | Checked
+[01:49:20]    Clawhi(TAG) | river | BTN/SB stk=21538 | 9c Ad | eq=32% [very_wet] -> check  | Error: 
+[01:49:45]    NitKing(NIT) | preflop | BTN stk=44648 | 8d 5h | eq=36% -> fold  | Folded
+[01:49:48]    CallStn(STATION) | preflop | ? stk=11978 | 6d 9c | eq=42% -> fold  | Folded
+[01:49:52]    📊 NitKing (NIT): 3700 hands | stack=44648 | net=-20404 (12 rebuys)
+[01:49:54]    NitKing(NIT) | preflop | UTG stk=44648 | 2c 3s | eq=25% -> fold  | Folded
+[01:49:57]    CallStn(STATION) | preflop | BTN stk=11978 | 8s Qh | eq=48% -> call  | Called
+[01:50:00]    AceBot(LAG) | preflop | SB stk=18763 | Ad Ac | eq=78% -> call  | Called
+[01:50:07]    Clawhi(TAG) | preflop | BB stk=21518 | 2h Jd | eq=39% -> check  | Checked
+[01:50:13]    AceBot(LAG) | flop | SB stk=18753 | Ad Ac | eq=66% [wet] -> raise 32 | Raised to 32 (target 32, range 0-18753, tier2_arrows)
+[01:50:22]    Clawhi(TAG) | flop | BB stk=21518 | 2h Jd | eq=18% [wet] -> fold  | Folded
+[01:50:31]    CallStn(STATION) | flop | BTN/SB stk=11958 | 8s Qh | eq=88% [wet] -> raise 96 | Raised to 96 (target 96, range 0-11958, tier2_arrows)
+[01:50:42]    AceBot(LAG) | flop | BB stk=18721 | Ad Ac | eq=79% [wet] -> raise 131 | Raised to 131 (target 131, range 0-18753, tier2_arrows)
+[01:51:05]    CallStn(STATION) | preflop | UTG stk=12050 | 5d 10h | eq=35% -> fold  | Folded
+[01:51:07]    AceBot(LAG) | preflop | BTN stk=18721 | Jc 8d | eq=46% -> call  | Called
+[01:51:16]    Clawhi(TAG) | preflop | SB stk=21508 | Ac 8s | eq=54% -> call  | Called
+[01:51:18]    NitKing(NIT) | preflop | BB stk=44628 | 6c 5c | eq=37% -> check  | Checked
+[01:51:36]    Clawhi(TAG) | flop | SB stk=21498 | Ac 8s | eq=34% [wet] -> check  | Checked
+[01:51:40]    NitKing(NIT) | flop | BB stk=44628 | 6c 5c | eq=19% [wet] -> check  | Checked
+[01:51:45]    AceBot(LAG) | flop | BTN stk=18701 | Jc 8d | eq=37% [wet] -> check  | Checked
+[01:51:59]    Clawhi(TAG) | turn | SB stk=21498 | Ac 8s | eq=23% [wet] -> check  | Checked
+[01:52:02]    NitKing(NIT) | turn | BB stk=44628 | 6c 5c | eq=13% [wet] -> check  | Checked
+[01:52:06]    AceBot(LAG) | turn | BTN stk=18701 | Jc 8d | eq=29% [wet] -> check  | Checked
+[01:52:26]    Clawhi(TAG) | river | SB stk=21498 | Ac 8s | eq=18% [very_wet] -> check  | Checked
+[01:52:27] 📊 LIVE DASHBOARD | 13988h (1898.6m)
+[01:52:27]    🎯 Hands: Clawhi:3118h AceBot:3586h NitKing:3701h CallStn:3605h
+[01:52:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:52:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:52:27] 📊 PERFORMANCE (14010h, 1898.6m)
+[01:52:27]    🎚️ Slider: 6260/6534 (96%) | T1:955 T2:5304 T3:1 | Fallback calls:0
+[01:52:33]    NitKing(NIT) | river | BB stk=44628 | 6c 5c | eq=1% [very_wet] -> check  | Checked
+[01:52:39]    AceBot(LAG) | river | BTN stk=18701 | Jc 8d | eq=19% [very_wet] -> check  | Checked
+[01:52:48]    AceBot(LAG) | preflop | UTG stk=18701 | 7d 3h | eq=29% -> fold  | Folded
+[01:53:08]    NitKing(NIT) | preflop | SB stk=44618 | 8s 10c | eq=44% -> fold  | Folded
+[01:53:09]    Clawhi(TAG) | preflop | BTN stk=21558 | 5d Ad | eq=53% -> call  | Error: 
+[01:53:09]    CallStn(STATION) | preflop | BB stk=12030 | 8h 6c | eq=41% -> check  | Checked
+[01:53:13]    CallStn(STATION) | flop | BB stk=12030 | 8h 6c | eq=55% [dry] -> check  | Checked
+[01:53:27] 📊 LIVE DASHBOARD | 14010h (1899.6m)
+[01:53:27]    🎯 Hands: Clawhi:3119h AceBot:3588h NitKing:3703h CallStn:3607h
+[01:53:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:53:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:53:27] 📊 PERFORMANCE (14017h, 1899.6m)
+[01:53:27]    🎚️ Slider: 6260/6534 (96%) | T1:955 T2:5304 T3:1 | Fallback calls:0
+[01:53:37]    Clawhi(TAG) | flop | BTN/SB stk=21538 | 5d Ad | eq=85% [dry] -> raise 30 | Error: 
+[01:53:41]    CallStn(STATION) | turn | BB stk=12030 | 8h 6c | eq=47% [wet] -> check  | Checked
+[01:54:07]    CallStn(STATION) | river | BB stk=12030 | 8h 6c | eq=55% [wet] -> check  | Checked
+[01:54:27] 📊 LIVE DASHBOARD | 14017h (1900.6m)
+[01:54:27]    🎯 Hands: Clawhi:3119h AceBot:3588h NitKing:3703h CallStn:3607h
+[01:54:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:54:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:54:27] 📊 PERFORMANCE (14017h, 1900.6m)
+[01:54:27]    🎚️ Slider: 6260/6536 (96%) | T1:955 T2:5304 T3:1 | Fallback calls:0
+[01:54:29]    Clawhi(TAG) | river | BTN/SB stk=21538 | 5d Ad | eq=86% [wet] -> raise 31 | Error: 
+[01:54:51]    Clawhi(TAG) | preflop | UTG stk=21588 | 2c 2s | eq=41% -> fold  | Folded
+[01:54:55]    NitKing(NIT) | preflop | BTN stk=44618 | Jh 2d | eq=39% -> fold  | Folded
+[01:54:58]    CallStn(STATION) | preflop | ? stk=12020 | Kh 6d | eq=52% -> call  | Called
+[01:54:59]    AceBot(LAG) | preflop | ? stk=18681 | 5d 5h | eq=60% -> check  | Checked
+[01:55:09]    CallStn(STATION) | flop | ? stk=12010 | Kh 6d | eq=66% [wet] -> raise 30 | Raised to 30 (target 30, range 0-12010, tier2_arrows)
+[01:55:23]    AceBot(LAG) | flop | ? stk=18681 | 5d 5h | eq=64% [wet] -> raise 90 | Error: 
+[01:55:40]    NitKing(NIT) | preflop | UTG stk=44618 | 9c Qs | eq=46% -> call  | Called
+[01:55:42]    CallStn(STATION) | preflop | BTN stk=12050 | 10d 6d | eq=40% -> call  | Called
+[01:55:45]    AceBot(LAG) | preflop | SB stk=18671 | 8c Jh | eq=42% -> call  | Called
+[01:56:04]    Clawhi(TAG) | preflop | BB stk=21568 | Qd Kh | eq=51% -> check  | Checked
+[01:56:09]    AceBot(LAG) | flop | SB stk=18661 | 8c Jh | eq=13% [dry] -> check  | Checked
+[01:56:32]    Clawhi(TAG) | flop | BB stk=21568 | Qd Kh | eq=28% [dry] -> raise 40 | Raised to 0 (target 40, range 0-21568, FAILED)
+[01:56:35]    NitKing(NIT) | flop | UTG stk=44598 | 9c Qs | eq=40% [dry] -> check  | Checked
+[01:56:41]    CallStn(STATION) | flop | BTN stk=12030 | 10d 6d | eq=61% [dry] -> raise 32 | Raised to 32 (target 32, range 0-12030, tier2_arrows)
+[01:56:44]    AceBot(LAG) | flop | SB stk=18661 | 8c Jh | eq=35% [dry] -> call  | Called
+[01:56:51]    Clawhi(TAG) | flop | BB stk=21568 | Qd Kh | eq=29% [dry] -> fold  | Folded
+[01:56:56]    NitKing(NIT) | flop | BB stk=44598 | 9c Qs | eq=20% [dry] -> fold  | Folded
+[01:56:59]    AceBot(LAG) | turn | BB stk=18629 | 8c Jh | eq=26% [dry] -> check  | Checked
+[01:57:04]    CallStn(STATION) | turn | BTN/SB stk=11998 | 10d 6d | eq=61% [dry] -> raise 64 | Raised to 64 (target 64, range 0-11998, tier2_arrows)
+[01:57:06]    AceBot(LAG) | turn | BB stk=18629 | 8c Jh | eq=22% [dry] -> fold  | Folded
+[01:57:11]    CallStn(STATION) | preflop | UTG stk=12142 | 6d Qd | eq=44% -> call  | Called
+[01:57:13]    AceBot(LAG) | preflop | BTN stk=18629 | As Jh | eq=53% -> call  | Called
+[01:57:20]    Clawhi(TAG) | preflop | SB stk=21558 | 5d Kh | eq=43% -> call  | Called
+[01:57:27]    NitKing(NIT) | preflop | BB stk=44578 | 8h 7h | eq=39% -> check  | Checked
+[01:57:53]    Clawhi(TAG) | flop | SB stk=21548 | 5d Kh | eq=31% [dry] -> check  | Checked
+[01:58:00]    NitKing(NIT) | flop | BB stk=44578 | 8h 7h | eq=85% [dry] -> raise 51 | Raised to 51 (target 51, range 0-44578, tier2_arrows)
+[01:58:02]    CallStn(STATION) | flop | UTG stk=12122 | 6d Qd | eq=21% [dry] -> call  | Called
+[01:58:04]    AceBot(LAG) | flop | BTN stk=18609 | As Jh | eq=42% [dry] -> call  | Called
+[01:58:15]    Clawhi(TAG) | flop | SB stk=21548 | 5d Kh | eq=28% [dry] -> call  | Called
+[01:58:52]    NitKing(NIT) | turn | BB stk=44527 | 8h 7h | eq=86% [dry] -> raise 184 | Error: 
+[01:59:09]    CallStn(STATION) | turn | UTG stk=12071 | 6d Qd | eq=34% [dry] -> check  | Checked
+[01:59:12]    AceBot(LAG) | turn | BTN stk=18558 | As Jh | eq=58% [dry] -> check  | Checked
+[01:59:18]    Clawhi(TAG) | river | SB stk=21497 | 5d Kh | eq=28% [wet] -> check  | Checked
+[01:59:27] 📊 LIVE DASHBOARD | 14017h (1905.6m)
+[01:59:27]    🎯 Hands: Clawhi:3122h AceBot:3592h NitKing:3707h CallStn:3611h
+[01:59:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[01:59:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[01:59:27] 📊 PERFORMANCE (14032h, 1905.6m)
+[01:59:27]    🎚️ Slider: 6264/6544 (96%) | T1:955 T2:5308 T3:1 | Fallback calls:0
+[01:59:29]    NitKing(NIT) | river | BB stk=44527 | 8h 7h | eq=92% [wet] -> raise 163 | Error: 
+[01:59:37]    NitKing(NIT) | river | BB stk=44527 | 8h 7h | eq=91% [wet] -> check  | Checked
+[01:59:43]    CallStn(STATION) | river | UTG stk=12071 | 6d Qd | eq=82% [wet] -> raise 152 | Raised to 152 (target 152, range 0-12071, tier2_arrows)
+[01:59:56]    AceBot(LAG) | river | BTN stk=18558 | As Jh | eq=45% [wet] -> raise 456 | Error: 
+[02:00:20]    Clawhi(TAG) | river | ? stk=21497 | 5d Kh | eq=73% [wet] -> raise 456 | Error: 
+[02:00:27] 📊 LIVE DASHBOARD | 14032h (1906.6m)
+[02:00:27]    🎯 Hands: Clawhi:3122h AceBot:3592h NitKing:3707h CallStn:3611h
+[02:00:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:00:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:00:27] 📊 PERFORMANCE (14032h, 1906.6m)
+[02:00:27]    🎚️ Slider: 6265/6547 (96%) | T1:955 T2:5309 T3:1 | Fallback calls:0
+[02:00:32]    AceBot(LAG) | preflop | UTG stk=18558 | 4s Qs | eq=42% -> call  | Called
+[02:00:48]    Clawhi(TAG) | preflop | BTN stk=21497 | Kh Ah | eq=56% -> call  | Called
+[02:00:50]    NitKing(NIT) | preflop | SB stk=44517 | 6h Ks | eq=44% -> call  | Called
+[02:00:52]    CallStn(STATION) | preflop | BB stk=12335 | Js Qh | eq=48% -> check  | Checked
+[02:01:02]    NitKing(NIT) | flop | SB stk=44507 | 6h Ks | eq=41% [dry] -> check  | Checked
+[02:01:05]    CallStn(STATION) | flop | BB stk=12335 | Js Qh | eq=21% [dry] -> check  | Checked
+[02:01:19]    AceBot(LAG) | flop | UTG stk=18538 | 4s Qs | eq=43% [dry] -> raise 40 | Raised to 40 (target 40, range 0-18538, tier2_arrows)
+[02:01:42]    Clawhi(TAG) | flop | BTN stk=21477 | Kh Ah | eq=58% [dry] -> call  | Called
+[02:01:47]    NitKing(NIT) | flop | SB stk=44507 | 6h Ks | eq=52% [dry] -> call  | Called
+[02:01:51]    CallStn(STATION) | flop | BB stk=12335 | Js Qh | eq=16% [dry] -> fold  | Folded
+[02:02:04]    NitKing(NIT) | turn | SB stk=44467 | 6h Ks | eq=91% [dry] -> raise 129 | Error: 
+[02:02:19]    NitKing(NIT) | turn | SB stk=44467 | 6h Ks | eq=91% [dry] -> check  | Checked
+[02:02:21]    AceBot(LAG) | turn | BB stk=18498 | 4s Qs | eq=42% [dry] -> check  | Checked
+[02:02:37]    Clawhi(TAG) | turn | BTN stk=21437 | Kh Ah | eq=62% [dry] -> check  | Checked
+[02:02:50]    NitKing(NIT) | river | SB stk=44467 | 6h Ks | eq=96% [wet] -> raise 114 | Error: 
+[02:03:03]    NitKing(NIT) | river | SB stk=44467 | 6h Ks | eq=95% [wet] -> check  | Checked
+[02:03:05]    AceBot(LAG) | river | BB stk=18498 | 4s Qs | eq=37% [wet] -> check  | Checked
+[02:03:22]    Clawhi(TAG) | river | BTN stk=21437 | Kh Ah | eq=63% [wet] -> raise 120 | Error: 
+[02:03:39]    Clawhi(TAG) | preflop | UTG stk=21437 | 3c 6h | eq=28% -> fold  | Folded
+[02:03:42]    NitKing(NIT) | preflop | BTN stk=44667 | 3s 8h | eq=32% -> fold  | Folded
+[02:03:43]    CallStn(STATION) | preflop | ? stk=12325 | 10h 10s | eq=75% -> call  | Called
+[02:03:53]    AceBot(LAG) | preflop | ? stk=18478 | Qd 4h | eq=47% -> raise 60 | Raised to 60 (target 60, range 0-18498, tier2_arrows)
+[02:03:55]    CallStn(STATION) | preflop | ? stk=12315 | 10h 10s | eq=75% -> call  | Called
+[02:04:06]    CallStn(STATION) | flop | ? stk=12275 | 10h 10s | eq=73% [very_wet] -> raise 82 | Raised to 82 (target 82, range 0-12275, tier2_arrows)
+[02:04:20]    AceBot(LAG) | flop | ? stk=18438 | Qd 4h | eq=65% [very_wet] -> raise 246 | Error: 
+[02:04:40]    NitKing(NIT) | preflop | UTG stk=44667 | Ac 3s | eq=46% -> call  | Called
+[02:04:42]    CallStn(STATION) | preflop | BTN stk=12395 | Jd 2s | eq=36% -> fold  | Folded
+[02:04:45]    AceBot(LAG) | preflop | ? stk=18428 | 9h 8d | eq=42% -> fold  | Folded
+[02:04:53]    📊 Clawhi (TAG): 3125 hands
+[02:05:02]    Clawhi(TAG) | preflop | ? stk=21417 | Qd Kd | eq=62% -> raise 30 | Raised to 30 (target 30, range 0-21437, tier2_arrows)
+[02:05:27] 📊 LIVE DASHBOARD | 14032h (1911.6m)
+[02:05:27]    🎯 Hands: Clawhi:3125h AceBot:3596h NitKing:3710h CallStn:3615h
+[02:05:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:05:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:05:27] 📊 PERFORMANCE (14046h, 1911.6m)
+[02:05:27]    🎚️ Slider: 6269/6556 (96%) | T1:955 T2:5313 T3:1 | Fallback calls:0
+[02:05:32]    Clawhi(TAG) | flop | ? stk=21417 | Qd Kd | eq=87% [dry] -> raise 32 | Error: 
+[02:05:36]    NitKing(NIT) | flop | ? stk=44647 | Ac 3s | eq=54% [dry] -> raise 30 | Raised to 30 (target 30, range 0-44647, tier2_arrows)
+[02:05:56]    Clawhi(TAG) | flop | ? stk=21417 | Qd Kd | eq=86% [dry] -> raise 90 | Error: 
+[02:06:08]    CallStn(STATION) | preflop | UTG stk=12395 | 4c Jh | eq=37% -> fold  | Folded
+[02:06:11]    AceBot(LAG) | preflop | BTN stk=18428 | Jd 5h | eq=41% -> fold  | Folded
+[02:06:23]    Clawhi(TAG) | preflop | ? stk=21407 | 2s Qs | eq=48% -> fold  | Folded
+[02:06:27] 📊 LIVE DASHBOARD | 14046h (1912.6m)
+[02:06:27]    🎯 Hands: Clawhi:3126h AceBot:3597h NitKing:3711h CallStn:3616h
+[02:06:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:06:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:06:27] 📊 PERFORMANCE (14050h, 1912.6m)
+[02:06:27]    🎚️ Slider: 6270/6558 (96%) | T1:955 T2:5314 T3:1 | Fallback calls:0
+[02:06:29]    AceBot(LAG) | preflop | UTG stk=18428 | Kd 2c | eq=41% -> fold  | Folded
+[02:06:40]    Clawhi(TAG) | preflop | BTN stk=21407 | As Qs | eq=60% -> call  | Called
+[02:06:42]    NitKing(NIT) | preflop | SB stk=44697 | 6c 8h | eq=37% -> fold  | Folded
+[02:06:47]    CallStn(STATION) | preflop | BB stk=12375 | 10c 2s | eq=39% -> check  | Checked
+[02:07:00]    CallStn(STATION) | flop | BB stk=12375 | 10c 2s | eq=88% [dry] -> raise 32 | Raised to 32 (target 32, range 0-12375, tier2_arrows)
+[02:07:15]    Clawhi(TAG) | flop | BTN/SB stk=21387 | As Qs | eq=64% [dry] -> raise 96 | Error: 
+[02:07:27] 📊 LIVE DASHBOARD | 14050h (1913.6m)
+[02:07:27]    🎯 Hands: Clawhi:3127h AceBot:3598h NitKing:3712h CallStn:3618h
+[02:07:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:07:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:07:27] 📊 PERFORMANCE (14055h, 1913.6m)
+[02:07:27]    🎚️ Slider: 6271/6560 (96%) | T1:955 T2:5315 T3:1 | Fallback calls:0
+[02:07:44]    Clawhi(TAG) | preflop | UTG stk=21387 | 7s 9s | eq=40% -> fold  | Folded
+[02:07:45]    NitKing(NIT) | preflop | BTN stk=44697 | Ah 4c | eq=50% -> call  | Called
+[02:07:48]    CallStn(STATION) | preflop | SB stk=12415 | 2h 5h | eq=32% -> fold  | Folded
+[02:07:50]    AceBot(LAG) | preflop | BB stk=18408 | 9c 4s | eq=38% -> check  | Checked
+[02:07:56]    AceBot(LAG) | flop | BB stk=18408 | 9c 4s | eq=25% [dry] -> check  | Checked
+[02:08:00]    NitKing(NIT) | flop | BTN/SB stk=44677 | Ah 4c | eq=46% [dry] -> check  | Checked
+[02:08:09]    AceBot(LAG) | turn | BB stk=18408 | 9c 4s | eq=29% [wet] -> raise 30 | Raised to 30 (target 30, range 0-18408, tier2_arrows)
+[02:08:15]    NitKing(NIT) | turn | BTN/SB stk=44677 | Ah 4c | eq=34% [wet] -> call  | Called
+[02:08:23]    AceBot(LAG) | river | BB stk=18378 | 9c 4s | eq=86% [wet] -> raise 72 | Raised to 72 (target 72, range 0-18378, tier2_arrows)
+[02:08:26]    NitKing(NIT) | river | BTN/SB stk=44647 | Ah 4c | eq=20% [wet] -> fold  | Folded
+[02:08:27] 📊 LIVE DASHBOARD | 14055h (1914.6m)
+[02:08:27]    🎯 Hands: Clawhi:3128h AceBot:3599h NitKing:3713h CallStn:3618h
+[02:08:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:08:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:08:27] 📊 PERFORMANCE (14058h, 1914.6m)
+[02:08:27]    🎚️ Slider: 6273/6562 (96%) | T1:955 T2:5317 T3:1 | Fallback calls:0
+[02:08:30]    📊 AceBot (LAG): 3600 hands | stack=18478 | net=-306512 (64 rebuys)
+[02:08:31]    NitKing(NIT) | preflop | UTG stk=44647 | Kc 2s | eq=41% -> fold  | Folded
+[02:08:33]    CallStn(STATION) | preflop | BTN stk=12415 | 6d 2h | eq=29% -> fold  | Folded
+[02:08:36]    AceBot(LAG) | preflop | ? stk=18478 | Ad 2d | eq=56% -> call  | Called
+[02:08:39]    Clawhi(TAG) | preflop | ? stk=21367 | 4c 8s | eq=37% -> check  | Checked
+[02:08:47]    AceBot(LAG) | flop | ? stk=18468 | Ad 2d | eq=80% [wet] -> raise 30 | Raised to 30 (target 30, range 0-18468, tier2_arrows)
+[02:08:58]    Clawhi(TAG) | flop | ? stk=21367 | 4c 8s | eq=23% [wet] -> fold  | Folded
+[02:09:04]    CallStn(STATION) | preflop | UTG stk=12415 | 3c 6c | eq=31% -> fold  | Folded
+[02:09:06]    AceBot(LAG) | preflop | BTN stk=18508 | 8s 10s | eq=46% -> call  | Called
+[02:09:13]    Clawhi(TAG) | preflop | SB stk=21357 | 2h 8h | eq=35% -> fold  | Folded
+[02:09:15]    NitKing(NIT) | preflop | BB stk=44627 | Jd 6d | eq=49% -> check  | Checked
+[02:09:22]    NitKing(NIT) | flop | BB stk=44627 | Jd 6d | eq=69% [dry] -> raise 30 | Raised to 30 (target 30, range 0-44627, tier2_arrows)
+[02:09:27] 📊 LIVE DASHBOARD | 14058h (1915.6m)
+[02:09:27]    🎯 Hands: Clawhi:3130h AceBot:3601h NitKing:3715h CallStn:3620h
+[02:09:27]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:09:27]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:09:27] 📊 PERFORMANCE (14066h, 1915.6m)
+[02:09:27]    🎚️ Slider: 6275/6565 (96%) | T1:955 T2:5319 T3:1 | Fallback calls:0
+[02:09:34]    AceBot(LAG) | flop | BTN/SB stk=18488 | 8s 10s | eq=46% [dry] -> raise 90 | Raised to 90 (target 90, range 0-18488, tier2_arrows)
+[02:09:48]    NitKing(NIT) | flop | BB stk=44597 | Jd 6d | eq=73% [dry] -> raise 85 | Error: 
+[02:10:06]    AceBot(LAG) | preflop | UTG stk=18568 | Qh 8h | eq=46% -> call  | Called
+[02:10:18]    Clawhi(TAG) | preflop | BTN stk=21357 | 3s 9h | eq=32% -> fold  | Folded
+[02:10:21]    NitKing(NIT) | preflop | ? stk=44587 | 10c 5s | eq=39% -> fold  | Folded
+[02:10:28] 📊 LIVE DASHBOARD | 14066h (1916.6m)
+[02:10:28]    🎯 Hands: Clawhi:3131h AceBot:3602h NitKing:3716h CallStn:3621h
+[02:10:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:10:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:10:28] 📊 PERFORMANCE (14070h, 1916.6m)
+[02:10:28]    🎚️ Slider: 6276/6567 (96%) | T1:955 T2:5320 T3:1 | Fallback calls:0
+[02:10:31]    CallStn(STATION) | preflop | ? stk=12395 | Js Qc | eq=57% -> raise 30 | Raised to 30 (target 30, range 0-12415, tier2_arrows)
+[02:10:55]    CallStn(STATION) | preflop | ? stk=12395 | Js Qc | eq=57% -> fold  | Folded
+[02:11:08]    Clawhi(TAG) | preflop | UTG stk=21357 | 6c Ah | eq=47% -> call  | Called
+[02:11:12]    NitKing(NIT) | preflop | BTN stk=44587 | 5h 7c | eq=32% -> fold  | Folded
+[02:11:14]    CallStn(STATION) | preflop | ? stk=12385 | 8c Kc | eq=52% -> call  | Called
+[02:11:21]    AceBot(LAG) | preflop | ? stk=18578 | 7s Jc | eq=44% -> raise 60 | Raised to 60 (target 60, range 0-18598, tier2_arrows)
+[02:11:25]    Clawhi(TAG) | preflop | ? stk=21337 | 6c Ah | eq=51% -> call  | Called
+[02:11:26]    CallStn(STATION) | preflop | ? stk=12375 | 8c Kc | eq=52% -> call  | Called
+[02:11:28] 📊 LIVE DASHBOARD | 14070h (1917.6m)
+[02:11:28]    🎯 Hands: Clawhi:3132h AceBot:3603h NitKing:3717h CallStn:3622h
+[02:11:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:11:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:11:28] 📊 PERFORMANCE (14074h, 1917.6m)
+[02:11:28]    🎚️ Slider: 6278/6568 (96%) | T1:955 T2:5322 T3:1 | Fallback calls:0
+[02:11:31]    CallStn(STATION) | flop | ? stk=12335 | 8c Kc | eq=20% [dry] -> check  | Checked
+[02:11:34]    AceBot(LAG) | flop | ? stk=18538 | 7s Jc | eq=33% [dry] -> check  | Checked
+[02:11:51]    Clawhi(TAG) | flop | ? stk=21297 | 6c Ah | eq=48% [dry] -> raise 94 | Raised to 94 (target 94, range 0-21297, tier2_arrows)
+[02:11:56]    CallStn(STATION) | flop | ? stk=12335 | 8c Kc | eq=38% [dry] -> call  | Called
+[02:11:59]    AceBot(LAG) | flop | ? stk=18538 | 7s Jc | eq=11% [dry] -> fold  | Folded
+[02:12:02]    CallStn(STATION) | turn | ? stk=12241 | 8c Kc | eq=43% [wet] -> check  | Checked
+[02:12:12]    Clawhi(TAG) | turn | ? stk=21203 | 6c Ah | eq=50% [wet] -> check  | Checked
+[02:12:17]    CallStn(STATION) | river | ? stk=12241 | 8c Kc | eq=49% [wet] -> check  | Checked
+[02:12:28] 📊 LIVE DASHBOARD | 14074h (1918.6m)
+[02:12:28]    🎯 Hands: Clawhi:3132h AceBot:3603h NitKing:3717h CallStn:3622h
+[02:12:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:12:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:12:28] 📊 PERFORMANCE (14074h, 1918.6m)
+[02:12:28]    🎚️ Slider: 6279/6569 (96%) | T1:955 T2:5323 T3:1 | Fallback calls:0
+[02:12:42]    Clawhi(TAG) | river | ? stk=21203 | 6c Ah | eq=70% [wet] -> raise 234 | Error: 
+[02:12:53]    NitKing(NIT) | preflop | UTG stk=44587 | 7c 6c | eq=36% -> fold  | Folded
+[02:12:55]    CallStn(STATION) | preflop | BTN stk=12241 | 3h Kh | eq=48% -> call  | Called
+[02:12:57]    AceBot(LAG) | preflop | SB stk=18528 | 2h 8c | eq=31% -> fold  | Folded
+[02:13:05]    Clawhi(TAG) | preflop | BB stk=21551 | 10d Ks | eq=58% -> check  | Checked
+[02:13:29]    CallStn(STATION) | flop | BTN/SB stk=12221 | 3h Kh | eq=33% [dry] -> check  | Checked
+[02:13:36]    Clawhi(TAG) | flop | BB stk=21551 | 10d Ks | eq=46% [dry] -> raise 30 | Error: 
+[02:14:00]    CallStn(STATION) | turn | BTN/SB stk=12221 | 3h Kh | eq=70% [wet] -> raise 30 | Raised to 30 (target 30, range 0-12221, tier2_arrows)
+[02:14:26]    📊 CallStn (STATION): 3625 hands
+[02:14:27]    CallStn(STATION) | preflop | UTG stk=12271 | Jc 3d | eq=36% -> fold  | Folded
+[02:14:29]    Clawhi(TAG) | turn | BB stk=21551 | 10d Ks | eq=74% [wet] -> raise 90 | Error: 
+[02:14:30]    AceBot(LAG) | preflop | BTN stk=18528 | Kh 7s | eq=49% -> call  | Called
+[02:14:48]    Clawhi(TAG) | preflop | SB stk=21541 | 5s 3c | eq=31% -> fold  | Folded
+[02:14:51]    NitKing(NIT) | preflop | BB stk=44567 | 8s 5h | eq=39% -> check  | Checked
+[02:14:57]    NitKing(NIT) | flop | BB stk=44567 | 8s 5h | eq=16% [wet] -> check  | Checked
+[02:15:06]    AceBot(LAG) | flop | BTN/SB stk=18508 | Kh 7s | eq=41% [wet] -> raise 31 | Raised to 31 (target 31, range 0-18508, tier2_arrows)
+[02:15:11]    NitKing(NIT) | flop | BB stk=44567 | 8s 5h | eq=19% [wet] -> fold  | Folded
+[02:15:18]    AceBot(LAG) | preflop | UTG stk=18558 | Ks 2s | eq=43% -> call  | Called
+[02:15:36]    Clawhi(TAG) | preflop | BTN stk=21541 | Qh Jc | eq=48% -> call  | Called
+[02:15:39]    NitKing(NIT) | preflop | SB stk=44557 | 8s Kd | eq=46% -> call  | Called
+[02:15:41]    CallStn(STATION) | preflop | BB stk=12251 | 3s 6c | eq=28% -> check  | Checked
+[02:15:46]    NitKing(NIT) | flop | SB stk=44547 | 8s Kd | eq=20% [wet] -> check  | Checked
+[02:16:00]    CallStn(STATION) | flop | BB stk=12251 | 3s 6c | eq=81% [wet] -> raise 50 | Error: 
+[02:16:13]    AceBot(LAG) | flop | UTG stk=18538 | Ks 2s | eq=34% [wet] -> check  | Checked
+[02:16:28]    Clawhi(TAG) | flop | BTN stk=21521 | Qh Jc | eq=37% [wet] -> check  | Checked
+[02:16:32]    NitKing(NIT) | turn | SB stk=44547 | 8s Kd | eq=15% [wet] -> check  | Checked
+[02:16:43]    CallStn(STATION) | turn | BB stk=12251 | 3s 6c | eq=81% [wet] -> raise 50 | Raised to 50 (target 50, range 0-12251, tier2_arrows)
+[02:16:47]    AceBot(LAG) | turn | UTG stk=18538 | Ks 2s | eq=15% [wet] -> fold  | Folded
+[02:16:52]    Clawhi(TAG) | turn | BTN stk=21521 | Qh Jc | eq=34% [wet] -> call  | Called
+[02:16:58]    NitKing(NIT) | turn | SB stk=44547 | 8s Kd | eq=26% [wet] -> call  | Called
+[02:17:01]    NitKing(NIT) | river | SB stk=44497 | 8s Kd | eq=12% [dry] -> check  | Checked
+[02:17:11]    CallStn(STATION) | river | BB stk=12201 | 3s 6c | eq=95% [dry] -> raise 123 | Raised to 123 (target 123, range 0-12201, tier2_arrows)
+[02:17:17]    Clawhi(TAG) | river | BTN stk=21471 | Qh Jc | eq=26% [dry] -> call  | Called
+[02:17:20]    NitKing(NIT) | river | SB stk=44497 | 8s Kd | eq=12% [dry] -> fold  | Folded
+[02:17:28] 📊 LIVE DASHBOARD | 14074h (1923.6m)
+[02:17:28]    🎯 Hands: Clawhi:3135h AceBot:3608h NitKing:3723h CallStn:3626h
+[02:17:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:17:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:17:28] 📊 PERFORMANCE (14092h, 1923.6m)
+[02:17:28]    🎚️ Slider: 6283/6576 (96%) | T1:955 T2:5327 T3:1 | Fallback calls:0
+[02:17:37]    Clawhi(TAG) | preflop | UTG stk=21348 | 3s Qd | eq=39% -> fold  | Folded
+[02:17:40]    NitKing(NIT) | preflop | BTN stk=44497 | 8c 5d | eq=36% -> fold  | Folded
+[02:17:41]    CallStn(STATION) | preflop | ? stk=12544 | Ad 10c | eq=62% -> call  | Called
+[02:17:50]    AceBot(LAG) | preflop | ? stk=18518 | 6h 6c | eq=63% -> raise 60 | Raised to 60 (target 60, range 0-18538, tier2_arrows)
+[02:17:53]    CallStn(STATION) | preflop | ? stk=12534 | Ad 10c | eq=62% -> call  | Called
+[02:18:06]    CallStn(STATION) | flop | ? stk=12494 | Ad 10c | eq=83% [dry] -> raise 75 | Raised to 75 (target 75, range 0-12494, tier2_arrows)
+[02:18:18]    AceBot(LAG) | flop | ? stk=18478 | 6h 6c | eq=56% [dry] -> raise 225 | Error: 
+[02:18:28] 📊 LIVE DASHBOARD | 14092h (1924.6m)
+[02:18:28]    🎯 Hands: Clawhi:3136h AceBot:3609h NitKing:3723h CallStn:3627h
+[02:18:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:18:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:18:28] 📊 PERFORMANCE (14095h, 1924.6m)
+[02:18:28]    🎚️ Slider: 6285/6579 (96%) | T1:955 T2:5329 T3:1 | Fallback calls:0
+[02:18:42]    NitKing(NIT) | preflop | UTG stk=44497 | 2s Js | eq=38% -> fold  | Folded
+[02:18:44]    CallStn(STATION) | preflop | BTN stk=12614 | 6h Jd | eq=42% -> fold  | Folded
+[02:18:47]    AceBot(LAG) | preflop | ? stk=18468 | 5d Ks | eq=51% -> call  | Called
+[02:19:12]    Clawhi(TAG) | preflop | ? stk=21328 | 8h 2d | eq=34% -> check  | Checked
+[02:19:23]    AceBot(LAG) | flop | ? stk=18458 | 5d Ks | eq=45% [dry] -> raise 30 | Raised to 30 (target 30, range 0-18458, tier2_arrows)
+[02:19:28] 📊 LIVE DASHBOARD | 14095h (1925.6m)
+[02:19:28]    🎯 Hands: Clawhi:3137h AceBot:3610h NitKing:3724h CallStn:3628h
+[02:19:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:19:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:19:28] 📊 PERFORMANCE (14099h, 1925.6m)
+[02:19:28]    🎚️ Slider: 6286/6580 (96%) | T1:955 T2:5330 T3:1 | Fallback calls:0
+[02:19:43]    Clawhi(TAG) | flop | ? stk=21328 | 8h 2d | eq=19% [dry] -> fold  | Folded
+[02:19:47]    📊 NitKing (NIT): 3725 hands
+[02:19:48]    CallStn(STATION) | preflop | UTG stk=12614 | 6d Ac | eq=47% -> call  | Called
+[02:19:50]    AceBot(LAG) | preflop | BTN stk=18498 | 10h 2s | eq=33% -> fold  | Folded
+[02:20:03]    Clawhi(TAG) | preflop | ? stk=21318 | 4h 10d | eq=38% -> fold  | Folded
+[02:20:05]    NitKing(NIT) | preflop | ? stk=44477 | Jd 8h | eq=50% -> check  | Checked
+[02:20:11]    NitKing(NIT) | flop | ? stk=44477 | Jd 8h | eq=41% [dry] -> check  | Checked
+[02:20:12]    CallStn(STATION) | flop | ? stk=12594 | 6d Ac | eq=52% [dry] -> check  | Checked
+[02:20:15]    NitKing(NIT) | turn | ? stk=44477 | Jd 8h | eq=31% [wet] -> check  | Checked
+[02:20:18]    CallStn(STATION) | turn | ? stk=12594 | 6d Ac | eq=50% [wet] -> check  | Checked
+[02:20:22]    NitKing(NIT) | river | ? stk=44477 | Jd 8h | eq=14% [wet] -> check  | Checked
+[02:20:23]    CallStn(STATION) | river | ? stk=12594 | 6d Ac | eq=45% [wet] -> check  | Checked
+[02:20:28] 📊 LIVE DASHBOARD | 14099h (1926.6m)
+[02:20:28]    🎯 Hands: Clawhi:3138h AceBot:3612h NitKing:3726h CallStn:3630h
+[02:20:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:20:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:20:28] 📊 PERFORMANCE (14106h, 1926.6m)
+[02:20:28]    🎚️ Slider: 6286/6580 (96%) | T1:955 T2:5330 T3:1 | Fallback calls:0
+[02:20:36]    AceBot(LAG) | preflop | UTG stk=18498 | 6h 6s | eq=53% -> call  | Called
+[02:20:43]    Clawhi(TAG) | preflop | BTN stk=21318 | 7h Ad | eq=48% -> call  | Called
+[02:20:45]    NitKing(NIT) | preflop | SB stk=44467 | As Qd | eq=54% -> call  | Called
+[02:20:47]    CallStn(STATION) | preflop | BB stk=12624 | 3c 5c | eq=31% -> check  | Checked
+[02:20:52]    NitKing(NIT) | flop | SB stk=44457 | As Qd | eq=23% [dry] -> check  | Checked
+[02:20:57]    CallStn(STATION) | flop | BB stk=12624 | 3c 5c | eq=38% [dry] -> check  | Checked
+[02:21:02]    AceBot(LAG) | flop | UTG stk=18478 | 6h 6s | eq=67% [dry] -> raise 32 | Raised to 32 (target 32, range 0-18478, tier2_arrows)
+[02:21:28] 📊 LIVE DASHBOARD | 14106h (1927.6m)
+[02:21:28]    🎯 Hands: Clawhi:3139h AceBot:3613h NitKing:3727h CallStn:3631h
+[02:21:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:21:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:21:28] 📊 PERFORMANCE (14110h, 1927.6m)
+[02:21:28]    🎚️ Slider: 6287/6582 (96%) | T1:955 T2:5331 T3:1 | Fallback calls:0
+[02:21:29]    Clawhi(TAG) | flop | BTN stk=21298 | 7h Ad | eq=50% [dry] -> raise 96 | Error: 
+[02:21:32]    NitKing(NIT) | flop | ? stk=44457 | As Qd | eq=53% [dry] -> raise 64 | Raised to 64 (target 64, range 0-44457, tier1_mouse)
+[02:21:38]    CallStn(STATION) | flop | ? stk=12624 | 3c 5c | eq=38% [dry] -> call  | Called
+[02:21:44]    AceBot(LAG) | flop | ? stk=18446 | 6h 6s | eq=44% [dry] -> call  | Called
+[02:21:47]    NitKing(NIT) | turn | ? stk=44393 | As Qd | eq=29% [dry] -> check  | Checked
+[02:21:58]    CallStn(STATION) | turn | ? stk=12560 | 3c 5c | eq=71% [dry] -> raise 146 | Error: 
+[02:22:23]    AceBot(LAG) | turn | ? stk=18414 | 6h 6s | eq=70% [dry] -> raise 146 | Error: 
+[02:22:28] 📊 LIVE DASHBOARD | 14110h (1928.6m)
+[02:22:28]    🎯 Hands: Clawhi:3139h AceBot:3613h NitKing:3727h CallStn:3631h
+[02:22:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:22:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:22:28] 📊 PERFORMANCE (14110h, 1928.6m)
+[02:22:28]    🎚️ Slider: 6288/6585 (95%) | T1:956 T2:5331 T3:1 | Fallback calls:0
+[02:22:43]    NitKing(NIT) | river | ? stk=44393 | As Qd | eq=60% [dry] -> check  | Checked
+[02:22:57]    CallStn(STATION) | river | ? stk=12560 | 3c 5c | eq=61% [dry] -> raise 122 | Error: 
+[02:23:17]    AceBot(LAG) | river | ? stk=18414 | 6h 6s | eq=95% [dry] -> raise 180 | Error: 
+[02:23:29]    AceBot(LAG) | river | ? stk=18414 | 6h 6s | eq=96% [dry] -> check  | Checked
+[02:23:42]    Clawhi(TAG) | preflop | UTG stk=21298 | 10s 6d | eq=37% -> fold  | Folded
+[02:23:45]    NitKing(NIT) | preflop | BTN stk=44393 | Kd 6c | eq=48% -> call  | Called
+[02:23:47]    CallStn(STATION) | preflop | SB stk=12550 | 4d Qs | eq=43% -> call  | Called
+[02:23:50]    AceBot(LAG) | preflop | BB stk=18666 | 2d 7c | eq=29% -> check  | Checked
+[02:23:56]    CallStn(STATION) | flop | SB stk=12540 | 4d Qs | eq=36% [dry] -> check  | Checked
+[02:23:59]    AceBot(LAG) | flop | BB stk=18666 | 2d 7c | eq=15% [dry] -> check  | Checked
+[02:24:04]    NitKing(NIT) | flop | BTN stk=44373 | Kd 6c | eq=43% [dry] -> check  | Checked
+[02:24:07]    CallStn(STATION) | turn | SB stk=12540 | 4d Qs | eq=26% [dry] -> check  | Checked
+[02:24:11]    AceBot(LAG) | turn | BB stk=18666 | 2d 7c | eq=8% [dry] -> check  | Checked
+[02:24:14]    NitKing(NIT) | turn | BTN stk=44373 | Kd 6c | eq=36% [dry] -> check  | Checked
+[02:24:18]    CallStn(STATION) | river | SB stk=12540 | 4d Qs | eq=26% [dry] -> check  | Checked
+[02:24:22]    AceBot(LAG) | river | BB stk=18666 | 2d 7c | eq=2% [dry] -> check  | Checked
+[02:24:24]    NitKing(NIT) | river | BTN stk=44373 | Kd 6c | eq=39% [dry] -> check  | Checked
+[02:24:36]    NitKing(NIT) | preflop | UTG stk=44373 | 8d 7d | eq=39% -> fold  | Folded
+[02:24:38]    CallStn(STATION) | preflop | BTN stk=12600 | 2d Ks | eq=45% -> call  | Called
+[02:24:40]    AceBot(LAG) | preflop | SB stk=18656 | As 7c | eq=53% -> call  | Called
+[02:24:56]    Clawhi(TAG) | preflop | BB stk=21278 | 6s Jh | eq=42% -> raise 60 | Error: 
+[02:25:11]    AceBot(LAG) | flop | SB stk=18646 | As 7c | eq=22% [very_wet] -> check  | Checked
+[02:25:36]    Clawhi(TAG) | flop | BB stk=21278 | 6s Jh | eq=55% [very_wet] -> raise 38 | Error: 
+[02:25:39]    CallStn(STATION) | flop | BTN stk=12580 | 2d Ks | eq=42% [very_wet] -> check  | Checked
+[02:25:51]    AceBot(LAG) | turn | SB stk=18646 | As 7c | eq=76% [very_wet] -> raise 43 | Raised to 43 (target 43, range 0-18646, tier2_arrows)
+[02:26:07]    Clawhi(TAG) | turn | BB stk=21278 | 6s Jh | eq=14% [very_wet] -> fold  | Folded
+[02:26:09]    CallStn(STATION) | turn | BTN/SB stk=12580 | 2d Ks | eq=44% [very_wet] -> call  | Called
+[02:26:21]    AceBot(LAG) | river | BB stk=18603 | As 7c | eq=93% [very_wet] -> raise 96 | Raised to 96 (target 96, range 0-18603, tier2_arrows)
+[02:26:23]    CallStn(STATION) | river | BTN/SB stk=12537 | 2d Ks | eq=38% [very_wet] -> call  | Called
+[02:26:31]    CallStn(STATION) | preflop | UTG stk=12441 | Kd 7s | eq=45% -> call  | Called
+[02:26:33]    AceBot(LAG) | preflop | BTN stk=18845 | As 10c | eq=52% -> call  | Called
+[02:26:50]    Clawhi(TAG) | preflop | SB stk=21268 | Ad 4d | eq=48% -> call  | Called
+[02:26:52]    NitKing(NIT) | preflop | BB stk=44353 | 9h 4c | eq=32% -> check  | Checked
+[02:27:13]    Clawhi(TAG) | flop | SB stk=21258 | Ad 4d | eq=45% [wet] -> check  | Checked
+[02:27:17]    NitKing(NIT) | flop | BB stk=44353 | 9h 4c | eq=6% [wet] -> check  | Checked
+[02:27:25]    CallStn(STATION) | flop | UTG stk=12421 | Kd 7s | eq=80% [wet] -> raise 50 | Raised to 50 (target 50, range 0-12421, tier2_arrows)
+[02:27:28] 📊 LIVE DASHBOARD | 14110h (1933.6m)
+[02:27:28]    🎯 Hands: Clawhi:3144h AceBot:3617h NitKing:3733h CallStn:3636h
+[02:27:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:27:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:27:28] 📊 PERFORMANCE (14130h, 1933.6m)
+[02:27:28]    🎚️ Slider: 6291/6591 (95%) | T1:956 T2:5334 T3:1 | Fallback calls:0
+[02:27:38]    AceBot(LAG) | flop | BTN stk=18825 | As 10c | eq=70% [wet] -> raise 150 | Error: 
+[02:28:11]    Clawhi(TAG) | flop | ? stk=21258 | Ad 4d | eq=61% [wet] -> raise 150 | Error: 
+[02:28:16]    NitKing(NIT) | flop | ? stk=44353 | 9h 4c | eq=19% [wet] -> fold  | Folded
+[02:28:22]    AceBot(LAG) | preflop | UTG stk=18825 | Ad 10h | eq=52% -> call  | Called
+[02:28:28] 📊 LIVE DASHBOARD | 14130h (1934.6m)
+[02:28:28]    🎯 Hands: Clawhi:3144h AceBot:3618h NitKing:3734h CallStn:3637h
+[02:28:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:28:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:28:28] 📊 PERFORMANCE (14133h, 1934.6m)
+[02:28:28]    🎚️ Slider: 6291/6593 (95%) | T1:956 T2:5334 T3:1 | Fallback calls:0
+[02:28:42]    Clawhi(TAG) | preflop | BTN stk=21258 | 8s 3d | eq=29% -> fold  | Folded
+[02:28:44]    NitKing(NIT) | preflop | ? stk=44343 | Jc 2d | eq=39% -> fold  | Folded
+[02:28:46]    CallStn(STATION) | preflop | ? stk=12481 | 4s Ac | eq=55% -> check  | Checked
+[02:28:52]    CallStn(STATION) | flop | ? stk=12481 | 4s Ac | eq=53% [dry] -> check  | Checked
+[02:28:55]    AceBot(LAG) | flop | ? stk=18805 | Ad 10h | eq=52% [dry] -> check  | Checked
+[02:28:58]    CallStn(STATION) | turn | ? stk=12481 | 4s Ac | eq=47% [wet] -> check  | Checked
+[02:29:10]    AceBot(LAG) | turn | ? stk=18805 | Ad 10h | eq=50% [wet] -> raise 30 | Raised to 30 (target 30, range 0-18805, tier2_arrows)
+[02:29:15]    CallStn(STATION) | turn | ? stk=12481 | 4s Ac | eq=43% [wet] -> call  | Called
+[02:29:27]    CallStn(STATION) | river | ? stk=12451 | 4s Ac | eq=84% [wet] -> raise 59 | Raised to 59 (target 59, range 0-12451, tier2_arrows)
+[02:29:28] 📊 LIVE DASHBOARD | 14133h (1935.6m)
+[02:29:28]    🎯 Hands: Clawhi:3145h AceBot:3618h NitKing:3734h CallStn:3637h
+[02:29:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:29:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:29:28] 📊 PERFORMANCE (14134h, 1935.6m)
+[02:29:28]    🎚️ Slider: 6293/6595 (95%) | T1:956 T2:5336 T3:1 | Fallback calls:0
+[02:29:38]    AceBot(LAG) | river | ? stk=18775 | Ad 10h | eq=82% [wet] -> raise 177 | Error: 
+[02:30:02]    Clawhi(TAG) | preflop | UTG stk=21258 | 10h 3c | eq=34% -> fold  | Folded
+[02:30:03]    NitKing(NIT) | preflop | BTN stk=44343 | Qh Ks | eq=56% -> call  | Called
+[02:30:06]    CallStn(STATION) | preflop | SB stk=12551 | Kc Jd | eq=55% -> call  | Called
+[02:30:09]    AceBot(LAG) | preflop | BB stk=18755 | Jh Qs | eq=52% -> check  | Checked
+[02:30:16]    CallStn(STATION) | flop | SB stk=12541 | Kc Jd | eq=33% [dry] -> check  | Checked
+[02:30:23]    AceBot(LAG) | flop | BB stk=18755 | Jh Qs | eq=84% [dry] -> raise 34 | Raised to 34 (target 34, range 0-18755, tier2_arrows)
+[02:30:36]    NitKing(NIT) | flop | BTN stk=44323 | Qh Ks | eq=85% [dry] -> raise 102 | Error: 
+[02:30:58]    CallStn(STATION) | flop | ? stk=12541 | Kc Jd | eq=54% [dry] -> call  | Called
+[02:31:13]    CallStn(STATION) | turn | ? stk=12507 | Kc Jd | eq=83% [wet] -> raise 89 | Error: 
+[02:31:28]    CallStn(STATION) | turn | ? stk=12507 | Kc Jd | eq=81% [wet] -> check  | Checked
+[02:31:36]    AceBot(LAG) | turn | ? stk=18721 | Jh Qs | eq=76% [wet] -> raise 89 | Raised to 89 (target 89, range 0-18721, tier2_arrows)
+[02:31:45]    NitKing(NIT) | preflop | UTG stk=44323 | 5d 7d | eq=35% -> fold  | Folded
+[02:31:51]    CallStn(STATION) | preflop | BTN stk=12507 | Qs Jh | eq=52% -> call  | Called
+[02:31:54]    AceBot(LAG) | preflop | SB stk=18839 | 10h Qc | eq=51% -> call  | Called
+[02:32:03]    Clawhi(TAG) | preflop | BB stk=21238 | 3d Kc | eq=45% -> check  | Checked
+[02:32:08]    AceBot(LAG) | flop | SB stk=18829 | 10h Qc | eq=13% [very_wet] -> check  | Checked
+[02:32:30]    Clawhi(TAG) | flop | BB stk=21238 | 3d Kc | eq=46% [very_wet] -> raise 40 | Error: 
+[02:32:34]    CallStn(STATION) | flop | BTN stk=12487 | Qs Jh | eq=56% [very_wet] -> check  | Checked
+[02:32:36]    AceBot(LAG) | turn | SB stk=18829 | 10h Qc | eq=7% [wet] -> check  | Checked
+[02:32:51]    Clawhi(TAG) | turn | BB stk=21238 | 3d Kc | eq=26% [wet] -> check  | Checked
+[02:33:02]    CallStn(STATION) | turn | BTN stk=12487 | Qs Jh | eq=89% [wet] -> raise 43 | Raised to 43 (target 43, range 0-12487, tier2_arrows)
+[02:33:05]    AceBot(LAG) | turn | SB stk=18829 | 10h Qc | eq=16% [wet] -> fold  | Folded
+[02:33:10]    Clawhi(TAG) | turn | BB stk=21238 | 3d Kc | eq=32% [wet] -> call  | Called
+[02:33:30]    Clawhi(TAG) | river | BB stk=21195 | 3d Kc | eq=36% [wet] -> check  | Checked
+[02:33:39]    CallStn(STATION) | river | BTN/SB stk=12444 | Qs Jh | eq=95% [wet] -> raise 78 | Raised to 78 (target 78, range 0-12444, tier2_arrows)
+[02:33:52]    Clawhi(TAG) | river | BB stk=21195 | 3d Kc | eq=34% [wet] -> call  | Called
+[02:33:58]    CallStn(STATION) | preflop | UTG stk=12668 | 10c 7h | eq=39% -> fold  | Folded
+[02:34:03]    AceBot(LAG) | preflop | BTN stk=18829 | 5h 8h | eq=39% -> fold  | Folded
+[02:34:27]    Clawhi(TAG) | preflop | ? stk=21107 | 9s 4d | eq=38% -> fold  | Folded
+[02:34:28] 📊 LIVE DASHBOARD | 14134h (1940.6m)
+[02:34:28]    🎯 Hands: Clawhi:3148h AceBot:3622h NitKing:3738h CallStn:3640h
+[02:34:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:34:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:34:28] 📊 PERFORMANCE (14148h, 1940.6m)
+[02:34:28]    🎚️ Slider: 6297/6603 (95%) | T1:956 T2:5340 T3:1 | Fallback calls:0
+[02:34:32]    AceBot(LAG) | preflop | UTG stk=18829 | 5c 3d | eq=28% -> fold  | Folded
+[02:34:57]    NitKing(NIT) | preflop | ? stk=44323 | 4h 9s | eq=38% -> fold  | Folded
+[02:35:17]    📊 Clawhi (TAG): 3150 hands | stack=21107 | net=-18841 (7 rebuys)
+[02:35:23]    Clawhi(TAG) | preflop | UTG stk=21107 | 3h Qd | eq=39% -> fold  | Folded
+[02:35:24]    NitKing(NIT) | preflop | BTN stk=44323 | 8s Ac | eq=54% -> call  | Called
+[02:35:27]    CallStn(STATION) | preflop | SB stk=12668 | 6d 6h | eq=58% -> call  | Called
+[02:35:28] 📊 LIVE DASHBOARD | 14148h (1941.6m)
+[02:35:28]    🎯 Hands: Clawhi:3150h AceBot:3624h NitKing:3740h CallStn:3642h
+[02:35:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:35:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:35:28] 📊 PERFORMANCE (14156h, 1941.6m)
+[02:35:28]    🎚️ Slider: 6297/6603 (95%) | T1:956 T2:5340 T3:1 | Fallback calls:0
+[02:35:29]    AceBot(LAG) | preflop | BB stk=18809 | Kd 5s | eq=47% -> check  | Checked
+[02:35:32]    CallStn(STATION) | flop | SB stk=12658 | 6d 6h | eq=44% [wet] -> check  | Checked
+[02:35:39]    AceBot(LAG) | flop | BB stk=18809 | Kd 5s | eq=45% [wet] -> raise 37 | Raised to 37 (target 37, range 0-18809, tier2_arrows)
+[02:35:45]    NitKing(NIT) | flop | BTN stk=44303 | 8s Ac | eq=56% [wet] -> raise 74 | Raised to 74 (target 74, range 0-44303, tier1_mouse)
+[02:35:46]    CallStn(STATION) | flop | SB stk=12658 | 6d 6h | eq=50% [wet] -> call  | Called
+[02:35:50]    AceBot(LAG) | flop | BB stk=18772 | Kd 5s | eq=21% [wet] -> fold  | Folded
+[02:35:55]    CallStn(STATION) | turn | BB stk=12584 | 6d 6h | eq=55% [wet] -> check  | Checked
+[02:35:57]    NitKing(NIT) | turn | BTN/SB stk=44229 | 8s Ac | eq=49% [wet] -> check  | Checked
+[02:36:10]    CallStn(STATION) | river | BB stk=12584 | 6d 6h | eq=65% [wet] -> raise 147 | Error: 
+[02:36:28] 📊 LIVE DASHBOARD | 14156h (1942.6m)
+[02:36:28]    🎯 Hands: Clawhi:3150h AceBot:3624h NitKing:3740h CallStn:3642h
+[02:36:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:36:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:36:28] 📊 PERFORMANCE (14156h, 1942.6m)
+[02:36:28]    🎚️ Slider: 6299/6607 (95%) | T1:957 T2:5341 T3:1 | Fallback calls:0
+[02:36:36]    NitKing(NIT) | river | BTN/SB stk=44229 | 8s Ac | eq=58% [wet] -> raise 140 | Error: 
+[02:36:48]    📊 AceBot (LAG): 3625 hands
+[02:36:58]    NitKing(NIT) | preflop | UTG stk=44229 | 5d 4h | eq=30% -> fold  | Folded
+[02:37:01]    CallStn(STATION) | preflop | BTN stk=12829 | 8d 8s | eq=63% -> call  | Called
+[02:37:13]    AceBot(LAG) | preflop | SB stk=18762 | 10c 4s | eq=38% -> fold  | Error: 
+[02:37:23]    AceBot(LAG) | preflop | SB stk=18762 | 10c 4s | eq=38% -> fold  | Folded
+[02:37:57]    Clawhi(TAG) | preflop | BB stk=21087 | Jc 5s | eq=45% -> check  | Error: 
+[02:38:08]    CallStn(STATION) | flop | BTN/SB stk=12809 | 8d 8s | eq=100% [dry] -> raise 32 | Error: 
+[02:38:29]    Clawhi(TAG) | turn | BB stk=21087 | Jc 5s | eq=20% [very_wet] -> check  | Checked
+[02:38:39]    CallStn(STATION) | turn | BTN/SB stk=12809 | 8d 8s | eq=100% [very_wet] -> raise 41 | Raised to 41 (target 41, range 0-12809, tier2_arrows)
+[02:38:55]    Clawhi(TAG) | turn | BB stk=21087 | Jc 5s | eq=19% [very_wet] -> fold  | Folded
+[02:39:04]    CallStn(STATION) | preflop | UTG stk=12859 | 8c 5s | eq=33% -> fold  | Folded
+[02:39:08]    AceBot(LAG) | preflop | BTN stk=18762 | Ac 2d | eq=49% -> call  | Called
+[02:39:27]    Clawhi(TAG) | preflop | SB stk=21077 | 5c 3c | eq=34% -> fold  | Folded
+[02:39:37]    NitKing(NIT) | preflop | BB stk=44209 | 6d Qs | eq=49% -> raise 30 | Error: 
+[02:39:54]    NitKing(NIT) | flop | BB stk=44209 | 6d Qs | eq=56% [wet] -> check  | Checked
+[02:40:00]    AceBot(LAG) | flop | BTN/SB stk=18742 | Ac 2d | eq=47% [wet] -> check  | Checked
+[02:40:13]    NitKing(NIT) | turn | BB stk=44209 | 6d Qs | eq=83% [very_wet] -> raise 36 | Error: 
+[02:40:28]    AceBot(LAG) | turn | BTN/SB stk=18742 | Ac 2d | eq=42% [very_wet] -> check  | Checked
+[02:40:35]    NitKing(NIT) | river | BB stk=44209 | 6d Qs | eq=59% [very_wet] -> check  | Checked
+[02:40:38]    AceBot(LAG) | river | BTN/SB stk=18742 | Ac 2d | eq=29% [very_wet] -> check  | Checked
+[02:40:48]    AceBot(LAG) | preflop | UTG stk=18742 | 7s 7d | eq=56% -> call  | Called
+[02:41:03]    Clawhi(TAG) | preflop | BTN stk=21077 | Jd Qh | eq=48% -> call  | Called
+[02:41:08]    NitKing(NIT) | preflop | SB stk=44249 | Ad As | eq=72% -> call  | Called
+[02:41:12]    CallStn(STATION) | preflop | BB stk=12839 | 6s 4s | eq=33% -> check  | Checked
+[02:41:27]    NitKing(NIT) | flop | SB stk=44239 | Ad As | eq=65% [dry] -> raise 38 | Error: 
+[02:41:28] 📊 LIVE DASHBOARD | 14156h (1947.6m)
+[02:41:28]    🎯 Hands: Clawhi:3154h AceBot:3629h NitKing:3744h CallStn:3646h
+[02:41:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:41:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:41:28] 📊 PERFORMANCE (14173h, 1947.6m)
+[02:41:28]    🎚️ Slider: 6300/6612 (95%) | T1:957 T2:5342 T3:1 | Fallback calls:0
+[02:41:44]    CallStn(STATION) | flop | BB stk=12839 | 6s 4s | eq=35% [dry] -> check  | Checked
+[02:41:49]    ⚠️ NitKing: Possible bust (stack=None, seated=False) — confirming (1/5)...
+[02:41:59]    AceBot(LAG) | flop | UTG stk=18722 | 7s 7d | eq=67% [dry] -> raise 32 | Error: 
+[02:42:18]    AceBot(LAG) | flop | UTG stk=18722 | 7s 7d | eq=63% [dry] -> check  | Checked
+[02:42:28] 📊 LIVE DASHBOARD | 14173h (1948.6m)
+[02:42:28]    🎯 Hands: Clawhi:3154h AceBot:3629h NitKing:3744h CallStn:3646h
+[02:42:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:42:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:42:28] 📊 PERFORMANCE (14173h, 1948.6m)
+[02:42:28]    🎚️ Slider: 6300/6613 (95%) | T1:957 T2:5342 T3:1 | Fallback calls:0
+[02:42:51]    NitKing(NIT) | turn | SB stk=44239 | Ad As | eq=69% [wet] -> raise 43 | Error: 
+[02:43:04]    CallStn(STATION) | turn | BB stk=12839 | 6s 4s | eq=25% [wet] -> check  | Checked
+[02:43:17]    AceBot(LAG) | turn | UTG stk=18722 | 7s 7d | eq=61% [wet] -> raise 36 | Error: 
+[02:43:52]    NitKing(NIT) | river | SB stk=44239 | Ad As | eq=62% [wet] -> check  | Checked
+[02:43:58]    CallStn(STATION) | river | BB stk=12839 | 6s 4s | eq=28% [wet] -> check  | Checked
+[02:44:10]    AceBot(LAG) | river | UTG stk=18722 | 7s 7d | eq=60% [wet] -> raise 43 | Error: 
+[02:44:21]    Clawhi(TAG) | turn | BTN stk=21057 | Jd Qh | eq=50% [wet] -> raise 48 | Error: 
+[02:44:36]    NitKing(NIT) | river | SB stk=44239 | Ad As | eq=85% [wet] -> raise 63 | Error: 
+[02:44:44]    CallStn(STATION) | river | SB stk=12839 | 6s 4s | eq=51% [wet] -> call  | Called
+[02:44:51]    AceBot(LAG) | river | BB stk=18722 | 7s 7d | eq=41% [wet] -> call  | Called
+[02:45:29]    NitKing(NIT) | preflop | BTN stk=44239 | Js Ac | eq=58% -> call  | Called
+[02:45:35]    CallStn(STATION) | preflop | SB stk=12809 | Ah 7c | eq=53% -> call  | Called
+[02:45:38]    AceBot(LAG) | preflop | BB stk=18822 | 3h Ad | eq=50% -> check  | Checked
+[02:45:44]    CallStn(STATION) | flop | SB stk=12799 | Ah 7c | eq=32% [dry] -> check  | Checked
+[02:45:56]    AceBot(LAG) | flop | BB stk=18822 | 3h Ad | eq=49% [dry] -> raise 30 | Error: 
+[02:46:11]    NitKing(NIT) | flop | BTN stk=44219 | Js Ac | eq=61% [dry] -> check  | Checked
+[02:46:24]    CallStn(STATION) | turn | SB stk=12799 | Ah 7c | eq=28% [wet] -> check  | Checked
+[02:46:37]    AceBot(LAG) | turn | BB stk=18822 | 3h Ad | eq=55% [wet] -> raise 37 | Error: 
+[02:46:59]    NitKing(NIT) | turn | BTN stk=44219 | Js Ac | eq=57% [wet] -> raise 34 | Error: 
+[02:47:15]    CallStn(STATION) | river | SB stk=12799 | Ah 7c | eq=34% [wet] -> check  | Checked
+[02:47:28]    AceBot(LAG) | river | BB stk=18822 | 3h Ad | eq=59% [wet] -> raise 30 | Error: 
+[02:47:28] 📊 LIVE DASHBOARD | 14173h (1953.6m)
+[02:47:28]    🎯 Hands: Clawhi:3155h AceBot:3631h NitKing:3746h CallStn:3648h
+[02:47:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:47:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:47:28] 📊 PERFORMANCE (14180h, 1953.6m)
+[02:47:28]    🎚️ Slider: 6300/6620 (95%) | T1:957 T2:5342 T3:1 | Fallback calls:0
+[02:47:43]    NitKing(NIT) | river | BTN stk=44219 | Js Ac | eq=67% [wet] -> raise 32 | Raised to 32 (target 32, range 0-44219, tier2_arrows)
+[02:47:45]    CallStn(STATION) | river | SB stk=12799 | Ah 7c | eq=59% [wet] -> call  | Called
+[02:47:49]    AceBot(LAG) | river | BB stk=18822 | 3h Ad | eq=32% [wet] -> call  | Called
+[02:48:02]    NitKing(NIT) | preflop | UTG stk=44343 | Ad Ah | eq=72% -> call  | Called
+[02:48:06]    CallStn(STATION) | preflop | BTN stk=12767 | 2s 3d | eq=25% -> fold  | Folded
+[02:48:08]    AceBot(LAG) | preflop | ? stk=18780 | 3h 8c | eq=32% -> fold  | Folded
+[02:48:28] 📊 LIVE DASHBOARD | 14180h (1954.6m)
+[02:48:28]    🎯 Hands: Clawhi:3157h AceBot:3633h NitKing:3747h CallStn:3649h
+[02:48:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:48:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:48:28] 📊 PERFORMANCE (14186h, 1954.6m)
+[02:48:28]    🎚️ Slider: 6301/6621 (95%) | T1:957 T2:5343 T3:1 | Fallback calls:0
+[02:48:31]    Clawhi(TAG) | preflop | ? stk=21017 | Jc 9s | eq=52% -> check  | Checked
+[02:48:53]    Clawhi(TAG) | flop | ? stk=21017 | Jc 9s | eq=38% [dry] -> check  | Checked
+[02:49:00]    NitKing(NIT) | flop | ? stk=44323 | Ad Ah | eq=84% [dry] -> raise 30 | Raised to 30 (target 30, range 0-44323, tier2_arrows)
+[02:49:20]    Clawhi(TAG) | flop | ? stk=21017 | Jc 9s | eq=38% [dry] -> call  | Called
+[02:49:28] 📊 LIVE DASHBOARD | 14186h (1955.6m)
+[02:49:28]    🎯 Hands: Clawhi:3157h AceBot:3633h NitKing:3747h CallStn:3649h
+[02:49:28]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:49:28]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:49:28] 📊 PERFORMANCE (14186h, 1955.6m)
+[02:49:28]    🎚️ Slider: 6302/6622 (95%) | T1:957 T2:5344 T3:1 | Fallback calls:0
+[02:49:48]    Clawhi(TAG) | turn | ? stk=20987 | Jc 9s | eq=33% [dry] -> check  | Checked
+[02:49:54]    NitKing(NIT) | turn | ? stk=44293 | Ad Ah | eq=83% [dry] -> raise 62 | Error: 
+[02:50:05]    NitKing(NIT) | turn | ? stk=44293 | Ad Ah | eq=82% [dry] -> check  | Checked
+[02:50:18]    Clawhi(TAG) | river | ? stk=20987 | Jc 9s | eq=7% [dry] -> check  | Checked
+[02:50:19]    📊 CallStn (STATION): 3650 hands | stack=8 | net=-149972 (29 rebuys)
+[02:50:27]    CallStn(STATION) | preflop | UTG stk=12767 | 5h 10d | eq=35% -> fold  | Folded
+[02:50:29]    AceBot(LAG) | preflop | BTN stk=18780 | 6h 9d | eq=39% -> fold  | Folded
+[02:50:36]    Clawhi(TAG) | preflop | ? stk=20977 | 2s 7h | eq=32% -> fold  | Folded
+[02:50:40]    📊 NitKing (NIT): 3750 hands | stack=44403 | net=-20649 (12 rebuys)
+[02:50:43]    AceBot(LAG) | preflop | UTG stk=18780 | 2s Jd | eq=36% -> fold  | Folded
+[02:52:25]    CallStn(STATION) | preflop | ? stk=12767 | 5d 10c | eq=42% -> fold  | Folded
+[02:52:35]    NitKing(NIT) | preflop | UTG stk=44403 | Kd 3c | eq=42% -> fold  | Folded
+[02:52:36]    Clawhi(TAG) | preflop | BTN stk=20977 | Kd 4d | eq=49% -> call  | Error: 
+[02:52:39]    CallStn(STATION) | preflop | BTN stk=12767 | Jh 4s | eq=40% -> fold  | Folded
+[02:52:43]    AceBot(LAG) | preflop | ? stk=18780 | 3h 2h | eq=33% -> fold  | Folded
+[02:52:49]    CallStn(STATION) | preflop | UTG stk=12767 | Qh Js | eq=48% -> call  | Called
+[02:52:51]    AceBot(LAG) | preflop | BTN stk=18780 | 2c Ah | eq=45% -> call  | Called
+[02:53:08]    Clawhi(TAG) | preflop | SB stk=20977 | 7s As | eq=50% -> call  | Called
+[02:53:11]    NitKing(NIT) | preflop | BB stk=44383 | 4c Kc | eq=45% -> check  | Checked
+[02:53:35]    Clawhi(TAG) | flop | SB stk=20967 | 7s As | eq=14% [wet] -> raise 48 | Error: 
+[02:53:46]    NitKing(NIT) | flop | BB stk=44383 | 4c Kc | eq=74% [wet] -> raise 43 | Raised to 43 (target 43, range 0-44383, tier2_arrows)
+[02:53:47]    CallStn(STATION) | flop | UTG stk=12747 | Qh Js | eq=42% [wet] -> call  | Called
+[02:53:52]    AceBot(LAG) | flop | BTN stk=18760 | 2c Ah | eq=19% [wet] -> fold  | Folded
+[02:54:01]    Clawhi(TAG) | flop | ? stk=20967 | 7s As | eq=18% [wet] -> fold  | Folded
+[02:54:13]    NitKing(NIT) | turn | ? stk=44340 | 4c Kc | eq=86% [wet] -> raise 119 | Error: 
+[02:54:29] 📊 LIVE DASHBOARD | 14186h (1960.6m)
+[02:54:29]    🎯 Hands: Clawhi:3160h AceBot:3639h NitKing:3753h CallStn:3655h
+[02:54:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:54:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:54:29] 📊 PERFORMANCE (14207h, 1960.6m)
+[02:54:29]    🎚️ Slider: 6303/6626 (95%) | T1:957 T2:5345 T3:1 | Fallback calls:0
+[02:54:29]    NitKing(NIT) | turn | ? stk=44340 | 4c Kc | eq=87% [wet] -> check  | Checked
+[02:54:33]    CallStn(STATION) | turn | ? stk=12704 | Qh Js | eq=50% [wet] -> check  | Checked
+[02:54:48]    NitKing(NIT) | river | ? stk=44340 | 4c Kc | eq=96% [wet] -> raise 95 | Error: 
+[02:54:56]    CallStn(STATION) | river | ? stk=12704 | Qh Js | eq=41% [wet] -> check  | Checked
+[02:55:08]    AceBot(LAG) | preflop | UTG stk=18760 | 8h 6h | eq=37% -> fold  | Folded
+[02:55:22]    Clawhi(TAG) | preflop | BTN stk=20967 | 7s 2c | eq=29% -> fold  | Folded
+[02:55:24]    NitKing(NIT) | preflop | ? stk=44496 | 4c Kd | eq=50% -> fold  | Folded
+[02:55:29] 📊 LIVE DASHBOARD | 14207h (1961.6m)
+[02:55:29]    🎯 Hands: Clawhi:3162h AceBot:3642h NitKing:3755h CallStn:3657h
+[02:55:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:55:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:55:29] 📊 PERFORMANCE (14216h, 1961.6m)
+[02:55:29]    🎚️ Slider: 6303/6627 (95%) | T1:957 T2:5345 T3:1 | Fallback calls:0
+[02:55:43]    Clawhi(TAG) | preflop | UTG stk=20967 | 2d 2c | eq=41% -> fold  | Folded
+[02:55:46]    NitKing(NIT) | preflop | BTN stk=44496 | Qs Jd | eq=52% -> call  | Called
+[02:55:47]    CallStn(STATION) | preflop | SB stk=12704 | 4c 4h | eq=52% -> call  | Called
+[02:55:49]    AceBot(LAG) | preflop | BB stk=18740 | Jh Kh | eq=57% -> check  | Checked
+[02:55:55]    CallStn(STATION) | flop | SB stk=12694 | 4c 4h | eq=21% [wet] -> check  | Checked
+[02:56:02]    AceBot(LAG) | flop | BB stk=18740 | Jh Kh | eq=70% [wet] -> raise 32 | Raised to 32 (target 32, range 0-18740, tier2_arrows)
+[02:56:05]    NitKing(NIT) | flop | BTN stk=44476 | Qs Jd | eq=48% [wet] -> call  | Called
+[02:56:08]    CallStn(STATION) | flop | SB stk=12694 | 4c 4h | eq=20% [wet] -> fold  | Folded
+[02:56:11]    AceBot(LAG) | turn | BB stk=18708 | Jh Kh | eq=57% [dry] -> check  | Checked
+[02:56:14]    NitKing(NIT) | turn | BTN/SB stk=44444 | Qs Jd | eq=37% [dry] -> check  | Checked
+[02:56:27]    AceBot(LAG) | river | BB stk=18708 | Jh Kh | eq=81% [wet] -> raise 82 | Error: 
+[02:56:29] 📊 LIVE DASHBOARD | 14216h (1962.6m)
+[02:56:29]    🎯 Hands: Clawhi:3163h AceBot:3642h NitKing:3755h CallStn:3658h
+[02:56:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[02:56:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[02:56:29] 📊 PERFORMANCE (14218h, 1962.6m)
+[02:56:29]    🎚️ Slider: 6304/6629 (95%) | T1:957 T2:5346 T3:1 | Fallback calls:0
+[02:56:46]    AceBot(LAG) | river | BB stk=18708 | Jh Kh | eq=87% [wet] -> check  | Checked
+[02:56:52]    NitKing(NIT) | river | BTN/SB stk=44444 | Qs Jd | eq=99% [wet] -> raise 71 | Raised to 71 (target 71, range 0-44444, tier2_arrows)
+[02:57:06]    NitKing(NIT) | preflop | UTG stk=44568 | 3c Jc | eq=39% -> fold  | Folded
+[02:57:09]    CallStn(STATION) | preflop | BTN stk=12694 | 3s 3d | eq=49% -> call  | Called
+[02:57:14]    AceBot(LAG) | preflop | SB stk=18698 | 6s 7c | eq=37% -> fold  | Folded
+[02:57:38]    Clawhi(TAG) | preflop | BB stk=20947 | 7d 4c | eq=36% -> check  | Checked
+[02:57:42]    CallStn(STATION) | flop | BTN/SB stk=12674 | 3s 3d | eq=41% [wet] -> check  | Checked
+[02:57:57]    Clawhi(TAG) | turn | BB stk=20947 | 7d 4c | eq=22% [wet] -> check  | Checked
+[02:57:59]    CallStn(STATION) | turn | BTN/SB stk=12674 | 3s 3d | eq=33% [wet] -> check  | Checked
+[02:58:21]    Clawhi(TAG) | river | BB stk=20947 | 7d 4c | eq=99% [wet] -> raise 31 | Error: 
+[02:58:23]    CallStn(STATION) | river | BTN/SB stk=12674 | 3s 3d | eq=38% [wet] -> check  | Checked
+[02:58:34]    CallStn(STATION) | preflop | UTG stk=12674 | Ks 3h | eq=42% -> call  | Called
+[02:58:37]    AceBot(LAG) | preflop | BTN stk=18698 | Kd 2s | eq=41% -> fold  | Folded
+[02:58:44]    Clawhi(TAG) | preflop | ? stk=20987 | 4c 9s | eq=35% -> fold  | Folded
+[02:58:47]    NitKing(NIT) | preflop | ? stk=44548 | 4d 9d | eq=41% -> check  | Checked
+[02:59:02]    NitKing(NIT) | flop | ? stk=44548 | 4d 9d | eq=91% [very_wet] -> raise 41 | Error: 
+[02:59:18]    CallStn(STATION) | flop | ? stk=12654 | Ks 3h | eq=29% [very_wet] -> check  | Checked
+[02:59:29]    NitKing(NIT) | turn | ? stk=44548 | 4d 9d | eq=93% [very_wet] -> raise 41 | Raised to 41 (target 41, range 0-44548, tier2_arrows)
+[02:59:35]    CallStn(STATION) | turn | ? stk=12654 | Ks 3h | eq=20% [very_wet] -> fold  | Folded
+[02:59:43]    AceBot(LAG) | preflop | UTG stk=18698 | 4d 2d | eq=29% -> fold  | Folded
+[02:59:58]    Clawhi(TAG) | preflop | BTN stk=20987 | 9h 3s | eq=34% -> fold  | Folded
+[03:00:00]    NitKing(NIT) | preflop | ? stk=44588 | Qs 2h | eq=45% -> fold  | Folded
+[03:00:13]    Clawhi(TAG) | preflop | UTG stk=20987 | 6c 5s | eq=31% -> fold  | Folded
+[03:00:28]    NitKing(NIT) | preflop | BTN stk=44588 | 6h Kc | eq=48% -> call  | Called
+[03:00:32]    CallStn(STATION) | preflop | SB stk=12654 | Ad 2h | eq=49% -> call  | Called
+[03:00:44]    AceBot(LAG) | preflop | BB stk=18678 | Kh Ac | eq=59% -> raise 60 | Error: 
+[03:01:01]    AceBot(LAG) | preflop | BB stk=18678 | Kh Ac | eq=59% -> fold  | Folded
+[03:01:03]    CallStn(STATION) | flop | SB stk=12644 | Ad 2h | eq=16% [wet] -> check  | Checked
+[03:01:06]    AceBot(LAG) | flop | BB stk=18678 | Kh Ac | eq=71% [wet] -> check  | Checked
+[03:01:13]    NitKing(NIT) | flop | BTN stk=44568 | 6h Kc | eq=61% [wet] -> raise 36 | Raised to 36 (target 36, range 0-44568, tier2_arrows)
+[03:01:16]    CallStn(STATION) | flop | SB stk=12644 | Ad 2h | eq=37% [wet] -> call  | Called
+[03:01:28]    AceBot(LAG) | flop | BB stk=18678 | Kh Ac | eq=53% [wet] -> raise 108 | Error: 
+[03:01:29] 📊 LIVE DASHBOARD | 14218h (1967.6m)
+[03:01:29]    🎯 Hands: Clawhi:3167h AceBot:3647h NitKing:3760h CallStn:3663h
+[03:01:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:01:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:01:29] 📊 PERFORMANCE (14237h, 1967.6m)
+[03:01:29]    🎚️ Slider: 6307/6636 (95%) | T1:957 T2:5349 T3:1 | Fallback calls:0
+[03:01:47]    CallStn(STATION) | turn | BB stk=12608 | Ad 2h | eq=72% [very_wet] -> raise 91 | Raised to 91 (target 91, range 0-12608, tier2_arrows)
+[03:01:52]    NitKing(NIT) | turn | BTN/SB stk=44532 | 6h Kc | eq=50% [very_wet] -> raise 182 | Raised to 182 (target 182, range 0-44532, tier1_mouse)
+[03:01:53]    CallStn: extended anti-stutter → downgraded raise to call (same street, 8s window)
+[03:01:54]    CallStn(STATION) | turn | BB stk=12517 | Ad 2h | eq=74% [very_wet] -> call  | Called
+[03:02:08]    CallStn(STATION) | river | BB stk=12426 | Ad 2h | eq=81% [very_wet] -> raise 266 | Error: 
+[03:02:29] 📊 LIVE DASHBOARD | 14237h (1968.6m)
+[03:02:29]    🎯 Hands: Clawhi:3167h AceBot:3647h NitKing:3760h CallStn:3663h
+[03:02:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:02:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:02:29] 📊 PERFORMANCE (14237h, 1968.6m)
+[03:02:29]    🎚️ Slider: 6309/6639 (95%) | T1:958 T2:5350 T3:1 | Fallback calls:0
+[03:02:32]    NitKing(NIT) | river | BTN/SB stk=44350 | 6h Kc | eq=27% [very_wet] -> check  | Checked
+[03:02:42]    NitKing(NIT) | preflop | UTG stk=44350 | Jd 2h | eq=36% -> fold  | Folded
+[03:02:45]    CallStn(STATION) | preflop | BTN stk=12922 | Ad 7h | eq=53% -> call  | Called
+[03:02:47]    AceBot(LAG) | preflop | SB stk=18668 | 8h 6h | eq=40% -> fold  | Folded
+[03:03:08]    Clawhi(TAG) | preflop | BB stk=20967 | 6d 4h | eq=35% -> check  | Checked
+[03:03:30]    Clawhi(TAG) | flop | BB stk=20967 | 6d 4h | eq=47% [wet] -> check  | Checked
+[03:03:32]    CallStn(STATION) | flop | BTN/SB stk=12902 | Ad 7h | eq=38% [wet] -> check  | Checked
+[03:03:48]    Clawhi(TAG) | turn | BB stk=20967 | 6d 4h | eq=38% [very_wet] -> check  | Checked
+[03:03:54]    CallStn(STATION) | turn | BTN/SB stk=12902 | Ad 7h | eq=27% [very_wet] -> check  | Checked
+[03:04:07]    Clawhi(TAG) | river | BB stk=20967 | 6d 4h | eq=33% [very_wet] -> check  | Checked
+[03:04:15]    CallStn(STATION) | river | BTN/SB stk=12902 | Ad 7h | eq=22% [very_wet] -> check  | Checked
+[03:04:17]    📊 AceBot (LAG): 3650 hands | stack=7 | net=-324983 (64 rebuys)
+[03:04:23]    CallStn(STATION) | preflop | UTG stk=12902 | Ks 10s | eq=51% -> call  | Called
+[03:04:25]    AceBot(LAG) | preflop | BTN stk=18668 | Kd 7c | eq=45% -> call  | Called
+[03:04:35]    Clawhi(TAG) | preflop | SB stk=21007 | 5d 9d | eq=37% -> fold  | Folded
+[03:04:37]    NitKing(NIT) | preflop | SB stk=44330 | 10c Jd | eq=50% -> check  | Checked
+[03:04:43]    NitKing(NIT) | flop | SB stk=44330 | 10c Jd | eq=21% [dry] -> check  | Checked
+[03:04:56]    CallStn(STATION) | flop | BB stk=12882 | Ks 10s | eq=49% [dry] -> raise 32 | Raised to 32 (target 32, range 0-12882, tier2_arrows)
+[03:05:09]    AceBot(LAG) | flop | BTN stk=18648 | Kd 7c | eq=47% [dry] -> raise 96 | Error: 
+[03:05:27]    NitKing(NIT) | flop | ? stk=44330 | 10c Jd | eq=40% [dry] -> call  | Called
+[03:05:31]    NitKing(NIT) | turn | ? stk=44298 | 10c Jd | eq=25% [wet] -> check  | Checked
+[03:05:38]    CallStn(STATION) | turn | ? stk=12850 | Ks 10s | eq=51% [wet] -> check  | Checked
+[03:05:45]    NitKing(NIT) | river | ? stk=44298 | 10c Jd | eq=24% [wet] -> check  | Checked
+[03:05:48]    CallStn(STATION) | river | ? stk=12850 | Ks 10s | eq=48% [wet] -> check  | Checked
+[03:05:55]    AceBot(LAG) | preflop | UTG stk=18648 | 7d 4d | eq=33% -> fold  | Folded
+[03:06:15]    Clawhi(TAG) | preflop | BTN stk=21007 | 3c 7s | eq=31% -> fold  | Folded
+[03:06:30]    NitKing(NIT) | preflop | ? stk=44288 | 7c 9d | eq=44% -> fold  | Error: 
+[03:06:38]    Clawhi(TAG) | preflop | UTG stk=21007 | 10s 4s | eq=37% -> fold  | Folded
+[03:06:40]    NitKing(NIT) | preflop | BTN stk=44288 | 9h 3c | eq=34% -> fold  | Folded
+[03:06:43]    CallStn(STATION) | preflop | ? stk=12984 | 3h 2d | eq=29% -> fold  | Folded
+[03:06:51]    NitKing(NIT) | preflop | UTG stk=44288 | 9s 9c | eq=61% -> call  | Called
+[03:06:54]    CallStn(STATION) | preflop | BTN stk=12984 | 2s 2d | eq=41% -> call  | Called
+[03:06:56]    AceBot(LAG) | preflop | SB stk=18648 | 5c 3h | eq=28% -> fold  | Folded
+[03:07:11]    Clawhi(TAG) | preflop | SB stk=20987 | 7h Ad | eq=53% -> raise 40 | Error: 
+[03:07:29] 📊 LIVE DASHBOARD | 14237h (1973.6m)
+[03:07:29]    🎯 Hands: Clawhi:3173h AceBot:3655h NitKing:3768h CallStn:3670h
+[03:07:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:07:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:07:29] 📊 PERFORMANCE (14266h, 1973.6m)
+[03:07:29]    🎚️ Slider: 6310/6642 (95%) | T1:958 T2:5351 T3:1 | Fallback calls:0
+[03:07:42]    Clawhi(TAG) | flop | SB stk=20987 | 7h Ad | eq=89% [dry] -> raise 45 | Raised to 45 (target 45, range 0-20987, tier2_arrows)
+[03:07:49]    NitKing(NIT) | flop | BB stk=44268 | 9s 9c | eq=39% [dry] -> call  | Called
+[03:07:53]    CallStn(STATION) | flop | BTN stk=12964 | 2s 2d | eq=25% [dry] -> call  | Called
+[03:08:14]    Clawhi(TAG) | turn | SB stk=20942 | 7h Ad | eq=82% [very_wet] -> raise 165 | Error: 
+[03:08:21]    NitKing(NIT) | turn | BB stk=44223 | 9s 9c | eq=51% [very_wet] -> check  | Checked
+[03:08:29] 📊 LIVE DASHBOARD | 14266h (1974.6m)
+[03:08:29]    🎯 Hands: Clawhi:3173h AceBot:3655h NitKing:3768h CallStn:3670h
+[03:08:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:08:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:08:29] 📊 PERFORMANCE (14266h, 1974.6m)
+[03:08:29]    🎚️ Slider: 6311/6645 (95%) | T1:958 T2:5352 T3:1 | Fallback calls:0
+[03:08:33]    CallStn(STATION) | turn | BTN stk=12919 | 2s 2d | eq=44% [very_wet] -> raise 117 | Error: 
+[03:08:49]    CallStn(STATION) | turn | BTN stk=12919 | 2s 2d | eq=43% [very_wet] -> check  | Checked
+[03:08:53]    Clawhi(TAG) | river | SB stk=20942 | 7h Ad | eq=56% [very_wet] -> check  | Checked
+[03:08:56]    NitKing(NIT) | river | BB stk=44223 | 9s 9c | eq=31% [very_wet] -> check  | Checked
+[03:09:07]    CallStn(STATION) | river | BTN stk=12919 | 2s 2d | eq=29% [very_wet] -> check  | Checked
+[03:09:12]    CallStn(STATION) | preflop | UTG stk=12919 | Kc 7d | eq=45% -> call  | Called
+[03:09:17]    AceBot(LAG) | preflop | BTN stk=18648 | 3s Jc | eq=36% -> fold  | Folded
+[03:09:28]    Clawhi(TAG) | preflop | ? stk=21137 | Ad 10c | eq=57% -> call  | Called
+[03:09:40]    NitKing(NIT) | preflop | ? stk=44203 | 5h Qd | eq=44% -> raise 60 | Error: 
+[03:09:58]    NitKing(NIT) | preflop | ? stk=44203 | 5h Qd | eq=44% -> fold  | Folded
+[03:10:28]    NitKing(NIT) | flop | ? stk=44203 | 5h Qd | eq=69% [wet] -> raise 32 | Raised to 32 (target 32, range 0-44203, tier2_arrows)
+[03:10:31]    CallStn(STATION) | flop | ? stk=12899 | Kc 7d | eq=43% [wet] -> call  | Called
+[03:10:34]    Clawhi(TAG) | flop | ? stk=21127 | Ad 10c | eq=45% [wet] -> raise 36 | Error: 
+[03:11:05]    NitKing(NIT) | turn | ? stk=44171 | 5h Qd | eq=84% [wet] -> raise 89 | Raised to 89 (target 89, range 0-44171, tier2_arrows)
+[03:11:08]    CallStn(STATION) | turn | ? stk=12867 | Kc 7d | eq=30% [wet] -> call  | Called
+[03:11:20]    NitKing(NIT) | river | ? stk=44082 | 5h Qd | eq=72% [wet] -> raise 173 | Error: 
+[03:11:32]    NitKing(NIT) | river | ? stk=44082 | 5h Qd | eq=74% [wet] -> check  | Checked
+[03:11:41]    CallStn(STATION) | river | ? stk=12778 | Kc 7d | eq=60% [wet] -> raise 151 | Error: 
+[03:12:02]    AceBot(LAG) | preflop | UTG stk=18648 | 10c 3d | eq=34% -> fold  | Folded
+[03:12:18]    📊 Clawhi (TAG): 3175 hands
+[03:12:19]    Clawhi(TAG) | preflop | BTN stk=21127 | 7c 7d | eq=60% -> call  | Called
+[03:12:21]    NitKing(NIT) | preflop | SB stk=44374 | Ks 5h | eq=47% -> fold  | Folded
+[03:12:24]    CallStn(STATION) | preflop | BB stk=12758 | 4d Jc | eq=44% -> check  | Checked
+[03:12:30]    CallStn(STATION) | flop | BB stk=12758 | 4d Jc | eq=32% [dry] -> check  | Checked
+[03:12:55]    Clawhi(TAG) | flop | BTN/SB stk=21107 | 7c 7d | eq=56% [dry] -> raise 30 | Raised to 0 (target 30, range 0-21107, FAILED)
+[03:12:56]    CallStn(STATION) | turn | BB stk=12758 | 4d Jc | eq=29% [wet] -> check  | Checked
+[03:13:25]    Clawhi(TAG) | turn | BTN/SB stk=21107 | 7c 7d | eq=60% [wet] -> raise 30 | Error: 
+[03:13:29] 📊 LIVE DASHBOARD | 14266h (1979.6m)
+[03:13:29]    🎯 Hands: Clawhi:3175h AceBot:3659h NitKing:3771h CallStn:3673h
+[03:13:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:13:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:13:29] 📊 PERFORMANCE (14278h, 1979.6m)
+[03:13:29]    🎚️ Slider: 6314/6653 (95%) | T1:958 T2:5355 T3:1 | Fallback calls:0
+[03:13:30]    CallStn(STATION) | river | BB stk=12758 | 4d Jc | eq=68% [very_wet] -> raise 30 | Error: 
+[03:13:41]    CallStn(STATION) | river | BB stk=12758 | 4d Jc | eq=73% [very_wet] -> check  | Checked
+[03:13:46]    Clawhi(TAG) | river | BTN/SB stk=21107 | 7c 7d | eq=52% [very_wet] -> check  | Checked
+[03:14:09]    Clawhi(TAG) | preflop | UTG stk=21107 | 5h Kh | eq=46% -> call  | Called
+[03:14:12]    NitKing(NIT) | preflop | BTN stk=44374 | 6s Jh | eq=39% -> fold  | Folded
+[03:14:14]    CallStn(STATION) | preflop | ? stk=12798 | 4s Ac | eq=50% -> call  | Called
+[03:14:16]    AceBot(LAG) | preflop | ? stk=18628 | 3h 6c | eq=30% -> check  | Checked
+[03:14:20]    CallStn(STATION) | flop | ? stk=12788 | 4s Ac | eq=41% [wet] -> check  | Checked
+[03:14:24]    AceBot(LAG) | flop | ? stk=18628 | 3h 6c | eq=60% [wet] -> check  | Checked
+[03:14:29] 📊 LIVE DASHBOARD | 14278h (1980.6m)
+[03:14:29]    🎯 Hands: Clawhi:3176h AceBot:3661h NitKing:3773h CallStn:3674h
+[03:14:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:14:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:14:29] 📊 PERFORMANCE (14284h, 1980.6m)
+[03:14:29]    🎚️ Slider: 6314/6653 (95%) | T1:958 T2:5355 T3:1 | Fallback calls:0
+[03:14:39]    Clawhi(TAG) | flop | ? stk=21087 | 5h Kh | eq=63% [wet] -> raise 30 | Raised to 30 (target 30, range 0-21087, tier2_arrows)
+[03:14:43]    CallStn(STATION) | flop | ? stk=12788 | 4s Ac | eq=55% [wet] -> call  | Called
+[03:14:49]    AceBot(LAG) | flop | ? stk=18628 | 3h 6c | eq=38% [wet] -> raise 75 | Raised to 75 (target 75, range 0-18628, tier2_arrows)
+[03:15:05]    Clawhi(TAG) | flop | ? stk=21057 | 5h Kh | eq=38% [wet] -> call  | Called
+[03:15:12]    CallStn(STATION) | flop | ? stk=12758 | 4s Ac | eq=37% [wet] -> call  | Called
+[03:15:22]    CallStn(STATION) | turn | ? stk=12713 | 4s Ac | eq=37% [wet] -> check  | Checked
+[03:15:29] 📊 LIVE DASHBOARD | 14284h (1981.6m)
+[03:15:29]    🎯 Hands: Clawhi:3176h AceBot:3661h NitKing:3773h CallStn:3674h
+[03:15:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:15:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:15:29] 📊 PERFORMANCE (14284h, 1981.6m)
+[03:15:29]    🎚️ Slider: 6316/6656 (95%) | T1:958 T2:5357 T3:1 | Fallback calls:0
+[03:15:35]    AceBot(LAG) | turn | ? stk=18553 | 3h 6c | eq=58% [wet] -> raise 178 | Error: 
+[03:15:49]    AceBot(LAG) | turn | ? stk=18553 | 3h 6c | eq=58% [wet] -> check  | Checked
+[03:16:01]    Clawhi(TAG) | turn | ? stk=21012 | 5h Kh | eq=72% [wet] -> raise 171 | Error: 
+[03:16:13]    CallStn(STATION) | river | ? stk=12713 | 4s Ac | eq=12% [very_wet] -> check  | Checked
+[03:16:15]    AceBot(LAG) | river | ? stk=18553 | 3h 6c | eq=54% [very_wet] -> check  | Checked
+[03:16:31]    Clawhi(TAG) | river | ? stk=21012 | 5h Kh | eq=64% [very_wet] -> raise 196 | Error: 
+[03:16:37]    📊 CallStn (STATION): 3675 hands
+[03:16:43]    📊 NitKing (NIT): 3775 hands
+[03:16:44]    NitKing(NIT) | preflop | UTG stk=44374 | 9d 4d | eq=35% -> fold  | Folded
+[03:16:46]    CallStn(STATION) | preflop | BTN stk=12713 | 7c 6c | eq=39% -> fold  | Folded
+[03:16:47]    AceBot(LAG) | preflop | ? stk=18543 | Ac 3h | eq=54% -> call  | Called
+[03:17:05]    Clawhi(TAG) | preflop | ? stk=21277 | Kc 2s | eq=48% -> check  | Checked
+[03:17:19]    AceBot(LAG) | flop | ? stk=18533 | Ac 3h | eq=51% [wet] -> raise 30 | Raised to 30 (target 30, range 0-18533, tier2_arrows)
+[03:17:36]    Clawhi(TAG) | flop | ? stk=21277 | Kc 2s | eq=41% [wet] -> call  | Called
+[03:17:47]    AceBot(LAG) | turn | ? stk=18503 | Ac 3h | eq=43% [wet] -> raise 62 | Raised to 62 (target 62, range 0-18503, tier2_arrows)
+[03:18:02]    Clawhi(TAG) | turn | ? stk=21247 | Kc 2s | eq=35% [wet] -> call  | Called
+[03:18:16]    AceBot(LAG) | river | ? stk=18441 | Ac 3h | eq=83% [wet] -> raise 148 | Error: 
+[03:18:27]    AceBot(LAG) | river | ? stk=18441 | Ac 3h | eq=82% [wet] -> check  | Checked
+[03:18:32]    Clawhi(TAG) | river | ? stk=21185 | Kc 2s | eq=41% [wet] -> check  | Checked
+[03:18:41]    CallStn(STATION) | preflop | UTG stk=12713 | 9d 4c | eq=32% -> fold  | Folded
+[03:18:44]    AceBot(LAG) | preflop | BTN stk=18665 | 9h 8d | eq=42% -> fold  | Folded
+[03:18:58]    Clawhi(TAG) | preflop | ? stk=21175 | Kc Ad | eq=64% -> call  | Called
+[03:18:59]    NitKing(NIT) | preflop | ? stk=44354 | 6d 4h | eq=35% -> check  | Checked
+[03:19:28]    NitKing(NIT) | flop | ? stk=44354 | 6d 4h | eq=18% [dry] -> check  | Checked
+[03:19:30]    Clawhi(TAG) | flop | ? stk=21165 | Kc Ad | eq=59% [dry] -> raise 30 | Error: 
+[03:19:54]    NitKing(NIT) | turn | ? stk=44354 | 6d 4h | eq=11% [dry] -> check  | Checked
+[03:19:54]    Clawhi(TAG) | turn | ? stk=21165 | Kc Ad | eq=85% [dry] -> raise 30 | Error: 
+[03:20:16]    NitKing(NIT) | river | ? stk=44354 | 6d 4h | eq=8% [wet] -> check  | Checked
+[03:20:24]    AceBot(LAG) | preflop | UTG stk=18665 | Qs Js | eq=50% -> call  | Called
+[03:20:29] 📊 LIVE DASHBOARD | 14284h (1986.6m)
+[03:20:29]    🎯 Hands: Clawhi:3178h AceBot:3666h NitKing:3779h CallStn:3680h
+[03:20:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:20:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:20:29] 📊 PERFORMANCE (14303h, 1986.6m)
+[03:20:29]    🎚️ Slider: 6318/6661 (95%) | T1:958 T2:5359 T3:1 | Fallback calls:0
+[03:20:40]    Clawhi(TAG) | preflop | BTN stk=21205 | 5c Ks | eq=43% -> call  | Called
+[03:20:42]    NitKing(NIT) | preflop | SB stk=44344 | 10h 2d | eq=33% -> fold  | Folded
+[03:20:45]    CallStn(STATION) | preflop | SB stk=12693 | As Qh | eq=58% -> check  | Checked
+[03:20:51]    CallStn(STATION) | flop | SB stk=12693 | As Qh | eq=29% [dry] -> check  | Checked
+[03:20:52]    AceBot(LAG) | flop | BB stk=18645 | Qs Js | eq=46% [dry] -> check  | Checked
+[03:21:16]    Clawhi(TAG) | flop | BTN stk=21185 | 5c Ks | eq=89% [dry] -> raise 45 | Error: 
+[03:21:20]    CallStn(STATION) | turn | SB stk=12693 | As Qh | eq=27% [dry] -> check  | Checked
+[03:21:27]    AceBot(LAG) | turn | BB stk=18645 | Qs Js | eq=49% [dry] -> raise 37 | Raised to 37 (target 37, range 0-18645, tier2_arrows)
+[03:21:29] 📊 LIVE DASHBOARD | 14303h (1987.6m)
+[03:21:29]    🎯 Hands: Clawhi:3179h AceBot:3666h NitKing:3779h CallStn:3680h
+[03:21:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:21:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:21:29] 📊 PERFORMANCE (14304h, 1987.6m)
+[03:21:29]    🎚️ Slider: 6319/6663 (95%) | T1:958 T2:5360 T3:1 | Fallback calls:0
+[03:21:47]    Clawhi(TAG) | turn | BTN stk=21185 | 5c Ks | eq=94% [dry] -> raise 111 | Error: 
+[03:21:54]    CallStn(STATION) | turn | ? stk=12693 | As Qh | eq=46% [dry] -> call  | Called
+[03:21:59]    CallStn(STATION) | river | ? stk=12656 | As Qh | eq=39% [wet] -> check  | Checked
+[03:22:11]    AceBot(LAG) | river | ? stk=18608 | Qs Js | eq=77% [wet] -> raise 95 | Error: 
+[03:22:42]    Clawhi(TAG) | preflop | UTG stk=21185 | 9h 2c | eq=31% -> fold  | Folded
+[03:22:44]    NitKing(NIT) | preflop | BTN stk=44344 | As 3s | eq=52% -> call  | Called
+[03:22:51]    CallStn(STATION) | preflop | SB stk=12646 | Qs 3d | eq=42% -> fold  | Folded
+[03:22:54]    AceBot(LAG) | preflop | BB stk=18732 | Kd 10s | eq=58% -> check  | Checked
+[03:23:03]    AceBot(LAG) | flop | BB stk=18732 | Kd 10s | eq=49% [dry] -> raise 30 | Raised to 30 (target 30, range 0-18732, tier2_arrows)
+[03:23:14]    NitKing(NIT) | flop | BTN/SB stk=44324 | As 3s | eq=90% [dry] -> raise 90 | Raised to 90 (target 90, range 0-44324, tier2_arrows)
+[03:23:26]    AceBot(LAG) | flop | BB stk=18702 | Kd 10s | eq=49% [dry] -> raise 90 | Error: 
+[03:23:42]    NitKing(NIT) | preflop | UTG stk=44404 | 8d Ks | eq=46% -> call  | Called
+[03:23:43]    CallStn(STATION) | preflop | BTN stk=12646 | 9c 5h | eq=34% -> fold  | Folded
+[03:23:47]    AceBot(LAG) | preflop | ? stk=18692 | Qc As | eq=58% -> call  | Called
+[03:24:08]    Clawhi(TAG) | preflop | ? stk=21165 | 10d 3c | eq=37% -> check  | Checked
+[03:24:12]    AceBot(LAG) | flop | ? stk=18682 | Qc As | eq=29% [dry] -> check  | Checked
+[03:24:34]    Clawhi(TAG) | flop | ? stk=21165 | 10d 3c | eq=74% [dry] -> raise 30 | Error: 
+[03:25:01]    AceBot(LAG) | flop | ? stk=18682 | Qc As | eq=54% [dry] -> raise 90 | Error: 
+[03:25:32]    NitKing(NIT) | flop | ? stk=44384 | 8d Ks | eq=46% [dry] -> raise 30 | Error: 
+[03:25:38]    CallStn(STATION) | preflop | UTG stk=12646 | 5c 2h | eq=26% -> fold  | Folded
+[03:25:40]    AceBot(LAG) | preflop | BTN stk=18682 | 4s Kh | eq=46% -> call  | Called
+[03:25:58]    Clawhi(TAG) | flop | ? stk=21165 | 10d 3c | eq=74% [dry] -> raise 90 | Error: 
+[03:26:00]    NitKing(NIT) | preflop | BB stk=44424 | 9h 2c | eq=34% -> fold  | Folded
+[03:26:03]    AceBot(LAG) | preflop | BTN/SB stk=18662 | 4s Kh | eq=50% -> call  | Called
+[03:26:12]    Clawhi(TAG) | flop | BB stk=21075 | As Ks | eq=57% [dry] -> check  | Checked
+[03:26:26]    AceBot(LAG) | flop | BTN/SB stk=18592 | 4s Kh | eq=58% [dry] -> raise 90 | Raised to 90 (target 90, range 0-18592, tier2_arrows)
+[03:26:29] 📊 LIVE DASHBOARD | 14304h (1992.6m)
+[03:26:29]    🎯 Hands: Clawhi:3182h AceBot:3670h NitKing:3783h CallStn:3684h
+[03:26:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:26:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:26:29] 📊 PERFORMANCE (14319h, 1992.6m)
+[03:26:29]    🎚️ Slider: 6324/6673 (95%) | T1:958 T2:5365 T3:1 | Fallback calls:0
+[03:26:43]    Clawhi(TAG) | flop | BB stk=21075 | As Ks | eq=51% [dry] -> raise 270 | Error: 
+[03:26:52]    AceBot(LAG) | preflop | UTG stk=18792 | 9d 6d | eq=38% -> fold  | Folded
+[03:26:59]    Clawhi(TAG) | preflop | BTN stk=21075 | 2c Jc | eq=42% -> fold  | Folded
+[03:27:02]    NitKing(NIT) | preflop | ? stk=44414 | 3c Kd | eq=49% -> fold  | Folded
+[03:27:23]    Clawhi(TAG) | preflop | UTG stk=21075 | Qs 8s | eq=46% -> call  | Called
+[03:27:25]    NitKing(NIT) | preflop | BTN stk=44414 | 6c Kd | eq=44% -> call  | Called
+[03:27:28]    CallStn(STATION) | preflop | SB stk=12646 | 5h Qd | eq=41% -> call  | Called
+[03:27:29] 📊 LIVE DASHBOARD | 14319h (1993.6m)
+[03:27:29]    🎯 Hands: Clawhi:3184h AceBot:3672h NitKing:3785h CallStn:3686h
+[03:27:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:27:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:27:29] 📊 PERFORMANCE (14327h, 1993.6m)
+[03:27:29]    🎚️ Slider: 6324/6674 (95%) | T1:958 T2:5365 T3:1 | Fallback calls:0
+[03:27:31]    AceBot(LAG) | preflop | BB stk=18772 | 2c 10s | eq=33% -> check  | Checked
+[03:27:35]    CallStn(STATION) | flop | SB stk=12636 | 5h Qd | eq=16% [very_wet] -> check  | Checked
+[03:27:40]    AceBot(LAG) | flop | BB stk=18772 | 2c 10s | eq=34% [very_wet] -> check  | Checked
+[03:27:46]    Clawhi(TAG) | flop | UTG stk=21055 | Qs 8s | eq=37% [very_wet] -> check  | Checked
+[03:27:58]    NitKing(NIT) | flop | BTN stk=44394 | 6c Kd | eq=72% [very_wet] -> raise 49 | Error: 
+[03:28:23]    CallStn(STATION) | turn | SB stk=12636 | 5h Qd | eq=10% [very_wet] -> check  | Checked
+[03:28:29]    AceBot(LAG) | turn | BB stk=18772 | 2c 10s | eq=35% [very_wet] -> check  | Checked
+[03:28:29] 📊 LIVE DASHBOARD | 14327h (1994.6m)
+[03:28:29]    🎯 Hands: Clawhi:3184h AceBot:3672h NitKing:3785h CallStn:3686h
+[03:28:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:28:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:28:29] 📊 PERFORMANCE (14327h, 1994.6m)
+[03:28:29]    🎚️ Slider: 6324/6675 (95%) | T1:958 T2:5365 T3:1 | Fallback calls:0
+[03:28:54]    Clawhi(TAG) | turn | UTG stk=21055 | Qs 8s | eq=29% [very_wet] -> raise 57 | Error: 
+[03:29:01]    NitKing(NIT) | turn | BTN stk=44394 | 6c Kd | eq=71% [very_wet] -> raise 49 | Raised to 49 (target 49, range 0-44394, tier2_arrows)
+[03:29:04]    CallStn(STATION) | turn | SB stk=12636 | 5h Qd | eq=27% [very_wet] -> call  | Called
+[03:29:16]    AceBot(LAG) | turn | BB stk=18772 | 2c 10s | eq=28% [very_wet] -> raise 128 | Error: 
+[03:29:39]    Clawhi(TAG) | turn | BB stk=21055 | Qs 8s | eq=17% [very_wet] -> fold  | Folded
+[03:29:41]    CallStn(STATION) | river | BB stk=12587 | 5h Qd | eq=8% [very_wet] -> check  | Checked
+[03:29:44]    NitKing(NIT) | river | BTN/SB stk=44345 | 6c Kd | eq=57% [very_wet] -> check  | Checked
+[03:29:54]    NitKing(NIT) | preflop | UTG stk=44523 | 9h Ad | eq=50% -> call  | Called
+[03:29:57]    CallStn(STATION) | preflop | BTN stk=12587 | 8d 3h | eq=29% -> fold  | Folded
+[03:29:59]    AceBot(LAG) | preflop | ? stk=18762 | 6s 4s | eq=35% -> fold  | Folded
+[03:30:10]    Clawhi(TAG) | preflop | ? stk=21035 | Ac 5d | eq=56% -> check  | Checked
+[03:30:39]    Clawhi(TAG) | flop | ? stk=21035 | Ac 5d | eq=52% [dry] -> raise 30 | Error: 
+[03:30:47]    NitKing(NIT) | flop | ? stk=44503 | 9h Ad | eq=48% [dry] -> raise 30 | Error: 
+[03:30:56]    NitKing(NIT) | flop | ? stk=44503 | 9h Ad | eq=48% [dry] -> check  | Checked
+[03:31:07]    Clawhi(TAG) | turn | ? stk=21035 | Ac 5d | eq=53% [wet] -> check  | Checked
+[03:31:34]    NitKing(NIT) | river | ? stk=44503 | 9h Ad | eq=45% [very_wet] -> check  | Checked
+[03:31:35]    📊 AceBot (LAG): 3675 hands
+[03:31:43]    CallStn(STATION) | preflop | UTG stk=12587 | 3s 5c | eq=28% -> fold  | Folded
+[03:31:46]    AceBot(LAG) | preflop | BTN stk=18762 | 3c 7d | eq=31% -> fold  | Folded
+[03:32:01]    Clawhi(TAG) | preflop | ? stk=21025 | 8h 10d | eq=48% -> fold  | Folded
+[03:32:09]    AceBot(LAG) | preflop | UTG stk=18762 | Kd 8s | eq=46% -> call  | Called
+[03:32:26]    Clawhi(TAG) | preflop | BTN stk=21025 | 6h Kc | eq=44% -> call  | Called
+[03:32:32]    NitKing(NIT) | preflop | SB stk=44553 | 6s 7c | eq=34% -> fold  | Folded
+[03:32:36]    CallStn(STATION) | preflop | SB stk=12567 | Qc Qd | eq=73% -> raise 34 | Raised to 34 (target 34, range 0-12587, tier2_arrows)
+[03:33:03]    CallStn(STATION) | preflop | SB stk=12567 | Qc Qd | eq=73% -> fold  | Folded
+[03:33:15]    CallStn(STATION) | flop | SB stk=12567 | Qc Qd | eq=62% [wet] -> raise 37 | Raised to 37 (target 37, range 0-12567, tier2_arrows)
+[03:33:19]    AceBot(LAG) | flop | BB stk=18742 | Kd 8s | eq=21% [wet] -> fold  | Folded
+[03:33:29] 📊 LIVE DASHBOARD | 14327h (1999.6m)
+[03:33:29]    🎯 Hands: Clawhi:3187h AceBot:3677h NitKing:3790h CallStn:3691h
+[03:33:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:33:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:33:29] 📊 PERFORMANCE (14345h, 1999.6m)
+[03:33:29]    🎚️ Slider: 6327/6681 (95%) | T1:958 T2:5368 T3:1 | Fallback calls:0
+[03:33:40]    Clawhi(TAG) | flop | BTN/SB stk=21005 | 6h Kc | eq=36% [wet] -> call  | Called
+[03:33:53]    CallStn(STATION) | turn | BB stk=12530 | Qc Qd | eq=79% [wet] -> raise 100 | Error: 
+[03:34:04]    CallStn(STATION) | turn | BB stk=12530 | Qc Qd | eq=81% [wet] -> check  | Checked
+[03:34:10]    Clawhi(TAG) | turn | BTN/SB stk=20968 | 6h Kc | eq=23% [wet] -> check  | Checked
+[03:34:20]    CallStn(STATION) | river | BB stk=12530 | Qc Qd | eq=85% [wet] -> raise 77 | Raised to 77 (target 77, range 0-12530, tier2_arrows)
+[03:34:29] 📊 LIVE DASHBOARD | 14345h (2000.6m)
+[03:34:29]    🎯 Hands: Clawhi:3187h AceBot:3677h NitKing:3790h CallStn:3691h
+[03:34:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:34:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:34:29] 📊 PERFORMANCE (14345h, 2000.6m)
+[03:34:29]    🎚️ Slider: 6328/6683 (95%) | T1:958 T2:5369 T3:1 | Fallback calls:0
+[03:34:32]    Clawhi(TAG) | river | BTN/SB stk=20968 | 6h Kc | eq=24% [wet] -> fold  | Folded
+[03:34:56]    Clawhi(TAG) | preflop | UTG stk=20968 | 6s 9c | eq=36% -> fold  | Folded
+[03:34:58]    NitKing(NIT) | preflop | BTN stk=44553 | 10h Ks | eq=54% -> call  | Called
+[03:35:01]    CallStn(STATION) | preflop | SB stk=12664 | 10s Kd | eq=54% -> call  | Called
+[03:35:14]    AceBot(LAG) | preflop | BB stk=18722 | Jd 7d | eq=46% -> raise 60 | Error: 
+[03:35:31]    AceBot(LAG) | preflop | BB stk=18722 | Jd 7d | eq=46% -> fold  | Folded
+[03:35:33]    CallStn(STATION) | flop | SB stk=12654 | 10s Kd | eq=24% [dry] -> check  | Checked
+[03:35:39]    NitKing(NIT) | flop | BTN stk=44533 | 10h Ks | eq=52% [dry] -> check  | Checked
+[03:35:41]    CallStn(STATION) | turn | SB stk=12654 | 10s Kd | eq=16% [dry] -> check  | Checked
+[03:35:52]    AceBot(LAG) | turn | BB stk=18722 | Jd 7d | eq=58% [dry] -> raise 32 | Raised to 32 (target 32, range 0-18722, tier2_arrows)
+[03:35:54]    NitKing(NIT) | turn | BTN stk=44533 | 10h Ks | eq=40% [dry] -> call  | Called
+[03:35:57]    CallStn(STATION) | turn | SB stk=12654 | 10s Kd | eq=19% [dry] -> fold  | Folded
+[03:36:07]    AceBot(LAG) | river | BB stk=18690 | Jd 7d | eq=64% [dry] -> raise 50 | Raised to 50 (target 50, range 0-18690, tier2_arrows)
+[03:36:11]    NitKing(NIT) | river | BTN/SB stk=44501 | 10h Ks | eq=34% [dry] -> call  | Called
+[03:36:21]    NitKing(NIT) | preflop | UTG stk=44451 | 8c 2h | eq=29% -> fold  | Folded
+[03:36:29]    CallStn(STATION) | preflop | BTN stk=12654 | Ks 10d | eq=54% -> call  | Called
+[03:36:31]    AceBot(LAG) | preflop | SB stk=18854 | 4c 5d | eq=32% -> fold  | Folded
+[03:36:42]    Clawhi(TAG) | preflop | BB stk=20948 | Jc 6s | eq=46% -> check  | Checked
+[03:37:17]    CallStn(STATION) | flop | BTN/SB stk=12634 | Ks 10d | eq=68% [very_wet] -> raise 31 | Error: 
+[03:37:45]    Clawhi(TAG) | turn | BB stk=20948 | Jc 6s | eq=29% [very_wet] -> check  | Checked
+[03:37:48]    CallStn(STATION) | turn | BTN/SB stk=12634 | Ks 10d | eq=57% [very_wet] -> check  | Checked
+[03:38:11]    Clawhi(TAG) | river | BB stk=20948 | Jc 6s | eq=16% [very_wet] -> check  | Checked
+[03:38:18]    CallStn(STATION) | river | BTN/SB stk=12634 | Ks 10d | eq=88% [very_wet] -> raise 30 | Raised to 30 (target 30, range 0-12634, tier2_arrows)
+[03:38:33]    Clawhi(TAG) | river | BB stk=20948 | Jc 6s | eq=21% [very_wet] -> fold  | Folded
+[03:38:41]    CallStn(STATION) | preflop | UTG stk=12684 | Ks 3c | eq=42% -> call  | Called
+[03:38:43]    AceBot(LAG) | preflop | BTN stk=18854 | 6h 8c | eq=34% -> fold  | Folded
+[03:38:56]    Clawhi(TAG) | preflop | ? stk=20938 | Ah 5s | eq=51% -> call  | Called
+[03:38:58]    NitKing(NIT) | preflop | ? stk=44431 | 8d 4c | eq=34% -> check  | Checked
+[03:39:18]    Clawhi(TAG) | flop | ? stk=20928 | Ah 5s | eq=30% [dry] -> check  | Checked
+[03:39:21]    NitKing(NIT) | flop | ? stk=44431 | 8d 4c | eq=24% [dry] -> check  | Checked
+[03:39:25]    CallStn(STATION) | flop | ? stk=12664 | Ks 3c | eq=43% [dry] -> check  | Checked
+[03:39:29] 📊 LIVE DASHBOARD | 14345h (2005.6m)
+[03:39:29]    🎯 Hands: Clawhi:3191h AceBot:3680h NitKing:3794h CallStn:3695h
+[03:39:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:39:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:39:29] 📊 PERFORMANCE (14360h, 2005.6m)
+[03:39:29]    🎚️ Slider: 6331/6688 (95%) | T1:958 T2:5372 T3:1 | Fallback calls:0
+[03:39:50]    NitKing(NIT) | turn | ? stk=44431 | 8d 4c | eq=15% [wet] -> check  | Checked
+[03:39:52]    CallStn(STATION) | turn | ? stk=12664 | Ks 3c | eq=58% [wet] -> check  | Checked
+[03:40:12]    Clawhi(TAG) | river | ? stk=20928 | Ah 5s | eq=14% [very_wet] -> check  | Checked
+[03:40:14]    NitKing(NIT) | river | ? stk=44431 | 8d 4c | eq=63% [very_wet] -> check  | Checked
+[03:40:19]    CallStn(STATION) | river | ? stk=12664 | Ks 3c | eq=54% [very_wet] -> check  | Checked
+[03:40:27]    AceBot(LAG) | preflop | UTG stk=18854 | 5d 10h | eq=35% -> fold  | Folded
+[03:40:29] 📊 LIVE DASHBOARD | 14360h (2006.6m)
+[03:40:29]    🎯 Hands: Clawhi:3191h AceBot:3682h NitKing:3796h CallStn:3697h
+[03:40:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:40:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:40:29] 📊 PERFORMANCE (14366h, 2006.6m)
+[03:40:29]    🎚️ Slider: 6331/6688 (95%) | T1:958 T2:5372 T3:1 | Fallback calls:0
+[03:40:39]    Clawhi(TAG) | preflop | BTN stk=20928 | Ah Qc | eq=58% -> call  | Called
+[03:40:43]    NitKing(NIT) | preflop | SB stk=44481 | 7s Ac | eq=53% -> call  | Called
+[03:40:46]    CallStn(STATION) | preflop | BB stk=12644 | Qs 10s | eq=54% -> check  | Checked
+[03:41:00]    NitKing(NIT) | flop | SB stk=44471 | 7s Ac | eq=68% [dry] -> raise 30 | Error: 
+[03:41:16]    CallStn(STATION) | flop | BB stk=12644 | Qs 10s | eq=58% [dry] -> check  | Checked
+[03:41:29] 📊 LIVE DASHBOARD | 14366h (2007.6m)
+[03:41:29]    🎯 Hands: Clawhi:3192h AceBot:3682h NitKing:3796h CallStn:3697h
+[03:41:29]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:41:29]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:41:29] 📊 PERFORMANCE (14367h, 2007.6m)
+[03:41:29]    🎚️ Slider: 6331/6689 (95%) | T1:958 T2:5372 T3:1 | Fallback calls:0
+[03:41:31]    Clawhi(TAG) | flop | BTN stk=20908 | Ah Qc | eq=87% [dry] -> raise 34 | Error: 
+[03:41:49]    NitKing(NIT) | turn | SB stk=44471 | 7s Ac | eq=70% [dry] -> raise 30 | Raised to 30 (target 30, range 0-44471, tier2_arrows)
+[03:41:55]    CallStn(STATION) | turn | BB stk=12644 | Qs 10s | eq=27% [dry] -> call  | Called
+[03:42:08]    Clawhi(TAG) | turn | BTN stk=20908 | Ah Qc | eq=76% [dry] -> raise 90 | Error: 
+[03:42:31]    CallStn(STATION) | river | ? stk=12614 | Qs 10s | eq=24% [wet] -> fold  | Folded
+[03:42:35]    NitKing(NIT) | river | ? stk=44441 | 7s Ac | eq=86% [wet] -> raise 69 | Error: 
+[03:42:48]    Clawhi(TAG) | preflop | UTG stk=20908 | 2h 3h | eq=28% -> fold  | Folded
+[03:43:01]    NitKing(NIT) | preflop | BTN stk=44561 | 7s 4d | eq=33% -> fold  | Folded
+[03:43:04]    CallStn(STATION) | preflop | ? stk=12604 | Qh 9h | eq=56% -> call  | Called
+[03:43:06]    AceBot(LAG) | preflop | ? stk=18834 | Qd 9d | eq=56% -> check  | Checked
+[03:43:17]    CallStn(STATION) | flop | ? stk=12594 | Qh 9h | eq=73% [wet] -> raise 30 | Raised to 30 (target 30, range 0-12594, tier2_arrows)
+[03:43:28]    AceBot(LAG) | flop | ? stk=18834 | Qd 9d | eq=74% [wet] -> raise 90 | Raised to 90 (target 90, range 0-18834, tier2_arrows)
+[03:43:33]    CallStn(STATION) | flop | ? stk=12564 | Qh 9h | eq=72% [wet] -> call  | Called
+[03:43:48]    CallStn(STATION) | turn | ? stk=12504 | Qh 9h | eq=62% [very_wet] -> raise 126 | Error: 
+[03:44:10]    AceBot(LAG) | turn | ? stk=18744 | Qd 9d | eq=56% [very_wet] -> raise 126 | Error: 
+[03:44:25]    AceBot(LAG) | turn | ? stk=18744 | Qd 9d | eq=59% [very_wet] -> check  | Checked
+[03:44:34]    CallStn(STATION) | river | ? stk=12504 | Qh 9h | eq=70% [very_wet] -> raise 118 | Error: 
+[03:44:49]    CallStn(STATION) | river | ? stk=12504 | Qh 9h | eq=68% [very_wet] -> check  | Checked
+[03:44:51]    AceBot(LAG) | river | ? stk=18744 | Qd 9d | eq=68% [very_wet] -> check  | Checked
+[03:44:52]    NitKing(NIT) | preflop | UTG stk=44561 | Kc 8c | eq=48% -> call  | Called
+[03:44:54]    CallStn(STATION) | preflop | BTN stk=12614 | 3s 4c | eq=27% -> fold  | Folded
+[03:44:57]    AceBot(LAG) | preflop | ? stk=18844 | 5s Qd | eq=44% -> fold  | Folded
+[03:45:10]    Clawhi(TAG) | preflop | ? stk=20888 | 3d 10s | eq=40% -> check  | Checked
+[03:45:28]    Clawhi(TAG) | flop | ? stk=20888 | 3d 10s | eq=61% [very_wet] -> check  | Checked
+[03:45:41]    NitKing(NIT) | flop | ? stk=44541 | Kc 8c | eq=66% [very_wet] -> raise 30 | Error: 
+[03:46:18]    NitKing(NIT) | turn | ? stk=44541 | Kc 8c | eq=46% [very_wet] -> check  | Checked
+[03:46:30]    Clawhi(TAG) | turn | ? stk=20888 | 3d 10s | eq=56% [very_wet] -> check  | Error: 
+[03:46:30] 📊 LIVE DASHBOARD | 14367h (2012.6m)
+[03:46:30]    🎯 Hands: Clawhi:3194h AceBot:3684h NitKing:3799h CallStn:3699h
+[03:46:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:46:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:46:30] 📊 PERFORMANCE (14376h, 2012.6m)
+[03:46:30]    🎚️ Slider: 6335/6698 (95%) | T1:958 T2:5376 T3:1 | Fallback calls:0
+[03:46:31]    NitKing(NIT) | river | ? stk=44541 | Kc 8c | eq=60% [very_wet] -> check  | Checked
+[03:46:31]    📊 CallStn (STATION): 3700 hands | stack=8 | net=-149972 (29 rebuys)
+[03:46:35]    📊 NitKing (NIT): 3800 hands | stack=20888 | net=-44164 (12 rebuys)
+[03:46:38]    CallStn(STATION) | preflop | UTG stk=12614 | Kh 3h | eq=44% -> call  | Called
+[03:46:44]    AceBot(LAG) | preflop | BTN stk=18844 | 10d 6s | eq=37% -> fold  | Folded
+[03:47:01]    Clawhi(TAG) | preflop | ? stk=20878 | 8d As | eq=54% -> call  | Called
+[03:47:03]    NitKing(NIT) | preflop | ? stk=44571 | 10h Qs | eq=51% -> check  | Checked
+[03:47:30]    NitKing(NIT) | flop | ? stk=44571 | 10h Qs | eq=46% [dry] -> check  | Checked
+[03:47:30] 📊 LIVE DASHBOARD | 14376h (2013.6m)
+[03:47:30]    🎯 Hands: Clawhi:3195h AceBot:3686h NitKing:3801h CallStn:3701h
+[03:47:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:47:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:47:30] 📊 PERFORMANCE (14383h, 2013.6m)
+[03:47:30]    🎚️ Slider: 6335/6698 (95%) | T1:958 T2:5376 T3:1 | Fallback calls:0
+[03:47:34]    Clawhi(TAG) | flop | ? stk=20868 | 8d As | eq=36% [dry] -> raise 30 | Error: 
+[03:47:39]    CallStn(STATION) | flop | ? stk=12594 | Kh 3h | eq=70% [dry] -> raise 30 | Raised to 30 (target 30, range 0-12594, tier2_arrows)
+[03:48:04]    Clawhi(TAG) | flop | ? stk=20868 | 8d As | eq=60% [dry] -> raise 90 | Error: 
+[03:48:07]    NitKing(NIT) | flop | ? stk=44571 | 10h Qs | eq=41% [dry] -> call  | Called
+[03:48:21]    NitKing(NIT) | turn | ? stk=44541 | 10h Qs | eq=86% [wet] -> raise 86 | Raised to 86 (target 86, range 0-44541, tier2_arrows)
+[03:48:25]    CallStn(STATION) | turn | ? stk=12564 | Kh 3h | eq=66% [wet] -> call  | Called
+[03:48:30] 📊 LIVE DASHBOARD | 14383h (2014.6m)
+[03:48:30]    🎯 Hands: Clawhi:3195h AceBot:3686h NitKing:3801h CallStn:3701h
+[03:48:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:48:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:48:30] 📊 PERFORMANCE (14383h, 2014.6m)
+[03:48:30]    🎚️ Slider: 6337/6702 (95%) | T1:958 T2:5378 T3:1 | Fallback calls:0
+[03:48:37]    NitKing(NIT) | river | ? stk=44455 | 10h Qs | eq=85% [wet] -> raise 167 | Error: 
+[03:48:58]    CallStn(STATION) | river | ? stk=12478 | Kh 3h | eq=60% [wet] -> raise 146 | Error: 
+[03:49:17]    AceBot(LAG) | preflop | UTG stk=18844 | 7s 2h | eq=27% -> fold  | Folded
+[03:49:27]    Clawhi(TAG) | preflop | BTN stk=20868 | Kd Kc | eq=76% -> call  | Called
+[03:49:29]    NitKing(NIT) | preflop | SB stk=44737 | Qs 6c | eq=45% -> fold  | Folded
+[03:49:32]    CallStn(STATION) | preflop | BB stk=12458 | 10s 2d | eq=39% -> check  | Checked
+[03:49:39]    CallStn(STATION) | flop | BB stk=12458 | 10s 2d | eq=51% [dry] -> check  | Checked
+[03:50:01]    Clawhi(TAG) | flop | BTN/SB stk=20848 | Kd Kc | eq=82% [dry] -> raise 30 | Error: 
+[03:50:09]    CallStn(STATION) | turn | BB stk=12458 | 10s 2d | eq=94% [wet] -> raise 36 | Raised to 36 (target 36, range 0-12458, tier2_arrows)
+[03:50:32]    Clawhi(TAG) | turn | BTN/SB stk=20848 | Kd Kc | eq=90% [wet] -> raise 108 | Error: 
+[03:50:59]    NitKing(NIT) | preflop | BTN stk=44737 | 4c 9s | eq=35% -> fold  | Folded
+[03:51:02]    CallStn(STATION) | preflop | ? stk=12498 | 9d 10d | eq=52% -> call  | Called
+[03:51:13]    AceBot(LAG) | preflop | ? stk=18824 | 7c As | eq=57% -> raise 60 | Error: 
+[03:51:32]    CallStn(STATION) | flop | ? stk=12488 | 9d 10d | eq=27% [wet] -> check  | Checked
+[03:51:38]    AceBot(LAG) | flop | ? stk=18824 | 7c As | eq=83% [wet] -> raise 30 | Raised to 30 (target 30, range 0-18824, tier2_arrows)
+[03:51:42]    CallStn(STATION) | flop | ? stk=12488 | 9d 10d | eq=28% [wet] -> call  | Called
+[03:51:49]    CallStn(STATION) | turn | ? stk=12458 | 9d 10d | eq=20% [wet] -> check  | Checked
+[03:52:01]    AceBot(LAG) | turn | ? stk=18794 | 7c As | eq=73% [wet] -> raise 54 | Error: 
+[03:52:12]    AceBot(LAG) | turn | ? stk=18794 | 7c As | eq=75% [wet] -> check  | Checked
+[03:52:14]    CallStn(STATION) | river | ? stk=12458 | 9d 10d | eq=14% [very_wet] -> check  | Checked
+[03:52:26]    AceBot(LAG) | river | ? stk=18794 | 7c As | eq=64% [very_wet] -> check  | Checked
+[03:52:29]    NitKing(NIT) | preflop | UTG stk=44737 | Jd 10h | eq=46% -> call  | Called
+[03:52:32]    CallStn(STATION) | preflop | BTN stk=12458 | 10c 8s | eq=40% -> call  | Called
+[03:52:35]    AceBot(LAG) | preflop | SB stk=18884 | 10s Qs | eq=49% -> call  | Called
+[03:53:05]    Clawhi(TAG) | preflop | BB stk=20828 | 6c 4h | eq=30% -> check  | Error: 
+[03:53:10]    AceBot(LAG) | flop | SB stk=18874 | 10s Qs | eq=40% [dry] -> raise 43 | Raised to 43 (target 43, range 0-18874, tier2_arrows)
+[03:53:30] 📊 LIVE DASHBOARD | 14383h (2019.6m)
+[03:53:30]    🎯 Hands: Clawhi:3199h AceBot:3690h NitKing:3805h CallStn:3706h
+[03:53:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:53:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:53:30] 📊 PERFORMANCE (14400h, 2019.6m)
+[03:53:30]    🎚️ Slider: 6340/6709 (94%) | T1:958 T2:5381 T3:1 | Fallback calls:0
+[03:53:41]    NitKing(NIT) | flop | BB stk=44717 | Jd 10h | eq=16% [dry] -> fold  | Folded
+[03:53:46]    CallStn(STATION) | flop | BTN/SB stk=12438 | 10c 8s | eq=34% [dry] -> call  | Called
+[03:53:51]    AceBot(LAG) | turn | BB stk=18831 | 10s Qs | eq=59% [wet] -> check  | Checked
+[03:53:59]    CallStn(STATION) | turn | BTN/SB stk=12395 | 10c 8s | eq=26% [wet] -> check  | Checked
+[03:54:03]    AceBot(LAG) | river | BB stk=18831 | 10s Qs | eq=45% [wet] -> check  | Checked
+[03:54:09]    CallStn(STATION) | river | BTN/SB stk=12395 | 10c 8s | eq=22% [wet] -> check  | Checked
+[03:54:20]    CallStn(STATION) | preflop | UTG stk=12395 | 6c Kc | eq=46% -> call  | Called
+[03:54:21]    📊 Clawhi (TAG): 3200 hands | stack=20818 | net=-19130 (7 rebuys)
+[03:54:24]    AceBot(LAG) | preflop | BTN stk=18997 | 10h Jh | eq=48% -> call  | Called
+[03:54:30] 📊 LIVE DASHBOARD | 14400h (2020.6m)
+[03:54:30]    🎯 Hands: Clawhi:3200h AceBot:3691h NitKing:3807h CallStn:3708h
+[03:54:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:54:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:54:30] 📊 PERFORMANCE (14406h, 2020.6m)
+[03:54:30]    🎚️ Slider: 6340/6709 (94%) | T1:958 T2:5381 T3:1 | Fallback calls:0
+[03:54:48]    NitKing(NIT) | preflop | SB stk=44697 | 4s 10s | eq=41% -> check  | Checked
+[03:54:54]    NitKing(NIT) | flop | SB stk=44697 | 4s 10s | eq=12% [dry] -> check  | Checked
+[03:54:58]    CallStn(STATION) | flop | BB stk=12375 | 6c Kc | eq=40% [dry] -> check  | Checked
+[03:55:09]    AceBot(LAG) | flop | BTN stk=18977 | 10h Jh | eq=78% [dry] -> raise 39 | Raised to 39 (target 39, range 0-18977, tier2_arrows)
+[03:55:16]    NitKing(NIT) | flop | SB stk=44697 | 4s 10s | eq=22% [dry] -> fold  | Folded
+[03:55:19]    CallStn(STATION) | flop | BB stk=12375 | 6c Kc | eq=39% [dry] -> call  | Called
+[03:55:25]    CallStn(STATION) | turn | BB stk=12336 | 6c Kc | eq=51% [wet] -> check  | Checked
+[03:55:30] 📊 LIVE DASHBOARD | 14406h (2021.6m)
+[03:55:30]    🎯 Hands: Clawhi:3200h AceBot:3691h NitKing:3807h CallStn:3708h
+[03:55:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[03:55:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[03:55:30] 📊 PERFORMANCE (14406h, 2021.6m)
+[03:55:30]    🎚️ Slider: 6341/6711 (94%) | T1:958 T2:5382 T3:1 | Fallback calls:0
+[03:55:37]    AceBot(LAG) | turn | BTN/SB stk=18938 | 10h Jh | eq=78% [wet] -> raise 103 | Error: 
+[03:55:54]    CallStn(STATION) | river | BB stk=12336 | 6c Kc | eq=27% [wet] -> check  | Checked
+[03:56:09]    AceBot(LAG) | river | BTN/SB stk=18938 | 10h Jh | eq=85% [wet] -> raise 98 | Error: 
+[03:56:22]    AceBot(LAG) | river | BTN/SB stk=18938 | 10h Jh | eq=83% [wet] -> check  | Checked
+[03:56:28]    AceBot(LAG) | preflop | UTG stk=19086 | 2d 4h | eq=25% -> fold  | Folded
+[03:56:57]    NitKing(NIT) | preflop | ? stk=44687 | Kc Ah | eq=64% -> call  | Called
+[03:57:01]    CallStn(STATION) | preflop | ? stk=12316 | 7s 2s | eq=35% -> check  | Checked
+[03:57:14]    NitKing(NIT) | flop | ? stk=44677 | Kc Ah | eq=86% [wet] -> raise 30 | Error: 
+[03:57:35]    CallStn(STATION) | flop | ? stk=12316 | 7s 2s | eq=41% [wet] -> check  | Checked
+[03:57:47]    NitKing(NIT) | turn | ? stk=44677 | Kc Ah | eq=86% [wet] -> raise 30 | Error: 
+[03:58:02]    CallStn(STATION) | turn | ? stk=12316 | 7s 2s | eq=28% [wet] -> check  | Checked
+[03:58:16]    NitKing(NIT) | river | ? stk=44677 | Kc Ah | eq=86% [very_wet] -> raise 30 | Error: 
+[03:58:37]    CallStn(STATION) | river | ? stk=12316 | 7s 2s | eq=92% [very_wet] -> raise 30 | Error: 
+[03:59:25]    Clawhi(TAG) | preflop | UTG stk=20818 | Qc 3c | eq=41% -> fold  | Error: 
+[03:59:30]    NitKing(NIT) | preflop | BTN stk=44677 | 8c 3d | eq=32% -> fold  | Folded
+[03:59:39]    CallStn(STATION) | preflop | ? stk=12346 | Qh Jc | eq=57% -> call  | Called
+[03:59:50]    AceBot(LAG) | preflop | ? stk=19066 | 5d 9d | eq=43% -> raise 60 | Error: 
+[04:00:21]    CallStn(STATION) | flop | ? stk=12336 | Qh Jc | eq=80% [dry] -> raise 30 | Error: 
+[04:00:30] 📊 LIVE DASHBOARD | 14406h (2026.6m)
+[04:00:30]    🎯 Hands: Clawhi:3203h AceBot:3694h NitKing:3811h CallStn:3712h
+[04:00:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[04:00:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[04:00:30] 📊 PERFORMANCE (14420h, 2026.6m)
+[04:00:30]    🎚️ Slider: 6341/6718 (94%) | T1:958 T2:5382 T3:1 | Fallback calls:0
+[04:00:34]    AceBot(LAG) | flop | ? stk=19066 | 5d 9d | eq=23% [dry] -> check  | Checked
+[04:00:49]    CallStn(STATION) | turn | ? stk=12336 | Qh Jc | eq=96% [dry] -> raise 30 | Error: 
+[04:01:02]    AceBot(LAG) | turn | ? stk=19066 | 5d 9d | eq=18% [dry] -> check  | Checked
+[04:01:15]    CallStn(STATION) | river | ? stk=12336 | Qh Jc | eq=94% [wet] -> raise 30 | Error: 
+[04:01:30] 📊 LIVE DASHBOARD | 14420h (2027.6m)
+[04:01:30]    🎯 Hands: Clawhi:3203h AceBot:3694h NitKing:3811h CallStn:3712h
+[04:01:30]    📉 Folds: Clawhi:23% AceBot:23% NitKing:25% CallStn:16%
+[04:01:30]    🔄 Rebuys: Clawhi:7 AceBot:64 NitKing:12 CallStn:29
+[04:01:30] 📊 PERFORMANCE (14420h, 2027.6m)
+[04:01:30]    🎚️ Slider: 6341/6720 (94%) | T1:958 T2:5382 T3:1 | Fallback calls:0
+[04:01:30]    AceBot(LAG) | river | ? stk=19066 | 5d 9d | eq=13% [wet] -> check  | Checked
+[04:01:50]    NitKing(NIT) | preflop | UTG stk=44677 | Ac 3c | eq=48% -> call  | Called
+[04:01:59]    CallStn(STATION) | preflop | BTN stk=12376 | 7d 5d | eq=35% -> fold  | Folded
+[04:02:09]    AceBot(LAG) | preflop | ? stk=19056 | 9c 5h | eq=37% -> fold  | Folded
+[04:03:03]    NitKing(NIT) | flop | ? stk=44657 | Ac 3c | eq=54% [dry] -> check  | Checked
+[04:03:28]    Clawhi(TAG) | flop | ? stk=20798 | 8s Qd | eq=46% [dry] -> check  | Error: 
+[04:03:32]    NitKing(NIT) | turn | ? stk=44657 | Ac 3c | eq=43% [very_wet] -> check  | Checked
+[04:03:59]    NitKing(NIT) | river | ? stk=44657 | Ac 3c | eq=33% [very_wet] -> check  | Checked
+[04:04:16]    CallStn(STATION) | preflop | UTG stk=12376 | 8s Qs | eq=46% -> call  | Called
+[04:04:23]    AceBot(LAG) | preflop | BTN stk=19056 | 2s 6d | eq=26% -> fold  | Folded
